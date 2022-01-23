@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>阿离的杂货堆</title>
+<title>【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）） | 阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642924969824">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了））" />
+  <meta name="keywords" content="圈外,云次方,同人" />
 </head>
 
 <body>
@@ -173,10 +175,25 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -206,153 +223,311 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          云次方
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-22
-              <small>【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了））</small>
-            </h1>
-          </div>
-        </div>
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/"> 【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）） </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2019-02-22 00:47:59">2019-02-22</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://aaaliaaa.github.io/tag/i5A75Xd1j/"> <span>圈外</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/JXhEKRIkdu/"> <span>云次方</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/m55WuF_qRT/">
+        <span>同人</span>
       </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qing-ren-jie-kuai-le/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-14
-              <small>【云次方】情人节快乐！</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >9<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >2548<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <blockquote>
+<ul>
+<li>同性婚姻合法设定</li>
+<li>ooc，论坛体，没写过论坛体，应该挺崩的，不扣逻辑</li>
+<li>激情创造产物，巨大可能性坑（估计得看我接下来看妻子的频率和妻子内容戳中我的点）</li>
+</ul>
+</blockquote>
+<p>1L：楼主<br>
+莫非我是最后一个知道的？！！刚刚陪我妈看各种综艺的时候看到先导片简直吓呆了，一刷朋友圈发现自己被刷屏了。</p>
+<p>2L：云次方的小迷妹<br>
+回楼上，是的你是最后一个。</p>
+<p>3L：人类没有理由不嗑云次方<br>
++1，是的 你是最后一个。</p>
+<p>4L：云云云云<br>
++2</p>
+<p>5L：今天的我依然沉迷云次方<br>
+等等等一下！你们在说些什么？！！</p>
+<p>6L：人类没有理由不嗑云次方<br>
+…看来楼主并不是最后一个呢。</p>
+<p>7L：云次方的小迷妹<br>
+哈哈哈哈哈哈哈我笑死。先导片昨天就丢出来啦，姐妹们快去补课吧 ！</p>
+<p>8L：苦逼高三生<br>
+我我我在上晚自习看不了！跪求文字转述qaq</p>
+<p>9L：楼主<br>
+让我来！我正看着呢！去年妻子不是大成功吗？于是水果台马不停蹄地就做了下一季，好像是做了个什么调查，发现大家好像对丈夫们一起出去玩的场景也挺感兴趣，于是第二季就变成了丈夫们的旅行！为了响应刚刚通过不久的新婚姻法，特地邀请了一堆同性伴侣，就是我们的云次方啊啊啊！</p>
+<p>10L：今天的我依然沉迷云次方<br>
+啊这就是他们最近沉迷玩耍不演剧的原因吗！大龙的票本来就抢不到，这几个月的场子还一缩再缩，问嘎子他就挑挑眉说他出去玩了，原来如此！</p>
+<p>11L：又要喝成长快乐啦<br>
+这俩男的，没公开时就腻腻歪歪，婚姻法改的第二天就领了证，现在又一起参加这种看着就像秀恩爱用的节目，惹。</p>
+<p>12L：云次方的小迷妹<br>
+看过节目的我，惹。</p>
+<p>13L：云云云云<br>
+惹。</p>
+<p>14L：人类没有理由不嗑云次方<br>
+惹。</p>
+<p>15L：每天都被正主的糖齁到<br>
+破坏队形！我惹够了！我要啊啊啊啊啊啊啊！</p>
+<p>16L：苦逼高三生<br>
+？？？救救孩子吧！让祖国的花朵感受一下人世间的美好！</p>
+<p>17L：楼主<br>
+来了来了，刚刚惹去了。就节目的第一个任务是妻子为丈夫准备个惊喜，然后让丈夫在没有语言暗示或其他引导的情况下说出我爱你。云次方不是大龙嘎子两个人嘛，也不知道他们怎么分的“妻子丈夫”，于是节目还特别播了一段他们商量谁出去玩谁留着看的过程。</p>
+<p>18L：云次方的小迷妹<br>
+我们大龙啊哈哈哈哈哈，上来就非常严肃：“说是丈夫出去。”然后暗示性极强的瞪了嘎子一眼。哎呀我们嘎子的小眼神，瞬间就露出那种带着宠溺的甜甜的笑，不行，这样说感觉不出来！让我放图！<br>
+【动图】<br>
+【动图】<br>
+你们看啊这个眼神啊！这谁能受得住！</p>
+<p>19L：苦逼高三生<br>
+死了。</p>
+<p>20L：匿名<br>
+再看一次还是死了。</p>
+<p>21L：楼主<br>
+然后！然后！大龙不是态度很硬要出去吗！嘎子就把手指曲起来挂挂大龙衣服上的褶皱，顺便帮他整了整麦克风：“那我就是妻子呗。”那语气！温柔得快要溢出水来了。</p>
+<p>22L：又要喝成长快乐啦<br>
+但说实在的嗷，这样不是感觉大龙更受了吗！女王受宠溺攻，只有受会说自己是攻！</p>
+<p>23L：好开心啊<br>
+楼上注意言辞！我们大龙比较攻好吗！</p>
+<p>24L：我是一只柠檬精<br>
+emmm所以楼上两位，是情侣名吗？作为一只柠檬精容易嘛我，在这里居然还要吃狗粮。</p>
+<p>25L：楼主<br>
+歪楼了歪楼了！让我们回到任务。别人都是认认真真想方法能让对方说出“我爱你”嘛，嘎子一看到这个要求，直接问节目组：“惩罚是什么？”</p>
+<p>26L：今天的我依然沉迷云次方<br>
+哈哈哈哈哈哈哈哈哈哈，大龙已经这么让人绝望了吗？</p>
+<p>27L：楼主<br>
+没完！然后就进入了那种单独的采访时间嘛，一大波狗粮在这里！<br>
+“我们两个从很多年前就一直在一起，很多话吧，不太需要放在嘴里，更多时候我们是互相怼来怼去的你们也知道。爱这种东西嘛，”说到这里一个皱眉！承包这个皱眉！“他就算不讲出来，眼睛里也装得满满的。”我hddfhslkfjdsld（此处已乱码）。</p>
+<p>28L：苦逼高三生<br>
+……</p>
+<p>29L：我是一只柠檬精<br>
+……</p>
+<p>30L：匿名<br>
+……所以这就是你放弃治疗的原因（我的重点是不是错了）。</p>
+<p>31L：云次方的小迷妹<br>
+楼上哈哈哈哈哈哈哈。</p>
+<p>32L：楼主<br>
+嘛！不管怎么说，任务还是要继续的嘛！其他有的妻子是亲手做了便当，有的是送了丈夫关于孩子的东西这类的，我们嘎子，果然不负众望！将大龙带到了北舞。啊！北舞！果然同班同学什么的就是在这种时候派上的用场啊！</p>
+<p>33L：人类没有理由不嗑云次方<br>
+接下来这段交给我！大龙一大早就被节目组弄起来，蒙上眼睛塞进车里，你们都知道这条龙是什么样子的人哈哈哈，碍于镜头怼在自己面前没好意思爆粗口，但窝在衣服里头的时候身后黑气简直具象化了。大龙生气起来还是蛮吓人的，节目组就有好心的小姐姐偷偷给嘎子发信息让他小心点什么的。嘎子咧着嘴就笑开了，跟她回：没事，他不舍得跟我发火。</p>
+<p>34L：我是一只柠檬精<br>
+是什么神仙爱情。</p>
+<p>35L：楼主<br>
+啊啊啊啊啊啊接下来这段核能！大龙被带到他们当时的宿舍后才被摘下眼罩，重见光明后四周到处看像是想找嘎子骂一顿，扫过床边的时候顿住了。嘎子把他们两个入学到毕业每场演出留下的照片还有各种校内活动的照片按着时间一溜儿挂在床边，满满当当挂的他们两个人的床边全是，真的我瞬间都泪目了阿云嘎是什么草原小甜心啊。</p>
+<p>36L：云次方的小迷妹<br>
+然后大龙就一张一张拿起来看，端详了几张之后跟摄影师吐槽：你看我以前怎么这么胖。</p>
+<p>37L：楼主<br>
+。。。咱能不提这个吗，这简直太毁气氛了。话是这么说啦！大龙还是乖乖地跟着嘎子留下的箭头往前走。走到后面都不用看地板了，就懒洋洋手插兜里往前晃。也难怪啦，从宿舍到学校剧场的路他们两个估计闭着眼睛都能走到了。</p>
+<p>38L：每天都被正主的糖齁到<br>
+接下来这个谁都不能阻止我放图！<br>
+【图片】<br>
+【图片】<br>
+【动图】<br>
+你们看这个回眸！看这个对视！打开门的那一刻一个站在门口逆着光，一个站在舞台灯光中（微笑），这是要我的命啊。</p>
+<p>39L：苦逼高三生<br>
+Rent！！！Angel！！！我的天这是当年那套衣服吗！</p>
+<p>40L：楼主<br>
+是的！是的！大龙看到嘎子穿着那套衣服站在台上一下子就笑了，眼睛眯得细细长长的，果然没舍得跟嘎子生气！（还是说这个人根本就已经忘记这件事情了）然后两个人就把对唱的部分重新演了一遍，此处划重点，包括那，个，吻！！！<br>
+我不行了，果然这段大家还是去看视频吧，语言实在无法表达我内心的澎湃激昂！<br>
+【链接】链接在此不用谢。</p>
+<p>41L：苦逼高三生<br>
+啊啊啊啊我今生无憾了呜呜呜呜（泪眼婆娑）。</p>
+<p>42L：云云云云<br>
+楼上不要话说太早。</p>
+<p>43L：楼主<br>
+是的，这两个人的糖从来没有最甜，只有更甜。然后果然大龙到了最后都没有说出“我爱你”，嘎子可以说是非常了解他了。于是嘎子只好接受惩罚咯，别的妻子失败的时候都是些什么戳气球啊这类文文雅雅的任务，丈夫一般都挡在前面帮忙做了。到了我们嘎子这里，导演组丢上来了一个指压板，大龙非但不心疼嘎子，甚至在嘎子龇牙咧嘴的时候快笑到了地上，最后扑到了嘎子的背上。</p>
+<p>44L：我是一只柠檬精<br>
+哈哈哈哈哈哈哈喜闻乐见！</p>
+<p>45L：云次方的小迷妹<br>
+楼上太过分了吧哈哈哈哈！大龙不是扑上来了吗，嘎子担心他摔到指压板上，下意识就使了使劲把他背到背上，那一瞬间表情简直酸爽。但大龙也就让他背了两秒就跳下来了，然后把他拉起来：就你这腰，可拉倒吧。</p>
+<p>46L：每天都被正主的糖齁到<br>
+你听听！你听听这语气！这拐着弯儿带着别捏的关心啊！</p>
+<p>47L：苦逼高三生<br>
+呜呜呜呜他们太甜了吧（捂着嘴哭）</p>
+<p>48L：楼主<br>
+啊啊啊啊这个预告片！搞事情！所以接下来的行程是由妻子团来决定吗哈哈哈哈哈哈哈。节目组简直搞事情。</p>
+<p>49L：我是一只柠檬精<br>
+摩拳擦掌等着第一期出来！</p>
+<p>50L：苦逼高三生<br>
+我我我让我先找个时间把先导片给看了！我可以的！我一定要去看的！不睡觉也要看的！楼里的各位大大不要消失不要抛弃可怜的我啊！我们下周见！<br>
+------------------------------------------ tbc（x）------------------------------------------</p>
+
+            </div>
+            
+              <div class="reward-btn">
+                <div class="reward-btn-text">赞赏</div>
+              </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      小阿离离离离
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/" title="【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了））">https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://aaaliaaa.github.io/tag/i5A75Xd1j/"># 圈外</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/JXhEKRIkdu/"># 云次方</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/m55WuF_qRT/"># 同人</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="一个总结" href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">一个总结</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="一个总结" href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="随笔 2.19.2019" href="https://aaaliaaa.github.io/post/sui-bi-2192019/">随笔 2.19.2019</a>
+        <a class="nav-mobile-next" title="随笔 2.19.2019" href="https://aaaliaaa.github.io/post/sui-bi-2192019/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -597,6 +772,235 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+            <img id="zfb" class="reward-img" src="\media\images\custom-zfbImg.jpg" alt="赞赏码">
+          
+          
+            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
+          
+        </div>
+      </div>
+      <p class="reward-word">量力而行哦，超过18找我要文档</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      <div id="zfbBtn" class="pay-text">
+        支付宝
+      </div>
+      
+      
+      <div id="wxBtn" class="pay-text">
+        微信支付
+      </div>
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -1999,7 +2403,6 @@ p.s.的p.s. 如果这是一篇同人，大概ooc得连亲妈都不认得了（�
       speed: 200
     });
   </script>
-
 
 
 

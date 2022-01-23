@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>阿离的杂货堆</title>
+<title>寻兄记 | 阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642924969824">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="寻兄记" />
+  <meta name="keywords" content="群魔乱舞,短篇,MM" />
 </head>
 
 <body>
@@ -173,10 +175,25 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -206,153 +223,242 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          云次方
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-22
-              <small>【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了））</small>
-            </h1>
-          </div>
-        </div>
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://aaaliaaa.github.io/post/xun-xiong-ji/"> 寻兄记 </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2017-06-14 15:01:39">2017-06-14</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://aaaliaaa.github.io/tag/d1xsRkiLw/"> <span>群魔乱舞</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/SHORT/"> <span>短篇</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/MM/">
+        <span>MM</span>
       </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qing-ren-jie-kuai-le/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-14
-              <small>【云次方】情人节快乐！</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >23<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >6698<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <p>从前有座山，山里没有庙。</p>
+<p>山在虚无缥缈间，唤做九仙山，以九尾狐仙在此安家闻名东西。</p>
+<p>......</p>
+<p>草丛间，一个青年一身玄衣匍匐在地，身边并排趴了一团白乎乎的毛球，青年慢条斯理在团子耳边说：“看好目标，动作要快，先限制住对方，然后攻起要害。”团子听得频频点头，两只乌溜溜小眼睛紧紧盯着目标——一只一蹦一跳正要从眼前经过的小白兔，紧张得屏住了呼吸。青年等小白兔跳到了他们面前的草丛旁，低声下令：“就是现在。”</p>
+<p>小团子“嗷”一声用自己最快的速度扑了出去——动作要快！</p>
+<p>正好扑倒在小兔子身上，两团毛绒绒抱在一起打了几个滚后，小毛球终于占到了领先地位——限制住对方！</p>
+<p>将小兔子压在身下，然后继续贯彻着青年对他的教诲，小毛球思考了一下，小心翼翼抬起小爪子，一爪子拍在小兔子脸上——所谓，攻其要害。</p>
+<p>青年：“......”</p>
+<p>青年：“小傻瓜，要害啊要害，咽喉啊！脖子啊！”</p>
+<p>小毛球委屈巴巴，脸蛋这么重要，怎么能不是要害呢，但是还是听话地转了攻击方位，两只小爪子一把搂住小兔子的脖子，然后抬头用水汪汪眼睛看青年，带着讨巧和炫耀——二哥你看我做得很好！</p>
+<p>青年无力扶额，放弃治疗。</p>
+<p>连小兔子都看不下去，在一阵光中化为人形，因为年龄尚小，化为人形并不完全，还带着头上两只长长的耳朵和身后的小尾巴。一把揪起小毛球：“嗣家阿六，你是不是傻，攻击的意思不是抱住，你至少用上牙吧。”小毛球也化为人形，身后两条漂亮的白色尾巴左右舒展着张开，小耳朵有些沮丧地耷拉下来：“那是二哥没说清楚嘛。”“你你你是一只狐狸啊！”小兔子七窍生烟，恨铁不成钢指着他训斥。</p>
+<p>“嗣允生！你又带你家小子出来闹腾我们家弟弟！”草丛那一旁冲过来一个白衣青年，一把把小白兔揽到自己身边，将小狐狸从他身上拎下来，丢回玄衣青年怀里。</p>
+<p>嗣允生习以为常接住自家小弟，往上抱了抱，另一只手变法术般一转，一把青色扇子出现在手上，拿扇子漫不经心扇了两下：“思源兄，何必这样凶嘛，在下只不过是在教舍弟作为一只狐狸的生存必备技能而已。”胡思源嗤之以鼻：“你嗣家是没人了吗？沦落到要靠你家这小子来给家里捕食？”然后扬高下巴打量了几眼他怀里不知所云的小狐狸，“那你们家其他人怕是要饿死了。”</p>
+<p>嗣允生咳嗽一声，老兄你别说这么直白，就算我们家小六是小傻子这么直白的话还是听得懂的，低头看了眼怀里弟弟，小狐狸一脸茫然：“二哥，为什么我们家的其他人要饿死了啊？”</p>
+<p>嗣允生：“......”算了，当他没说过好了。</p>
+<p>嗣允季，排行老六，九尾狐仙家老幺，小傻子一个。</p>
+<p>下午时分，嗣允季在家前草丛中躺着发呆，看着一朵朵云慢悠悠晃过视线，歪头看身边的二哥，糯糯问了一句：“二哥，大哥啥时候回来啊？”嗣允生正叼着一根草思考人生，猛然被问到愣了一下，然后扬起灿烂的笑侧过身来搂住他：“哎呀六儿，二哥陪你不好吗？天天想着大哥二哥不依的啦。”嗣允季嘟起嘴几下滚出他的怀抱范围：“不给你抱，坏二哥。”然后从草丛中站起身，双手拍拍黏在身后的杂草，一蹦一跳出去玩了，嗣允生看着他蹦蹦跳跳出去的背影，笑得无奈。他才是最想知道这个答案的人好吗？碰上一个有了孩子就当甩手掌柜出门在外游历四方的爹已是万分不幸，本来族中二子的身份可以让他逍遥一世，谁知又遇到一个抱负远大的大哥，一心本着要让人，妖与西方众圣和谐相处，大手一挥去了天庭担任外交司司长，留下他管理家中一堆琐事，简直不能更倒霉了好吗？天天想要到处跑跑看看漂亮小姐姐的嗣家二子重重叹气。</p>
+<p>嗣允季独自一人跑到了九仙山的最高处，趴在顶大顶大的石头上看着身边云雾缭绕，回想着各种人告诉他的大哥的下落，听说大哥是到一个叫“天庭”的地方去工作了，那应该是一个很高很高的地方，九仙山已经够高了啊，为什么还是看不到呢？嗣允季皱起包子脸，半晌后破釜沉舟一般下定决心：不管了！路上问人就行了啊！先出发吧~</p>
+<p>于是欣赏完风景的嗣允生回家后，绝望地发现自己房间桌上放着一张潦草至极言简意赅的纸条：二哥我去找大哥啦~不用担心我有带钱哦！目光停在了“有带钱”三个字上，嗣允生身子僵了一下，连忙弯下腰趴在地上，够出床深处放着的小铁盒，颤抖着双手打开盖子，不出意料，里面空空如也。嗣允生“嗷呜”一声哀嚎：爹啊娘啊大哥啊，看看你们的宝贝啊，这都叫什么事儿啊，孩子大了不好管了，学会偷二哥私房钱了啊。</p>
+<p>悲伤完才想起来这事儿挺大，毕竟是自家小呆子啊，从来没有离开过九仙山事事被人包办的小包子啊，才堪堪过了一百岁，只有两条尾巴，化为人都不能完全，这样怎么是事儿啊。边想着边右手一握一张，一只娇小的火红小鹤出现在掌心中，将它贴近嘴唇细语了几声，小鹤扑腾着翅膀顺着一束光消失在空中——知音鹤，九尾狐仙家祖传的宝贝，用于同族之间的消息传递，能在转瞬即逝间出现在另一只狐仙身边。</p>
+<p>远在天庭的嗣允天今日起一直觉得右眼皮跳动得厉害，似是有什么不祥之兆，连路过的玄武家老爷爷也笑呵呵过来说了一句：“小狐狸崽子，我看你印堂发黑必有血光之灾。”鉴于这位老爷爷一向神神叨叨没个正经，嗣允天面无表情选择性遗忘了他的话，直到看到嗣允生的知音鹤出现在身边，才狠狠皱了眉。</p>
+<p>侧耳听完知音鹤的留言，嗣允天深吸了好几口气才没当场破口大骂，家里几个小的，唯一需要认真点看着的就是六儿，还能给他看丢了，压下气回了嗣允生几句，让他不要担心他来处理。转身就去天帝那里请了假，招了祥云就下了天庭。对凡人来说天庭或许遥不可及，但是事实上，只要知道具体方位，任何一个地方都可以是通往天庭的路径。</p>
+<p>嗣允天特地挑了离九仙山最近的大城，安邑城的郊外降落下来，他对他弟的脚程了解得透彻，就这么一天不到的时间，能在附近几个镇徘徊已经算是好的了。收了身后尾巴和耳朵，带上斗笠跟着人流进了安邑城。天色尚早，刚过了午时一两个时辰，太阳仍好端端挂在西边的天空上，却又不似午时那般毒辣，正是最适合在外闲逛的时间。街上人流攒动，各式各样小街小巷塞满奇形怪状来自各地的小商品，当今大陆交流广泛，不单单是寻常当地特产的瓷碗儿瓷碟子，甚至西洋传来的精致茶具和礼物丝带也在此安家，各种肤色瞳色的人们妖们用着带了各地区口音的话讨价还价聊着天儿，即使是各种妖魔鬼怪现出原形也不会有人觉得哪里不妥。</p>
+<p>嗣允天一身雪白的长衣穿梭在人群中，细心侧耳倾听周围人的议论，试着从他们的语句中搜寻出嗣允季的下落。走了大概有半个时辰，已经进入了安邑城最中心的地方，找了一家豆花店坐下，豆花师傅拿着大大的勺一层一层打起薄薄一层豆花，浇了整整一大勺白糖，又转手泼进一小勺红糖酱在表面，最后左手随意撒上一把花生米儿，看起来既有卖相。师傅将豆花摆到嗣允天面前，炫耀般道：“小兄弟你可找对地方啦，这城内就数我们家豆花最好啦，你看，能这样一瓢打起来不断的才是好豆花儿！”嗣允天在生人面前一向话不多，只勾了勾嘴角点点头，手在袖子里一转变出一颗金豆豆放在他面前。师傅一下子有些为难：“哎哟，小兄弟你这......吃一百碗豆花儿也要不了这么多呀。”嗣允天摇头：“没事，在下有件事想向师傅打听下，今天是否有见过这么高左右......”伸手在从地上比划了一个高度，“有两条尾巴的小狐狸？”嗣允季嗜甜，小时候谁家有糖就把谁当娘，黏在屁股后面怎么甩都甩不掉，第一次来了这么大城镇，只要看到了这豆花，定会移不动脚。</p>
+<p>师傅托腮思考了一番，突然想起什么般道：“啊，有些印象，大早上来的，像是不寻常人家出来的小少爷，白耳朵白尾巴，足足在我这儿吃了三大碗豆花呢。”嗣允天眼睛一亮：“您还记得他往哪方向去了吗？”师傅不确定地摸了摸下巴：“我只看到他往那个方向去了，具体去了哪儿......倒是不清楚。”然后上下端详了嗣允天一番，“小兄弟你找那小狐狸有事？”嗣允天叹了口气，换上有些无可奈何又带着担心的愁容：“不瞒师傅，那小狐狸是我胞弟，闹了些别扭离家出走呢。”豆花师傅被他的表情击中，马上把他定位为为弟弟操心劳累却又极其溺爱弟弟的哥哥，当下拍了胸脯保证：“放心吧小兄弟！论与邻里邻居的关系啊，这城中我陈三要称第二，没人敢称第一！我这就帮你四处问问人，让大伙儿都留意着。”嗣允天配合得绽开带着些惊喜的浅笑，把笨蛋哥哥的神情演绎得淋漓尽致：“那就谢谢陈师傅啦！”</p>
+<p>本来嗣允天是不怎么担心的，从九仙山到这安邑城，就这么点距离的路，仅有一条路也不存在什么迷路，再加上弟弟那两条尾巴乖乖竖在身后，稍微有些眼力的都能看出他不是普通狐狸精，就算不猜出是九尾狐仙家的孩子，多少也能顾忌点，寻常狐狸精向来只有一条尾巴，听嗣允生的语气嗣允季又带足了钱，理应没有什么需要担心的了。但真正见到弟弟的时候，嗣允天还是震惊了，一天不到的时间啊，怎么能把自己折腾成这幅样子。</p>
+<p>鉴于陈三在城内的确人脉极广，不出几柱香的时间就有了嗣允季的消息，但是出乎意料，并不算好消息，听说小家伙因为吃饭没钱给被压在一家店内做苦力，当下嗣允天就挑了眉，怎么样都没道理这么可怜啊，陈三也一下皱起脸：“哎哟哟那家店出了名的克扣员工服务不好，小兄弟快去看看吧，别让弟弟受了委屈。”</p>
+<p>嗣允天刚踏入那家店的门，就看到自家小弟混身灰蒙蒙小脸皱成一团拿着扫把闷闷不乐扫着地。身上衣服干净不再，隐隐约约还能看到衣服下皮肤的红肿，心一下就紧了，不声不响走上去拿了他扫把，嗣允季扫把被抽走的那一刻浑身一颤，几乎是下意识地双手护住头：“对不起…对不起我错了。”嗣允天愣了一下，弯下腰轻柔扶正他脑袋：“季儿？是大哥。”</p>
+<p>嗣允季愣在原地，顺着他手的力度抬了头，看清他的脸，沉默了几秒，突然咬了唇眼角划下一滴泪，渐渐的越流越多，却始终不敢放开声音大哭，嗣允天被他弟压抑的哭声挠了几下心，这是他家那个无论做了什么都扬起无辜讨好的笑，吐吐舌头装傻的小家伙吗？九尾狐仙这辈统共就六人，嗣允季生得晚，和哥哥们年龄差极大，从一出生就注定一辈子无忧无虑在哥哥们的庇护下安全长大，长辈们开玩笑是给他起过个小名儿：嗣意，嗣意肆意，无论他做什么都有人在后面帮他撑起一切。如今只是出来了一天啊，怎么就把小家伙变成这副样子了？</p>
+<p>丝毫不在意他身上的污垢伸出双手将他接到怀里站起来，冷了脸走到掌柜面前：“听说舍弟给贵店添麻烦了，不知舍弟餐钱多少？这样够不够？”说着随手掏出一个金元宝放在桌上，掌柜眼睛一亮，忙不迭伸手夺过来放在牙缝间咬了一下，然后心满意足将那块货真价实的金块儿收进袖口，拢起袖子露出谄媚的笑：“客官客气了，自然是足够了，既然交齐了饭钱，小少爷随时可以回家了，之前都是误会。”</p>
+<p>嗣允季窝在大哥怀里搂住他脖子，在他耳边小小声道：“玉佩，被抢走了......”嗣允天听清后用手在他背上轻划了两下，小声安慰道：“没事儿，大哥给你要回来。”面对掌柜时收起来所有笑意：“小弟的东西能否请贵店归还一下呢？”掌柜笑容一僵，顿了一下道：“那是自然，那是自然，还请您稍等片刻。”然后就向店内吆喝了声：“李四！听到没有！快去将小少爷东西拿过来！真是......一点眼头见识都没有......”被喊道的小弟低低道了一声“是”后匆匆去了后室，不一会儿就拎出一个小包，双手毕恭毕敬交到嗣允天手上，嗣允季伸爪子抢过包翻了一阵找出一个玉盘状的玉佩，那袖子蹭了几下心有余辜地贴在脸上感受它的温度，随后将其郑重绑回腰间，然后一头栽回嗣允天怀里，在他耳边蹭蹭：“大哥，回家吧。”嗣允天“嗯”了一声，将小包系好，离开途中警告地看了掌柜一眼，遂抱着嗣允季头也不回回去了。</p>
+<p>嗣允季没回来，嗣允生也不管有所懈怠，早早等在九仙山山脚下，看着嗣允天抱着蜷在怀里小小一团的嗣允季回来，忙迎上去：“这是怎么啦？六儿六儿来，二哥看看。”回了自家的地盘，小孩儿胆子明显大多了，撇了撇嘴就要哭，委屈巴巴伸出小手臂：“疼——”嗣允生一下急了：“哪儿哪儿，哪儿伤了？我去谁家王八蛋啊，我们家六儿也敢欺负的！不哭不哭二哥帮你报仇啊。”嗣允天刚刚就看出他衣袖下有伤，但碍于在外面不好处理，只想着快些带他回家处理伤口，也不管嗣允生义愤填膺吵吵闹闹，一巴掌拍他脑后：“噤声，吵得头疼，先回家。”嗣允生默，在心里泪流满面，这什么哥啊这是，一回来看到弟弟就这态度对吗？！他就是担心而已啊！</p>
+<p>回了家嗣允季就被丢进木桶洗了热水澡，嗣允天皱着眉头轻轻抓起他两只小爪子查看了伤情，红红肿肿一看就是被人无规律殴打上去的伤，严重地方甚至有了青紫痕迹，不光两只手臂，身上也难免有些伤，细细帮他上了药，在心里叹了口气：他的小孩子，这一天而已，受了多少伤啊。</p>
+<p>包裹得严严实实把他塞进被窝，尽量放柔了语气：“季儿你告诉大哥，这些伤怎么来的？怎么会没钱付饭钱了呢？”说到这里小孩儿就无比愧疚看了二哥一眼，然后低下头，双手在被子上磨搓磨搓，带着点小心虚：“钱袋子，好像被偷了，不知道什么时候......”嗣允生眨了两下眼，上前轻弹他额头：“小笨蛋，这下二哥可没钱啦，以后要你养二哥了，好不好？”嗣允季疑惑摸摸额头，在他语气里丝毫听不到一点生气之意，咧开嘴笑得灿烂：“嗯嗯我养二哥啊，额二哥你爱吃草吗季儿穷买不起其他的......”嗣允天由着他们哥俩打趣了一番后把嗣允生按回原来座位：“季儿，接着说。”</p>
+<p>嗣允季摸摸下巴：“然后，饿了，去吃饭，没钱。”想到这里耳朵都耷拉了下来，“然后我就说我回家拿钱，他们不肯，抢我玉佩，还打我，让我扫地，呜......”嗣允天眼眸一暗，探手揉乱他头发：“怎么不说你是嗣家人？”“啊，说了有用的吗？”嗣允季揉揉眼睛一脸疑惑，嗣允天默了一秒：“嗯，以后有人欺负你，就说自己叫什么，知道了吗？”虽然这不是个好习惯但是总比自家小孩被欺负了的好啊！</p>
+<p>“好了，生儿，你出去一下，我和季儿谈谈。”嗣允天大抵了解了具体情况，站起身打开了房门下巴一扬，对嗣允生下了逐客令，嗣允生一愣：“哥你不是吧，好歹歇一天。”“嗯？”嗣允天胳膊肘抵着木门，微微眯起眼睛，“嗯我是说，辛苦你了哥~”嗣允生非常识相咧嘴笑，路过门边是还是忍不住朝嗣允天挤了下眼睛，变着相给小弟求情，嗣允天抿着嘴轻轻笑了一下，将他推出房间。</p>
+<p>嗣允季傻傻看着二哥被赶出去，一点危机感都没有地把自己从被子里剥出来，爬到床边伸手：“大哥抱！季儿想大哥了。”嗣允天从善如流抱过他，极其自然地坐在了床沿，小心翼翼避开他伤，把他横放在膝上：“嗯，大哥也想你了。”嗣允季就算平时再傻也嗅到了一丝危机的气息，小小扑腾了几下脚丫：“大哥？”嗣允天顺手扒了他亵裤，将两条小尾巴拨到一边，垂了眼帘，扬手就是不轻不重的一下，打红了小半片皮肤。</p>
+<p>嗣允季耳朵一下竖的笔直，尾巴触电一般立起来半晌又软下去，不敢有太大挣扎，只用小爪子在嗣允天腿上轻抓了几下，小猫咪一样开口：“大哥......”嗣允天一向对他这招没什么抵抗力，但今天的事也说明孩子不是惯着就行，也有护不到的时候，狠了心继续拍下去，不听不看不知道。落了大约十下，将他身后染上一层均匀的粉红，才停了手问他：“大哥为何打你？”</p>
+<p>嗣允季早在第四五下时眼泪就掉了下来，终于等到他大哥停下来，抢着时间呜咽了几声，然后抽抽搭搭道：“季儿给人家扫地，丢人。”嗣允天听得一愣，有些哭笑不得把他抱正，刮刮他小鼻子：“小脑袋里成天都装了些什么东西，胡说八道，该打。”嗣允季眼睛湿漉漉看着他哥眼睛，又掉下几滴眼泪，顺着鼻梁滑到嘴边，将他开口说的话黏成一团：“哥我疼......”嗣允天心咯噔一下，虽然很清楚自己手上留着七八成的力，但被他这么一哭好像严重得需要急救了似的。也不能全怪嗣允季，小孩子也算是受了惊吓，回家还没被好好哄哄呢，就遭到如此非“狐”待遇，任谁都会心里有些委屈。</p>
+<p>嗣允天犹豫了一下，将他放到地板上牵起两只小手，打算先跟他说清楚：“季儿，为什么自己跑下山？”嗣允季吸吸鼻子：“我想大哥......”嗣允天被噎了一下，心下有些小小的感动，自己不过离家不到一年，竟能让小家伙这么想他？伸手顺顺他耷拉下来的耳朵上凌乱的毛：“对不起季儿，大哥以后会经常回来的，为什么想下山不跟大家说一声呢？”“说了......说了的。”嗣允季委屈，理直气壮回道，“给二哥留了纸条的。”嗣允天嘴角一抽，深吸几口气告诉自己心平气和，继续开导：“那季儿认不认得找大哥的路？”嗣允季茫然摇头，扭扭身子嘟嘟囔囔说了一句：“路上可以问人啊，二哥说了，路在嘴上，世上好人多！”嗣允天暗暗握拳，努力挤出笑：“那为什么季儿不可以带着二哥上路呢？二哥认得路啊。”嗣允季张大嘴巴恍然大悟样：“哦！对哦！”嗣允天长舒一口气：“下次不许一个人下山了，听到没？”嗣允季乖乖点点头，嗣允天感动，终于将话题继续下去了，真让人欣慰，接着道：“那季儿可知错了？”嗣允季包子脸一皱，纠结了一下还是顺从点了头，整了整衣襟乖巧趴伏回嗣允天膝上，嗣允天左手轻按了他腰：“二十下，别再有下一次。”说完就不紧不慢开始落巴掌。</p>
+<p>嗣允天打人过程中极少说话，就专心致志往他身后落巴掌，刚刚的十巴掌跟闹着玩儿似的这么点时间已经一点痕迹都没有了，现在既然下定决心让他记住教训，下手自然就重了许多，一掌就是一个巴掌印儿，雪白的双丘瞬间红了一半，嗣允季即使做好了充分的心理准备还是被凌厉的掌风扇得叫出声来。嗣允天早预料到他会挣扎，左手将他控制得严严实实只能小幅度蹬蹬腿。身上的动作被限制住了，嘴上可就没人把关了，小狐狸带着哭腔的细碎叫声一浪高过一浪，最后几乎冲破天际。</p>
+<p>门突然就被剧烈地敲响了，嗣允生带着点慌乱的声音传过来：“哥！你你你收着点劲儿！季儿才多大呢。”嗣允天面色不改甚至挥巴掌的频率都不曾改变，慢悠悠道：“嗯，收着呢。”嗣允生气绝，却又不敢硬闯，只能在门边碎碎念。嗣允天摇摇头叹口气，加快了速度将收尾的五下一连串抽下来，嗣允季已经哭得上气不接下气，身后红红肿肿叠着巴掌印儿，臀峰肿的老高。嗣允天将他横抱着放回床上给他抹了眼泪，随口对门外的嗣允生说：“生儿，进来吧。”</p>
+<p>几乎没有任何停息的门就被粗鲁地推开了，嗣允生进了屋冲向嗣允季将他护到身边，仰天长啸：“六儿啊二哥可怜的六儿，哎哟看看这小屁股红的，不知道的还以为娘和猴子通婚了呢......哎呀哥你做什么。”嗣允天毫不留情往他头上拍了一下：“嘴上没个正经，看好季儿，我去拿药。”</p>
+<p>嗣允季一天又是受惊又是挨打的已经累得不行，连跟二哥撒撒娇装个可怜的精力都没有了，只软绵绵窝在被窝里时不时抽噎一下，嗣允生也不忍心闹他，手在他背上轻轻划着放柔了声音哄他睡觉，嗣允天悄无声息走过来在他身边坐下，倾下身正要查看他伤处，嗣允季却不知是嗅到他气息还是为何，伸了小手抓住他衣角，含糊喊了声：“大哥......”嗣允天下意识应了一声，凝神去看他小脸，却又似只是梦呓。嗣允天一下子心被装得满满的，即使是这样重打了他后，这孩子还是对自己这样依恋啊。柔和了嘴角的弧度，弯腰在他额上落下一个轻的感觉不到的吻。</p>
+<p>“睡吧宝贝，大哥在。”</p>
+<p>......</p>
+<p>一个月不到的时间，安邑城内一家规模极大的酒楼就被查封了，原因为店内食物安全没有保证且楼内建筑质量堪忧，鉴于该酒楼对待员工，甚至客人的态度都令人发指，无人为其辩解一二，而城内卖豆花儿出了名的陈三却机缘巧合得到了这块地，重新修筑后与当地其他传统小吃摊子合营起一栋美食城，日日生意红火，客源络绎不绝。</p>
+<p>【END】</p>
+
+            </div>
+            
+              <div class="reward-btn">
+                <div class="reward-btn-text">赞赏</div>
+              </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      小阿离离离离
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://aaaliaaa.github.io/post/xun-xiong-ji/" title="寻兄记">https://aaaliaaa.github.io/post/xun-xiong-ji/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://aaaliaaa.github.io/tag/d1xsRkiLw/"># 群魔乱舞</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/SHORT/"># 短篇</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/MM/"># MM</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="错误的吃醋方式" href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/">错误的吃醋方式</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="错误的吃醋方式" href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="凤阁龙楼连云霄" href="https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/">凤阁龙楼连云霄</a>
+        <a class="nav-mobile-next" title="凤阁龙楼连云霄" href="https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -597,6 +703,235 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+            <img id="zfb" class="reward-img" src="\media\images\custom-zfbImg.jpg" alt="赞赏码">
+          
+          
+            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
+          
+        </div>
+      </div>
+      <p class="reward-word">量力而行哦，超过18找我要文档</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      <div id="zfbBtn" class="pay-text">
+        支付宝
+      </div>
+      
+      
+      <div id="wxBtn" class="pay-text">
+        微信支付
+      </div>
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -1999,7 +2334,6 @@ p.s.的p.s. 如果这是一篇同人，大概ooc得连亲妈都不认得了（�
       speed: 200
     });
   </script>
-
 
 
 

@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>阿离的杂货堆</title>
+<title>错误的吃醋方式 | 阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642924969824">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="错误的吃醋方式" />
+  <meta name="keywords" content="MF,短篇,MM" />
 </head>
 
 <body>
@@ -173,10 +175,25 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -206,153 +223,236 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          云次方
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-22
-              <small>【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了））</small>
-            </h1>
-          </div>
-        </div>
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/"> 错误的吃醋方式 </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2017-06-26 14:53:22">2017-06-26</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://aaaliaaa.github.io/tag/MF/"> <span>MF</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/SHORT/"> <span>短篇</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/MM/">
+        <span>MM</span>
       </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qing-ren-jie-kuai-le/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-14
-              <small>【云次方】情人节快乐！</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >25<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >7445<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <blockquote>
+<ul>
+<li>这是一篇披着原创皮的同人（沉思）因为我个人对同人的极度抗拒，但是又有人点文（捂脸）</li>
+<li>因为是一篇点文，所以中间有一些小朋友的特殊要求（额其实也很普通）</li>
+</ul>
+</blockquote>
+<p>江汐冉借着楼道外倾泻进来的月光单手在包里掏了半天，好不容易用食指和中指将散落在包最底层的钥匙掏出来，小心翼翼拎稳另一只手上的蛋糕，放轻开锁的声音，刚想要蹑手蹑脚潜进厨房将蛋糕放进冰箱，黑暗中，突然传出一声清脆的开电源开关的声音，房间骤然亮了起来。江汐冉浑身一颤，僵硬地转身，看到自家恋人双手撑在下巴下有些阴沉的脸，下意识将精美的蛋糕包装盒收到身后，勾起嘴角调整出一个带着点心虚的笑：“宝宝！你今天回来这么早啊？额其实也不早了，怎么坐在大厅里不回房间啊？”</p>
+<p>顾翔一下子站起身来，眼睛死死盯着江汐冉背在背后的手：“那是什么？”江汐冉心道糟糕，连忙打哈哈道：“啊没什么啦，今天我哥还跟我说你们有项目要赶工呢，结果怎么样啦？”本来想着明天才让他知道的惊喜，今天当然能瞒就瞒啦~顾翔却不听她说话，迈着步子几步走到她面前，一米八五的个子格外有压迫力，提了些声音：“我问你那是什么？”江汐冉愣了一下，被逼迫的感觉让她突然就萌生出了一丝委屈，不自觉往后跺了两步：“你干嘛那么大声啊？”顾翔突然俯下身探到她身后将蛋糕盒子粗鲁拽了出来毫不留情摔在桌上：“你以为我什么都不知道？我今天都看到了！”</p>
+<p>江汐冉被他的大动作拽的几乎踉跄了一下，看到蛋糕盒子被摔到桌上的时候暗自吸了口气，随后被他的话说得愣住了：“看到？看到什么了？”顾翔咬牙，要是今天他不早点结束和学长的商讨，想着她喜欢吃巧克力蛋糕特地拐到商业街的蛋糕店，还不会看到她和那个面包店店长卿卿我我那么亲密！居然还把蛋糕带回家来！“你连蛋糕都带回来了，还要跟我解释你和那个店长什么都没有？”顾翔瞪着江汐冉手指着蛋糕，心里越想越拧巴，心烦意义将蛋糕扫到了地上。</p>
+<p>话讲到这个份上了江汐冉还能不懂吗，看着自己几天的辛苦成果就这样被扫到了地上，眼圈腾地红了，通红着眼睛回瞪顾翔：“在你心里我就是这样的人吗？”顾翔满心的怒火已经让他无法分辨江汐冉此时在说些什么，只要是她说出的话都带着挑起他心火的调调，忍无可忍上前抓了她将她不算轻柔地丢到沙发上，顺手抄起茶几上压着报纸的镇纸没条理地就往她身后落下：“我都看到了你还要跟我狡辩吗？！”江汐冉被他抓得一懵，直到疼痛通过神经传入大脑才反应过来，火也一下升了起来，虽说平日里自家恋人是有些孩子气，但是像这样不分亲红皂白误会自己会动手的事情还从来没有发生过，用尽全身力气挣扎着想要起来：“顾翔你脑子有毛病吧——”但因为力量上的悬殊差距一丝一毫也挣扎不动。</p>
+<p>顾翔听到这句话停下手中的动作用镇纸指了她鼻子：“我有毛病？你最好想想是谁的问题！”这句话一下子将江汐冉心中最后一点残留的理智也说没了，连解释的力气都没有了。拼尽全身力气挣脱开他的束缚，抱着手臂缩在沙发一角，顾不得身后一突一突的疼忍住哭腔：“对！我就是和那个人情投意合，你满意了吗？你凭什么打我？你是我什么人？嗯？！”顾翔难以置信看着她，像是没意料到她居然承认了，手上一下卸了所有力气，镇纸也“哐当”一声掉到地板上，喃喃问她：“凭什么？”江汐冉心里的倔强一下膨胀起来，不知哪里来的力气猛地站起身来：“对！你顾翔凭什么打我！”顾翔死死咬了牙，从牙缝中挤出几个字：“是，我是没资格管你！不管就是！”说完就转了身大步流星走出房门用力摔上门。江汐冉前一秒还能强硬地站在他面前跟他对视，听到摔门声的那一刻浑身力气都被抽光了，整个人瘫软到沙发上，身后的疼痛愈发明显起来，但心里源源不断涌出来的难过情绪让她无暇顾及疼痛，只能更紧更紧抱住自己的膝盖将自己蜷缩在沙发上。</p>
+<p>顾翔从房间里摔门出来全凭着一肚子的气和别捏得不行的脾气，听着身后门“嘭”地一声关起来，心里一下子空了，站在门口握紧了拳头，但又没有现在就回去面对女孩子的勇气，明明知道应该好好说说清楚，但看到她就失了全部理智，没想到还听到了她的承认，现在该怎么办才好呢？他是真的不想就这样不明不白地分手了，从小一起长大的小姑娘啊，他到现在都还记得她答应他的时候他高兴得傻乐了好几天走路都飘飘忽忽，被导师骂了也笑嘻嘻看着导师，吓得导师忙探他额头。但是这样的情况他能怎么做呢？烦躁地抓乱本就不是很整齐的碎发，甩手走了：既然想不清楚，就不要想清楚了！反正明天也没有课，找个酒吧好好安静一下吧。</p>
+<p>江汐冉不知道自己缩在沙发上缩了多久，突然间听到手机铃响起，挣扎着起了身探过手机，看到来电提示好不容易才收住一些的眼泪再次决堤，咬了牙不让自己哭出声音接了电话，电话那头传来熟悉的温和声音：“冉儿？回家了吗？明天阿翔过生日，有什么想法吗？哥哥过去帮你啊？”像是溺水的人找到了救命的横木，江汐冉抱着手机大哭出声，含含糊糊喊着哥哥。电话那头的江渊愣住了一下，自家妹妹他清楚，如果不是受了大委屈是不会哭成这么撕心裂肺的模样的，但这个状态下她是什么都听不进去的，所以只想着先哄了她不哭再说：“冉儿，冉儿，听哥哥说，先冷静下来，对，深呼吸，没事没事，哥哥在这呢，对了，冉儿真乖。”江汐冉在江渊的安抚下逐渐收了些哭声，转为小小声的抽泣。</p>
+<p>“好了，现在跟哥哥说说吧？发生了什么？”江渊卡着合适的时间点问，说到正事儿江汐冉又掉出两滴眼泪：“哥我不要他了！他是坏蛋！”小孩子脾气，江渊险些笑出声，他比两人大了一些，从小看他们两个打打闹闹跌跌撞撞起来的，小打小闹闹闹别扭也是经常发生的事情，也就顺着她哄：“行~不要他了，哥今天就把他绑回宿舍。”江汐冉听出他语气中哄孩子的语气，嘟起嘴：“哥！我认真的，他......他打我！莫名其妙的！”江渊听到这里严肃了起来，不管怎么吵怎么闹他都可以不管，但是动上手了是怎么回事呢？自家的妹妹自己从小宠到大自己都没舍得动过一个手指头，他顾翔怎么能动手呢！“哥现在过来，你好好待着。”</p>
+<p>这边江汐冉还有个哥哥撒撒娇，那边顾翔就更惨啦，才十八九岁的少年，能去过几个酒吧，只能跑到之前和同系学长们聚会的小酒吧，傻傻地点了几扎啤酒窝在角落闷闷地喝，想要一醉方休，喝着喝着突然看到一个熟悉的身影，腾地从座位上站起来，眯了眯眼睛，这不是那个和小冉谈笑风生的面包店老板嘛！居然还敢在他面前晃来晃去，不给他点教训是不行了！</p>
+<p>凭着一丝酒意，顾翔拎着啤酒瓶吊儿郎当晃到那位身边：“哟，这不是面包工坊的老板嘛。”青年转过身，有些不明就里，但还是本着职业操守微笑道：“在下陆任家，您是？”“呵，陆任家......”什么鬼名字，小冉居然会喜欢上名字这么难听的人！这人哪点比自己好了？？这张脸？还是虚伪的笑？“就是你跟小冉！”陆任家愣了一下：“小冉？哦~您是说汐冉吗？是个很认真的女孩子呢......”话没说完，就被顾翔打断，顾翔用力将啤酒瓶磕在旁边桌上：“不许叫她的名字！”陆任家大概反应过来了，揉了揉眉头笑了：“您是汐冉的男朋友？您大概误会了......”顾翔额上青筋爆了出来，握起拳头就要往他嘴角打去：“说了，不许叫她的名字！”却不想中途被一只有力的手抓住了：“哟这位客人，在我的店里请稍微冷静一点。”</p>
+<p>顾翔狠狠甩开那手，朝说话的人瞪去，那人穿着有些宽松的黑色高领毛衣和牛仔裤，外面随意地罩着一个白色的围裙，一看就知道是酒吧的店长，顾翔只觉得有些眼熟，上次和江渊一起来时似乎有介绍说这个酒吧的老板是他朋友，稍微收敛了些眼神低吼道：“私事，不要管我们。”叶岚仔细打量了一下眼前的少年，这样的少年他见得多，十八九岁，飞扬跋扈，一个不高兴拍案就起，但是......这小少年有点眼熟啊：“这不是小江家的小学弟嘛，这是怎么啦吃火药啦？”甩甩手将桌上被捏得变形的啤酒瓶收起来，“小店可不是你发脾气的地方，要么乖乖坐着，今天这啤酒钱算哥请你的，要么我给你学长打电话，回家该怎么闹怎么闹。”然后转身对陆任家笑笑：“孩子小任性，我代孩子家长陪个不是，今儿这酒算我的。”</p>
+<p>陆任家摇摇头笑了：“都知道叶老板爽快，没事儿，这不也没出什么事，今天先走了，改天聊。”放下钱转身要走，走时回头看了顾翔一眼，眼里笑意分明：“孩子啊，做事这么冲动，汐冉那么好的女孩儿丢了怎么办？”顾翔感觉到他话里的嘲讽意味，一下子炸了毛，一副要拼命的样子扑过去，却被叶岚从吧台里探出身轻而易举拎住衣领：“诶诶诶，没完了是吧。”另一只手从围裙口袋掏了手机手机飞速拨了一串数字打出去：“喂，小江啊，你家那倒霉学弟，就是那个什么翔来着的，二翔？哦哦哦顾翔，对，在我这儿呢，要跟人打架我给拦住了，得嘞，我给你看着，你来领就成。”挂了电话云淡风轻地将顾翔往吧台里一拽，递给他几个杯子：“洗干净了，醒醒酒。”一点不想解释刚刚把人名字记成二翔什么的事儿。顾翔满肚子的气对着叶岚都发不出来，泄了气乖乖拿着毛巾在水池边洗杯子。</p>
+<p>江渊现在很不好，准确的说，是他将要让某人很不好。刚刚从学校回了家，看到自家妹妹可怜巴巴趴在沙发上哭得眼睛都红了，小心翼翼查看了她身后的伤，虽然位于IT行业顾翔实在是细胳膊细腿在别人看来一撂就倒，但十几岁男孩子的力气再加上盛怒下一点都没收敛的打法还是让自家宝贝身后变得红肿不堪一碰就疼，将她抱到床上上了药，柔声细语哄了半天才止了哭声，还没想好怎么讨伐没有分寸的臭小子，就接到以前前辈打来的电话，有些忐忑地接了：“前辈......你是说顾翔吗？不好意思给你添麻烦了，麻烦你帮我看住他，谢谢前辈！我现在过来。”转头看向床上用被子半蒙着头假装不感兴趣眼睛却一直往自己这里瞟的妹妹，叹口气顺顺她的头发：“我去接他，冉儿先休息一会儿吧。”</p>
+<p>江渊赶到就酒吧的时候，顾翔正好洗完一打的杯子，被允许有了休息的时间，蔫蔫地坐在椅子上，江渊不留痕迹小小瞪了他一眼，然后就转身跟叶岚打招呼：“前辈。”叶岚右手将唇边的烟拿下来漫不经心掸了两下，轻吐出一缕青烟：“小江，好久不见了，你家这学弟要好好管管啦。”江渊深吸一口气：“是我教导不周，给前辈添麻烦了，等有了空，我再来和前辈喝一杯。”叶岚挥挥手：“快回去吧，家里还有一个不是吗？”江渊笑出声：“有劳前辈。”几年前，叶岚在他们学校几乎是神一样的存在，蝉联蓝桥杯冠军三年，全国IT界无人不知无人不晓，使他们学校的计算机系一度闻名全国，后来不知道是发生了什么事，这样的人物居然辍了学，再出现的时候成了这家小酒吧的老板，这事儿只有以前相熟的朋友知道，也就经常来来给他撑撑场子。</p>
+<p>顾翔一路上没敢说话，但也十分硬气地没有看到江渊就怂了，上了的士后一个人坐在后座瞥了头看窗外飞速向后退的风景，江渊怎么样也不会在外人面前训他，看他不闹自己也就安静地闭目养神，一路上两个人愣是一个人都没有说话，司机师傅看出二人中气氛不对，油门踩得飞快将二人送回江家。</p>
+<p>到了家门口顾翔犹豫了一下顿在门口，江渊回头瞥了他一眼，笑了：“进来吗？不进我关门了。”笑了？笑了？！顾翔被江渊嘴角边一抹笑吓得浑身一颤，情不自禁三步两步进了房门，然后又觉得自己这样太没骨气了，耍脾气般蹬掉了鞋，大步进了房间，江渊看他孩子气的表现，也不气，甚至弯下腰帮他理好了鞋，然后轻飘飘说了一句：“阿翔，拿键盘，冉儿房间跪着去。”顾翔故作镇定的步伐一个踉跄，装了一路深沉的表情终于破碎：“键盘？！我靠学长你哪一年代的人啊罚跪，我不，你要打就打我绝不会跪的！”江渊慢慢收起唇边的笑：“嗯？我没跟你开玩笑，顾翔。”顾翔嘴里还没说完的话一下卡住，沉默了两秒垂头丧气从电脑房里找出了去年坏掉的键盘，蹬蹬蹬上了楼，声音大得像是要把楼梯踏碎。</p>
+<p>进了江汐冉房间，躺在床上往外张望的女孩儿看到进来的不是自家哥哥而是刚吵完架的男朋友，哼了一声将头转进去，顾翔也撇开头背对着床蹭进房间，将键盘放在地上，心里激烈斗争了许久，还是视死如归跪了下去。键盘坑坑洼洼不比平地，刚开始还好，越到后面越能体现出效果，顾翔直挺挺跪了十多分钟，悄悄活动了下腿，重新唤起膝盖上酥酥麻麻的疼，嘶......这酸爽......十多分钟好捱，半个小时左右，最困扰顾翔的问题就不是膝盖上的疼痛了，他喝了不少酒，又打人又生气了一整天，这会儿终于有了休息的时间，渐渐的觉得困顿了，头一点一点往下垂，然后一会儿又猛然惊醒重新跪直。</p>
+<p>江渊正好处理完了导师刚发过来的一个问题，想着可以找倒霉学弟算算账了，推门进来却看到顾翔头都快要垂到地板上了，轻咳了两声，顾翔打了一个激灵一下子跪直了，怯怯看向他小声喊了句学长，江渊不应他，提了他一只胳膊将他从地板上提起来，一路拖下楼拖进浴室，不算轻柔地拽过他头发，打开淋浴头往他脸上冲了几秒，看着他疯狂甩头拼命将脸上的水珠抹掉，抱臂问：“清醒些了吗？”顾翔抬头看他，紧抿了嘴不说话，水顺着发梢一点点滴下来。</p>
+<p>江渊轻叹口气，抽了旁边的毛巾帮他擦干净脸，转身出了浴室：“去我房间趴好了，你知道规矩的。”然后不管顾翔在后面什么反应，出了门到储藏间找工具。江渊一般教训学弟们，用上尺子已是严重了，但这次几件事情叠加起来，江渊握了握尺子，只觉得还是对他太宽容了，弯腰又捣腾了一番，翻出一根伸缩的铁质教鞭，在手上试了试力道，不太需要多大力气挥下去就是一道红痕，刺刺的疼，兀自点点头，回了房间。</p>
+<p>推了房门进来看到顾翔果然按照规矩将外裤携内裤一道褪到了膝弯处，虽然脸上仍看起来别扭极了，但至少伏在床上的姿势还算乖顺，江渊被小程度灭了下火，但想想他做的事还是恨得牙痒痒。将教鞭拉到合适的长度抵在他光果的臀上，看他被金属的冰凉触感刺激得抖了一下，视而不见他调整成委屈模式已经噙满泪水的眼睛，条理清晰跟他算账：“我本来不想过问你们两个之间的事，但是阿翔，你今天过分了。”顾翔撇过头哼得响亮：“你是小冉哥哥，从来都是偏心她的。”江渊不紧不慢不轻不重落下五下，平行的五条红痕印在顾翔臀上，顾翔“嗷呜”一声叫出声来，忍不住背了手要去身后摸，还没摸到就被早有先见之明的江渊一把擒住按在身后，又是五下重叠在刚刚五下上面一丝不差。</p>
+<p>顾翔眼泪一下就下来了，挣扎着回了头看江渊，声音里掺上了浓浓的哭腔：“学长你就是偏心！这次是小冉的错啊，为什么打我？”江渊头疼，打他是最费体力的，还没打多重呢就叫得跟自己要废了他似的，所以他的叫声一点都不能当真，面色不改地问他：“我问你，你知道为什么冉儿今天要去做蛋糕吗？”顾翔咬牙：“不就是为了见她那小情人吗！还能为什么。”江渊面无表情加大力度重重五下都落在了臀腿之间，直接打出了一道隆起的青紫痕迹，顾翔杀猪般的叫声冲破天花板，响的江渊皱了眉头：“小声点，杀猪呢？明天什么日子，你记得吗？”“明天？”顾翔使劲吸了吸鼻子，有些茫然地问，“明天几号？”“2号。”江渊扶额，这么傻的孩子真的适合学IT吗连自己的生日都能忘记啊。</p>
+<p>“哦！我生日吗？”顾翔恍然大悟，一系列事件过了下脑子终于慢慢反应过来点什么，“学长你是说？”“嗯，懂了？现在觉得自己过分吗？”江渊面无表情补刀，顾翔捂脸沉默了两秒，放下时已是一脸的悔意：“可，可是她都没解释啊！”“你给人解释的机会了吗话都不说就把人给打了你让我说你什么好呢。”江渊恨铁不成钢用教鞭戳戳他脑袋，“你这冲动的毛病什么时候能改呢？”说着又是不间断的十下从上到下将臀照顾了个遍。顾翔的脸一下子揪起来，许是心里愧疚，叫的声音都小了许多，但也不能阻止他左右蠕动着想要躲开教鞭的小动作，江渊像是被他动的恼了半个身子都俯下去硬压住他腰际，右手控制着力度和位置照顾着身后那两团肉，将它们拍得彻底红肿起来，顾翔只觉得疼上叠着疼久久消散不掉，反而愈演愈烈，只觉得已经很疼很疼，但下一下总是能将疼痛放大，加倍。</p>
+<p>这个问题算完了，江渊继续进入下一个话题：“跟谁学的啊去酒吧买醉，买醉就算了你好好喝你的酒不行吗还要跟人打架？谁给你的自信啊顾翔，觉得自己身强力壮战无不胜可以通过决斗将美人赢回来？”顾翔已经回不了话了，抽抽搭搭吸着鼻子抽泣，过了好几秒才道：“我......生气嘛。”“生气？生气是能当力气使？亏得是在这个酒吧，亏得那店长不跟你计较，要不然今天学长还能看到完整的你叽叽喳喳在这里闹脾气吗？”江渊越说越气，右手上渐渐的就收不住力了，身后就那么大点地方，在江渊随着训话落下的教鞭下由红变紫，有的地方肿的透亮，几乎渗出血来。江渊看着也差不多了，听着顾翔已经断断续续的哭嚎声，终究是没忍下心，停了手，嘴上却没放松：“以后把脾气给我收着点，没人有办法一直护着你。”转身就要去放教鞭，却被顾翔汗津津的手一把抓住。</p>
+<p>顾翔疼得出了一身的汗，却不知道哪里来的力气，抓江渊手腕的劲儿一点都不小，江渊只觉得手腕生疼，却没有掰开他或甩开他的手，顺着他的力俯下身问：“怎么了？”“哥——你帮我......想想办法，小冉生气了。”江渊愣了一下，心一下子软到了心坎儿里，顾翔往日就像中二期的小孩儿一样，从来不承认自己会撒娇，学长学长叫得正经，只有在挨打之后或者有求于他时才会软化下来唤声哥，扬了扬嘴角，却突然多了些想要玩玩他的坏心眼，坐在他身边道：“是啊，冉儿那个脾气我也没办法呢，怎么办，要不然你们就顺势这样分了吧？”顾翔难以置信想要撑起上半身看他，牵到了伤口疼得龇牙咧嘴又跌了回去，但还是顺利瞥到了江渊眉目间的笑，一下子明白过来，刚想要说些什么就被口水呛到了，猛地咳了一阵子，江渊也没想到他反应这么大忙上前去帮他顺背：“哥跟你开玩笑呢，你还不清楚冉儿吗？闹别捏归闹别扭，你哄哄总是很容易好的啊。”说到这里江渊都有些嫌弃自己妹妹，嫁出去的妹妹泼出去的水，指不定没到明天就帮着顾翔折腾自己了。</p>
+<p>顾翔缓过来后第一件事就是大逆不道一拳头砸在江渊腿上，砸完后又有点小心虚地摸摸，然后理所当然张开双手：“哥！背我上楼！”“又折腾什么呢，睡觉。”江渊瞪他，顾翔嫌弃瞥他一眼：“谁要跟你睡啊，我要上去跟冉儿睡。”江渊头也不回出了门：“要上自己上，我忙着呢。”顾翔目瞪口呆，沉默了一下一叠叠地喊起来：“哥，哥，哥，哥......”只是出门拿个药膏的江渊扶额，天啊这熊孩子谁家的快点捡走，他不要了。进了门毫不犹豫一巴掌拍到他头上：“做什么！造反吗？”“哥你带我上去吧，带我上去嘛。”顾翔不厌其烦在他耳边念叨，江渊手掌上沾了药膏，毫不留情一巴掌拍在伤的最重的臀峰上，成功打断了顾翔的唠叨换来一声冲破云霄的惨叫，满意地换来了一阵安稳时光成功帮他上完药，然后慢慢腾腾擦干净手，拍拍他后背大方道：“上来吧，哥背你上去。”</p>
+<p>江汐冉从顾翔被江渊拽出了房间就开始犹豫什么时候去帮顾翔求情，但是心里又觉得委屈，无缘无故挨了顿打又莫名其妙吵了次架，没有一个错在自己身上，自己凭什么过去帮他求情嘛，犹豫着犹豫着，就听到门被推开的声音，不像是平时哥哥温文尔雅的推门声，倒更有顾翔推门如撞门的风范，心里刚泛起一丝欣喜就想起来晚上刚发生过的事，毫不犹豫转了身对墙。</p>
+<p>顾翔骑在江渊背上有了驰骋沙场的豪气感觉，但看到江汐冉朝着他的后背就一下子犯了怵，手在江渊背上点了点，意味分明：哥！快帮我开个头。江渊将他从背上扔到床上，拍拍手：“好了搬运工作也结束了，接下来是你们两个自己的事了，我也忙了一个晚上，管不了其他的了。”说完就转身出了门。</p>
+<p>顾翔被他随意丢到了床上，牵到了伤口硬是忍住了破口而出的痛呼，咬了手指头“嘶”了一声，来不及抱怨江渊不讲义气就这么走了，凑过去在江汐冉耳边叫：“小冉？”江汐冉呼吸一滞，没有理他，顾翔听着她呼吸的变化，知道她还是在听自己说话的，瞬间跟打了鸡血似的：“小冉，小冉对不起！都是我不好，你别生气了......”江汐冉闭着眼睛，嘴角却忍不住勾起小小弧度，意识到后又欲盖弥彰地将嘴角撇回原来那个不太愉快的弧度。</p>
+<p>顾翔没得到她的反馈，一下子急起来，身子往她那儿蹭了蹭，被角蹭到臀上的伤短促地痛呼出声，虽然很快地止住了，江汐冉却听得清晰，一颗心一下提了起来，虽然理智上希望哥哥揍他揍得越狠越好，但是一听到他叫，就忍不住想看看他到底伤得怎么样，抿了抿嘴，觉得自己不能这么没出息，于是只是往后挪了挪身子，蹭到了他旁边。顾翔眼睛一亮，将脑袋凑过去：“小冉你不生气了吧？赶明儿我给你做个蛋糕好不好？我不是故意的，我真不知道......”江汐冉听到这里火腾地一下子起来了，一翻身坐起来：“你不说我都忘了！你也不想想我给谁做个蛋糕啊我自己都没吃到！不行我一定要打回来！”顾翔终于看到了她正脸，嬉皮笑脸无赖地伸手拉了她手：“没问题！给你打回来。”江汐冉高高扬了手，却又想到刚刚他只是动了动就牵得伤口痛，硬是将那一巴掌落到了背上，然后凶巴巴一巴掌糊他脸上：“看什么看，睡觉！”顾翔甘之若素享受着自家小姑娘的巴掌， 乐呵呵将她搂到怀里。江汐冉挣扎了一下，就口嫌体正直地乖乖待着了。</p>
+<p>快要入睡时听到顾翔在她耳边小小声又补了一句：“对不起......”江汐冉鼻子瞬间就酸了，皱了眉头将头埋到他怀里：</p>
+<p>“吵死了，睡觉！”</p>
+<pre><code>                                        【END】
+</code></pre>
+<blockquote>
+<p>p.s. 里头有点小小的彩蛋，是我个人的小小私心（偷偷为喜欢的cp打call！耶！）以及官方对起名废的吐槽（陆任家什么鬼）<br>
+p.s.的p.s. 如果这是一篇同人，大概ooc得连亲妈都不认得了（我不管我不管这是原创！）</p>
+</blockquote>
+
+            </div>
+            
+              <div class="reward-btn">
+                <div class="reward-btn-text">赞赏</div>
+              </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      小阿离离离离
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/" title="错误的吃醋方式">https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://aaaliaaa.github.io/tag/MF/"># MF</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/SHORT/"># 短篇</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/MM/"># MM</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="那些年坑爹的高考作文题" href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/">那些年坑爹的高考作文题</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="那些年坑爹的高考作文题" href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="寻兄记" href="https://aaaliaaa.github.io/post/xun-xiong-ji/">寻兄记</a>
+        <a class="nav-mobile-next" title="寻兄记" href="https://aaaliaaa.github.io/post/xun-xiong-ji/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -597,6 +697,235 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+            <img id="zfb" class="reward-img" src="\media\images\custom-zfbImg.jpg" alt="赞赏码">
+          
+          
+            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
+          
+        </div>
+      </div>
+      <p class="reward-word">量力而行哦，超过18找我要文档</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      <div id="zfbBtn" class="pay-text">
+        支付宝
+      </div>
+      
+      
+      <div id="wxBtn" class="pay-text">
+        微信支付
+      </div>
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -1999,7 +2328,6 @@ p.s.的p.s. 如果这是一篇同人，大概ooc得连亲妈都不认得了（�
       speed: 200
     });
   </script>
-
 
 
 
