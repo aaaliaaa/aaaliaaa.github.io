@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>阿离的杂货堆</title>
+<title>盼盼（1） | 阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642927669627">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="盼盼（1）" />
+  <meta name="keywords" content="长篇,盼盼,MF,MM" />
 </head>
 
 <body>
@@ -173,10 +175,25 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -206,245 +223,220 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          云次方
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-20
-              <small>【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）</small>
-            </h1>
-          </div>
-        </div>
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://aaaliaaa.github.io/post/pan-pan-1/"> 盼盼（1） </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2020-12-31 14:46:55">2020-12-31</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://aaaliaaa.github.io/tag/LONG/"> <span>长篇</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/ueVHOYRkn/"> <span>盼盼</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/MF/"> <span>MF</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/MM/">
+        <span>MM</span>
       </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qing-ren-jie-kuai-le/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              02-14
-              <small>【云次方】情人节快乐！</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >7<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >2095<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <p>徐尘到现在都记得第一次见蒋盼时候的场景。<br>
+他是在蒋念念去世的当天晚上知道的消息，他爸抖着报纸展开，从社会新闻中大发慈悲斜眼赏给了他一个眼神，慢条斯理：“总也得过去看看，好歹生了你一遭。”<br>
+徐尘从脸到行为举止，都和他爹一个模子导出来，他放下吃甜点的铁质小勺子，点点头说好，平静且自然。<br>
+他也就只见过蒋念念没几次，照片也没看过几张，确实如他爸所说，蒋念念做的也就是“生了他一遭”。他倒也不怨——算算年龄他这个名义上的母亲生他时不过十六七岁，想想也不是为了有个孩子，把他丢给他爹就走倒也合情合理。<br>
+但徐尘没想到的是，第二天早上，他在葬礼现场，被蒋念念的律师叫住，和其他三个男人（或者说男孩儿）面对面坐在了一个圆桌旁。<br>
+四个人大眼瞪小眼，分析了一下律师刚刚说的内容，心情复杂。<br>
+你好，我是蒋念念儿子。<br>
+好巧，我也是。<br>
+蒋念念此人，一生风流，留种无数，去哪儿都是挥挥衣袖，只留下一个儿子，直到她人躺在了地下，她的儿子们才终于相见。<br>
+场面气氛一时间非常微妙。<br>
+律师把他们四个放在这儿去取文件了，徐尘沉默了一会儿，习惯性从口袋拿了名片递给三个人：“徐尘，今年24。”徐尘对面的那位满脸写着疲惫，黑眼圈快挂到脸颊，留着有些长的头发，被随意地用绑文件的皮筋扎着，他伸手接过名片，仔细看了眼，然后环顾了一下身边的其他二人：“那我应该是老二了，芒昱，芒果的芒，日立昱，23，在第二医院实习呢。”所以说这黑眼圈是手术台给弄出来的。他身边的小少年带着鸭舌帽，黑色的口罩还挂在下巴上，露出了半张不太真切的脸，咬字清晰但声音却不大：“我叫裴永宁，今年20。”芒昱打量了他一眼，像是在回忆：“啊我好像知道，是那个什么选秀节目吧？星…星什么。”他身边很多护士医生姐姐妹妹，休息时间就捧着手机对着这张脸喊儿子妈妈爱你，突然有一种被降了一辈的苍凉感。<br>
+裴永宁没想到他能看过选秀节目，有些不好意思地红了耳尖，小声道：“摘星之子。”然后把目光投向最后一个男孩子：“你呢。”最后的男孩子带着明显的学生气儿，帽子倒扣后仰在椅子上，咧牙笑：“邹和宇，十八岁，隔壁体校，学花滑的。”确实，这儿离燕体就一站地铁，非常近。<br>
+兄弟四个刚刚认得，就看律师一手抱着文件，一手牵着一个三四岁的小姑娘走了进来，四个人的心中都是“哇哦”一声，都不用介绍，想想都知道这个是他们小妹妹。<br>
+一旦接受了这个设定，竟然觉得就很合理。<br>
+席川可能没想到他们四个的表情能如此淡定且自然，毕竟在电视剧里这种狗血的情况必须伴随着几声“不！我不相信！”，他反而有些尴尬了起来，将文件放到他们四人面前的桌上，把小姑娘抱起来：“这是蒋盼，蒋念念的小女儿，今年四岁。”然后招呼兄弟几个看文件，“蒋念念生前就留了套房子，她也没结婚，盼盼是唯一的继承人，她之前立过遗嘱，如果她意外死亡，就把房子卖了，给你们兄弟几个平分，但她有个请求，希望你们四个能轮流照顾一下盼盼，房子钱就当抚养费了。”毕竟也不可能让几岁的小孩子一个人住着。<br>
+徐尘打量了一眼被席川抱在怀里的小姑娘，小姑娘穿着黑色的小裙子，两只手虚虚地搭在席川脖子上，眼睛红红的，像是哭了很久，正悄悄低着头看他们，与他的目光对视了一下，就飞快地转开头，像一只受了惊的小兔子。蒋念念很漂亮，就算过了这么多年，遗像上的照片依然非常靓丽，蒋盼像极了她，甚至连眼角边一颗小小的泪痣都一模一样。<br>
+席川看他们四个要么翻着文件要么沉思，还是加了一句：“当然，这是你们的选择，从法律上来说，你们并没有抚养盼盼的义务。如果你们选择不养，那么…”“诶～”话说了一半，被站起身的芒昱打断，他走到席川面前伸出手，歪头眯着眼笑，“盼盼，二哥抱抱好不好？”<br>
+蒋盼小小的脑袋这两天被塞了太多的东西，突然间妈妈就不见了，然后席川叔叔就告诉她妈妈再也回不来，她只能跟没见过的四个哥哥一起住，如果哥哥们没有办法带着她，她就会去孤儿院，可能会成为别人家的孩子。她一点都不想当别人家的孩子，于是她只希望哥哥们能喜欢她。<br>
+于是她努力笑起来，伸手给芒昱抱，芒昱愣了一下，把她接到怀里，抱的满满当当，压低了声音跟席川说：“您别当着孩子面说这些，孩子都能听懂的。”他们实习经常串科室，也在儿科呆了一段时间，他喜欢孩子，时常也听儿科的前辈们叨叨些孩子相关的事情，实在看不得小姑娘这强颜欢笑讨好人的表情——明明在一个本应该只会撒娇耍赖的年纪。<br>
+徐尘看他这样，大概懂他意思，思考了一下道：“我问题不大，家里也有人照顾。”芒昱点点头：“我也是，我自己住，只是可能会比较忙。”席川看他们的意思，知道他们是愿意的了，接了一句：“盼盼很乖的，一个人在家也没问题，蒋念念之前也时不时放她一个人在家。”裴永宁放下手机，像是刚刚跟经纪人确定过：“我问了一下，我经纪人说他知道了。”那意思就是同意了，毕竟住的公司的房子，还是得跟团队说一下。邹和宇摊手：“我的宿舍也是单人宿舍，很ok的。”<br>
+席川确实没想到他们能这么快达成共识，毕竟谁愿意养一个天上掉下来的异父妹妹，推了推眼镜：“所有的文件和蒋念念的遗物我都整在房子里了，包括盼盼的东西也都还在那里，我会处理好蒋念念身后的这些事情。”徐尘站起身跟他握了握手：“麻烦您了。”席川笑笑：“分内之事，盼盼就麻烦你们了。”<br>
+最后，兄弟四个互留了联系方式和地址，决定先一人一周试试看，从徐尘开始。临走时，大概是要离开这里唯一认得的大人席川了，蒋盼有些不安地拽住了他的衣角。席川顿了一下，蹲下身和她对视，拿起她两只小手，语气温柔：“盼盼，记得叔叔昨天跟你说的话吗？”<br>
+小小的孩子不能理解妈妈为何去世，昨天哭得几乎背过气去，她问席川：“叔叔，是盼盼不乖吗？所以妈妈走了再也不回来了吗？”席川也是这样认认真真跟她说：“不是的，盼盼是世界上最乖的孩子，所以老天送给盼盼四个哥哥。”盼盼想起来这句话，抬头去看正在商量具体事宜的四个哥哥，郑重其事地点点头：“我记住了，席川叔叔。”<br>
+然后的然后，他们五个人，就机缘巧合，决定搬进了一栋房子里。</p>
+
+            </div>
+            
+              <div class="reward-btn">
+                <div class="reward-btn-text">赞赏</div>
+              </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      小阿离离离离
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://aaaliaaa.github.io/post/pan-pan-1/" title="盼盼（1）">https://aaaliaaa.github.io/post/pan-pan-1/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://aaaliaaa.github.io/tag/LONG/"># 长篇</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/ueVHOYRkn/"># 盼盼</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/MF/"># MF</a>
+    
+      <a href="https://aaaliaaa.github.io/tag/MM/"># MM</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="一个总结" href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">一个总结</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="一个总结" href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="盼盼目录页" href="https://aaaliaaa.github.io/post/pan-pan-mu-lu/">盼盼目录页</a>
+        <a class="nav-mobile-next" title="盼盼目录页" href="https://aaaliaaa.github.io/post/pan-pan-mu-lu/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -689,6 +681,235 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+            <img id="zfb" class="reward-img" src="\media\images\custom-zfbImg.jpg" alt="赞赏码">
+          
+          
+            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
+          
+        </div>
+      </div>
+      <p class="reward-word">量力而行哦，超过18找我要文档</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      <div id="zfbBtn" class="pay-text">
+        支付宝
+      </div>
+      
+      
+      <div id="wxBtn" class="pay-text">
+        微信支付
+      </div>
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -2942,7 +3163,6 @@ p.s.的p.s. 如果这是一篇同人，大概ooc得连亲妈都不认得了（�
       speed: 200
     });
   </script>
-
 
 
 
