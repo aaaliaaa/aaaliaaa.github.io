@@ -2120,20 +2120,19 @@ body {
     .next-md-body a:hover, .friends-box a:hover {
       color: #222;
       border-bottom-color: #222;
-    }
-    .nav-toggle .line {
-      background-color:  !important;
+    }.nav-toggle .line {
+      background-color: #343a40 !important;
     }
       .nav-item a {
         color:  #555;
       }.nav-item a:hover {
         color: #222;
       }.nav-item-active {
-      background: #f9f9f9fe;
+      background: #495057fe;
     }
 
     .nav-item:hover {
-      background: #f9f9f9fe;
+      background: #495057fe;
       color: rgba(0, 0, 0, 0.98);
     }.site-author-image {
       border-radius: 50%;
@@ -2145,11 +2144,11 @@ body {
       transition-duration: 59s;
       transition-timing-function: cubic-bezier(.34,0,.84,1);
     }.markdownIt-TOC a {
-      color: #eee;
-      border-bottom-color: #eee;
+      color: #495057;
+      border-bottom-color: #495057;
     }.markdownIt-TOC a:hover {
-      color: #fff;
-      border-bottom-color: #fff;
+      color: #495057;
+      border-bottom-color: #495057;
     }.active-current > a {
       color: #fc6423 !important;
       border-bottom-color: #fc6423 !important;
@@ -2168,7 +2167,9 @@ body {
     .active-hidden > a {
       color: #fc6423;
       border-bottom-color: #fc6423;
-    }.bg-color {
+    }.reward-btn-text {
+        background-color: #c92a2afe !important;
+      }.bg-color {
       background-color: #f8f9fafe;
     }
     .site-meta {
@@ -2181,10 +2182,10 @@ body {
   
     }
     .main-title, .brand {
-      color: #f8f9fa !important;
+      color: #495057 !important;
     }
     .mist .site-title i {
-      background: #f8f9fafe;
+      background: #495057fe;
     }.box-shadow-wrapper {
       box-shadow: none !important;
     }body {
