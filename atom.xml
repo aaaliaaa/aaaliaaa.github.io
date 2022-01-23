@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://aaaliaaa.github.io</id>
     <title>阿离的杂货堆</title>
-    <updated>2022-01-23T10:53:19.169Z</updated>
+    <updated>2022-01-23T11:09:10.623Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://aaaliaaa.github.io"/>
     <link rel="self" href="https://aaaliaaa.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://aaaliaaa.github.io/post/yi-ge-zong-jie/</id>
         <link href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">
         </link>
-        <updated>2022-01-14T11:43:15.000Z</updated>
+        <updated>2022-01-13T22:43:15.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#%E9%95%BF%E7%AF%87"><strong>长篇</strong></a></li>
 <li><a href="#%E4%B8%AD%E7%9F%AD%E7%AF%87"><strong>中短篇</strong></a>
@@ -63,7 +63,7 @@
 <h2 id="同人文">同人文：</h2>
 <ol start="19">
 <li>【网王同人】网球不是用来制造仇恨的工具</li>
-<li>续《漫无止境的八月》番外三：（一只小雨莉）老师的番外续写</li>
+<li><a href="https://aaaliaaa.github.io/post/xu-lesslessman-wu-zhi-jing-de-ba-yue-greatergreater-fan-wai-san/">续《漫无止境的八月》番外三：（一只小雨莉）老师的番外续写</a></li>
 </ol>
 <h2 id="一些圈外文">一些圈外文：</h2>
 <ol start="21">
@@ -78,13 +78,12 @@
 <h1 id="乱七八糟脑洞加随笔"><strong>乱七八糟脑洞加随笔</strong></h1>
 <ol>
 <li><a href="https://aaaliaaa.github.io/post/nao-dong-wen-xue-jiao-shou-min-gan-xiao-shao-nian/">【MM】文学教授+敏感小少年</a></li>
-<li>【MM】游戏小主播梗</li>
-<li>【MM】清冷小朋友吃醋梗（算是人偶世界观的）</li>
-<li>【MM】古早直系学长梗</li>
-<li>【FF】一个FF的梗</li>
-<li>【都可】离家出走梗</li>
+<li><a href="https://aaaliaaa.github.io/post/nao-dong-you-xi-xiao-zhu-bo-geng/">【MM】游戏小主播梗</a></li>
+<li><a href="https://aaaliaaa.github.io/post/nao-dong-qing-leng-xiao-peng-you-chi-cu-geng-suan-shi-ren-ou-shi-jie-guan-de/">【MM】清冷小朋友吃醋梗（算是人偶世界观的）</a></li>
+<li><a href="https://aaaliaaa.github.io/post/nao-dong-gu-zao-zhi-xi-xue-chang-geng/">【MM】古早直系学长梗</a></li>
+<li><a href="https://aaaliaaa.github.io/post/nao-dong-yi-ge-ff-de-geng/">【FF】一个FF的梗</a></li>
+<li><a href="https://aaaliaaa.github.io/post/chi-jia-chu-zou-geng/">【都可】离家出走梗</a></li>
 <li><a href="https://aaaliaaa.github.io/post/que-ai-xiao-pian-duan/">【都可】缺爱小片段</a></li>
-<li>【盘点向】影视剧里贼圈的兄弟们</li>
 <li>【随笔】	一个实践repo</li>
 <li><a href="https://aaaliaaa.github.io/post/sp-zuo-zhe-wen-juan/">【随笔】圈内作者问卷</a></li>
 <li>【随笔】文手二十问</li>
