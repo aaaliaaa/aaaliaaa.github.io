@@ -2049,7 +2049,7 @@ p > code {
   }
 }
 body {
-      background-color: #eee;
+      background-color: #343a40;
     }.header {
         width: 960px;
         margin: 0 auto;
@@ -2060,14 +2060,18 @@ body {
         margin: 0 auto;
       }
     @font-face {
-      font-family: '中华民国';
-      src: url('/media/fonts/中华民国.ttf');
+      font-family: '悟空大字库';
+      src: url('/media/fonts/悟空大字库.ttf');
     }
     * {
-        font-family: '中华民国';
+        font-family: '悟空大字库';
     }
     .katex-block *{
       font-family: 'KaTeX_Main';
+    }
+    
+    .post-body {
+      font-size: 16px !important
     }
     body {
       color: #555;
@@ -2165,22 +2169,22 @@ body {
       color: #fc6423;
       border-bottom-color: #fc6423;
     }.bg-color {
-      background-color: #fffffffe;
+      background-color: #f8f9fafe;
     }
     .site-meta {
-      background: #000 !important;
+      background: #adb5bd !important;
     }
     .head-top-line {
-      background: #000;
+      background: #adb5bd;
     }
     .brand {
   
     }
     .main-title, .brand {
-      color: #FFF !important;
+      color: #f8f9fa !important;
     }
     .mist .site-title i {
-      background: #FFFFFFfe;
+      background: #f8f9fafe;
     }.box-shadow-wrapper {
       box-shadow: none !important;
     }body {
