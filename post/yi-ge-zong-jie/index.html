@@ -9,7 +9,7 @@
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
 <title>一个总结 | 阿离的杂货堆</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1642920292626">
+<link rel="shortcut icon" href="/favicon.ico?v=1642921305838">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -193,7 +193,8 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -223,6 +224,200 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li><a href="#%E9%95%BF%E7%AF%87"><strong>长篇：</strong></a></li>
+<li><a href="#%E4%B8%AD%E7%9F%AD%E7%AF%87"><strong>中短篇：</strong></a>
+<ul>
+<li><a href="#%E6%9D%82">杂：</a></li>
+<li><a href="#%E5%A8%B1%E4%B9%90%E5%9C%88%E7%9B%B8%E5%85%B3">娱乐圈相关：</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E5%9C%88%E5%A4%96%E6%96%87">一些圈外文：</a></li>
+<li><a href="#%E5%90%8C%E4%BA%BA%E6%96%87">同人文：</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F%E8%84%91%E6%B4%9E%E5%8A%A0%E9%9A%8F%E7%AC%94"><strong>乱七八糟脑洞加随笔：</strong></a></li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -323,7 +518,7 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2022-01-19 03:43:15">2022-01-19</span>
+      <span class="publish-time" data-t="2022-01-18 14:43:15">2022-01-18</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -350,7 +545,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >439<span class="pc-show language" data-lan="words"
+        >418<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -360,16 +555,14 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>这个离谱的软件不能加链接，让我研究一下可能性</p>
-<p><br>
-<strong>长篇：</strong></p>
+              <h1 id="长篇"><strong>长篇：</strong></h1>
 <ol>
 <li>【MF+MM】盼盼</li>
 <li>【MM】警察是份随便能捡到孩子的职业吗</li>
 <li>【MM】客栈·无颜卷</li>
 </ol>
-<p><strong>中短篇：</strong><br>
-杂：</p>
+<h1 id="中短篇"><strong>中短篇：</strong></h1>
+<h2 id="杂">杂：</h2>
 <ol>
 <li>【MF+MM】错误的吃醋方式</li>
 <li>【MM】至今没有名字的菜菜生贺</li>
@@ -381,19 +574,25 @@
 <li>【MM】念生</li>
 <li>【MM】你就是欺负我喜欢你</li>
 <li>【MM】出人意料</li>
-<li>【MM】凤阁龙楼连霄汉</li>
+<li><a href="https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/">【MM】凤阁龙楼连霄汉</a></li>
 <li>【FM】喜欢你的这件事</li>
 <li>【FM】其叶蓁蓁</li>
-<li>【FF】明天之后<br>
-娱乐圈相关：</li>
+<li>【FF】明天之后</li>
+</ol>
+<h2 id="娱乐圈相关">娱乐圈相关：</h2>
+<ol start="15">
 <li>【MM】论兄控的自我修养+世界那么大（坑了）</li>
 <li>【MM】还不能谈个恋爱了吗</li>
 <li>【MF】关于追星的那些事儿</li>
-<li>【MM】惹金主生气了怎么办？在线等，挺急的。<br>
-一些圈外文：</li>
+<li>【MM】惹金主生气了怎么办？在线等，挺急的。</li>
+</ol>
+<h2 id="一些圈外文">一些圈外文：</h2>
+<ol start="19">
 <li>【童话】得过且过的勇者和英勇善战的公主</li>
-<li>【严肃文学】谁杀死了知更鸟<br>
-同人文：</li>
+<li>【严肃文学】谁杀死了知更鸟</li>
+</ol>
+<h2 id="同人文">同人文：</h2>
+<ol start="21">
 <li>【网王同人】网球不是用来制造仇恨的工具</li>
 <li>【云次方】情人节快乐！</li>
 <li>【云次方】妻子AU论坛体</li>
@@ -401,7 +600,7 @@
 <li>【以家人之名】【凌秋】七夕了，你们店店长出售吗</li>
 <li>【以家人之名】【贺子秋个人向】你不是没人要的小孩</li>
 </ol>
-<p><strong>乱七八糟脑洞加随笔：</strong></p>
+<h1 id="乱七八糟脑洞加随笔"><strong>乱七八糟脑洞加随笔：</strong></h1>
 <ol>
 <li>【MM】文学教授+敏感小少年</li>
 <li>【MM】游戏小主播梗</li>
@@ -941,16 +1140,14 @@
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/"" data-c="
-          &lt;p&gt;这个离谱的软件不能加链接，让我研究一下可能性&lt;/p&gt;
-&lt;p&gt;&lt;br&gt;
-&lt;strong&gt;长篇：&lt;/strong&gt;&lt;/p&gt;
+          &lt;h1 id=&#34;长篇&#34;&gt;&lt;strong&gt;长篇：&lt;/strong&gt;&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;【MF+MM】盼盼&lt;/li&gt;
 &lt;li&gt;【MM】警察是份随便能捡到孩子的职业吗&lt;/li&gt;
 &lt;li&gt;【MM】客栈·无颜卷&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;中短篇：&lt;/strong&gt;&lt;br&gt;
-杂：&lt;/p&gt;
+&lt;h1 id=&#34;中短篇&#34;&gt;&lt;strong&gt;中短篇：&lt;/strong&gt;&lt;/h1&gt;
+&lt;h2 id=&#34;杂&#34;&gt;杂：&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;【MF+MM】错误的吃醋方式&lt;/li&gt;
 &lt;li&gt;【MM】至今没有名字的菜菜生贺&lt;/li&gt;
@@ -962,19 +1159,25 @@
 &lt;li&gt;【MM】念生&lt;/li&gt;
 &lt;li&gt;【MM】你就是欺负我喜欢你&lt;/li&gt;
 &lt;li&gt;【MM】出人意料&lt;/li&gt;
-&lt;li&gt;【MM】凤阁龙楼连霄汉&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/&#34;&gt;【MM】凤阁龙楼连霄汉&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;【FM】喜欢你的这件事&lt;/li&gt;
 &lt;li&gt;【FM】其叶蓁蓁&lt;/li&gt;
-&lt;li&gt;【FF】明天之后&lt;br&gt;
-娱乐圈相关：&lt;/li&gt;
+&lt;li&gt;【FF】明天之后&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;娱乐圈相关&#34;&gt;娱乐圈相关：&lt;/h2&gt;
+&lt;ol start=&#34;15&#34;&gt;
 &lt;li&gt;【MM】论兄控的自我修养+世界那么大（坑了）&lt;/li&gt;
 &lt;li&gt;【MM】还不能谈个恋爱了吗&lt;/li&gt;
 &lt;li&gt;【MF】关于追星的那些事儿&lt;/li&gt;
-&lt;li&gt;【MM】惹金主生气了怎么办？在线等，挺急的。&lt;br&gt;
-一些圈外文：&lt;/li&gt;
+&lt;li&gt;【MM】惹金主生气了怎么办？在线等，挺急的。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;一些圈外文&#34;&gt;一些圈外文：&lt;/h2&gt;
+&lt;ol start=&#34;19&#34;&gt;
 &lt;li&gt;【童话】得过且过的勇者和英勇善战的公主&lt;/li&gt;
-&lt;li&gt;【严肃文学】谁杀死了知更鸟&lt;br&gt;
-同人文：&lt;/li&gt;
+&lt;li&gt;【严肃文学】谁杀死了知更鸟&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;同人文&#34;&gt;同人文：&lt;/h2&gt;
+&lt;ol start=&#34;21&#34;&gt;
 &lt;li&gt;【网王同人】网球不是用来制造仇恨的工具&lt;/li&gt;
 &lt;li&gt;【云次方】情人节快乐！&lt;/li&gt;
 &lt;li&gt;【云次方】妻子AU论坛体&lt;/li&gt;
@@ -982,7 +1185,7 @@
 &lt;li&gt;【以家人之名】【凌秋】七夕了，你们店店长出售吗&lt;/li&gt;
 &lt;li&gt;【以家人之名】【贺子秋个人向】你不是没人要的小孩&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;乱七八糟脑洞加随笔：&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;乱七八糟脑洞加随笔&#34;&gt;&lt;strong&gt;乱七八糟脑洞加随笔：&lt;/strong&gt;&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;【MM】文学教授+敏感小少年&lt;/li&gt;
 &lt;li&gt;【MM】游戏小主播梗&lt;/li&gt;

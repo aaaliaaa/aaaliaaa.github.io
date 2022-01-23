@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://aaaliaaa.github.io</id>
     <title>阿离的杂货堆</title>
-    <updated>2022-01-23T06:44:55.652Z</updated>
+    <updated>2022-01-23T07:01:57.161Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://aaaliaaa.github.io"/>
     <link rel="self" href="https://aaaliaaa.github.io/atom.xml"/>
@@ -15,17 +15,15 @@
         <id>https://aaaliaaa.github.io/post/yi-ge-zong-jie/</id>
         <link href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">
         </link>
-        <updated>2022-01-19T08:43:15.000Z</updated>
-        <content type="html"><![CDATA[<p>这个离谱的软件不能加链接，让我研究一下可能性</p>
-<p><br>
-<strong>长篇：</strong></p>
+        <updated>2022-01-18T19:43:15.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="长篇"><strong>长篇：</strong></h1>
 <ol>
 <li>【MF+MM】盼盼</li>
 <li>【MM】警察是份随便能捡到孩子的职业吗</li>
 <li>【MM】客栈·无颜卷</li>
 </ol>
-<p><strong>中短篇：</strong><br>
-杂：</p>
+<h1 id="中短篇"><strong>中短篇：</strong></h1>
+<h2 id="杂">杂：</h2>
 <ol>
 <li>【MF+MM】错误的吃醋方式</li>
 <li>【MM】至今没有名字的菜菜生贺</li>
@@ -37,19 +35,25 @@
 <li>【MM】念生</li>
 <li>【MM】你就是欺负我喜欢你</li>
 <li>【MM】出人意料</li>
-<li>【MM】凤阁龙楼连霄汉</li>
+<li><a href="https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/">【MM】凤阁龙楼连霄汉</a></li>
 <li>【FM】喜欢你的这件事</li>
 <li>【FM】其叶蓁蓁</li>
-<li>【FF】明天之后<br>
-娱乐圈相关：</li>
+<li>【FF】明天之后</li>
+</ol>
+<h2 id="娱乐圈相关">娱乐圈相关：</h2>
+<ol start="15">
 <li>【MM】论兄控的自我修养+世界那么大（坑了）</li>
 <li>【MM】还不能谈个恋爱了吗</li>
 <li>【MF】关于追星的那些事儿</li>
-<li>【MM】惹金主生气了怎么办？在线等，挺急的。<br>
-一些圈外文：</li>
+<li>【MM】惹金主生气了怎么办？在线等，挺急的。</li>
+</ol>
+<h2 id="一些圈外文">一些圈外文：</h2>
+<ol start="19">
 <li>【童话】得过且过的勇者和英勇善战的公主</li>
-<li>【严肃文学】谁杀死了知更鸟<br>
-同人文：</li>
+<li>【严肃文学】谁杀死了知更鸟</li>
+</ol>
+<h2 id="同人文">同人文：</h2>
+<ol start="21">
 <li>【网王同人】网球不是用来制造仇恨的工具</li>
 <li>【云次方】情人节快乐！</li>
 <li>【云次方】妻子AU论坛体</li>
@@ -57,7 +61,7 @@
 <li>【以家人之名】【凌秋】七夕了，你们店店长出售吗</li>
 <li>【以家人之名】【贺子秋个人向】你不是没人要的小孩</li>
 </ol>
-<p><strong>乱七八糟脑洞加随笔：</strong></p>
+<h1 id="乱七八糟脑洞加随笔"><strong>乱七八糟脑洞加随笔：</strong></h1>
 <ol>
 <li>【MM】文学教授+敏感小少年</li>
 <li>【MM】游戏小主播梗</li>
