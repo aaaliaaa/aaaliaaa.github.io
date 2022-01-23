@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>其叶蓁蓁 | 阿离的杂货堆</title>
+<title>阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642923943861">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,6 @@
 
 
 
-  <meta name="description" content="其叶蓁蓁" />
-  <meta name="keywords" content="FM,短篇" />
 </head>
 
 <body>
@@ -175,25 +173,10 @@
   <div class="main-continer">
     
     <div
-      class="section-layout gemini ">
+      class="section-layout  gemini">
       <div class="section-layout-wrapper">
-        
-
-<div class="sidebar">
-  
-    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
-      
-        <div class="post-list-sidebar">
-          <div class="sidebar-title">
-            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
-            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
-          </div>
-        </div>
-      
-      <div class="sidebar-body gemini" id="sidebar_body">
-        
-          
-            
+        <div id="sidebarMeta" class="sidebar">
+    
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -223,254 +206,118 @@
 
 
 </div>
-          
-        
-      </div>
-    </div>
-  
 </div>
 <script>
-  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
-  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
-  const SLIDE_UP_IN = 'slide-up-in';
-
-  let sidebar = document.querySelector('#sidebar'),
-  tocSideBar = document.querySelector('#tocSideBar'),
-  metaSideBar = document.querySelector('#metaSideBar'),
-  postToc = document.querySelector('#post_toc'),
-  postSiteMeta = document.querySelector('#post_side_meta'),
-  sidebarTitle = document.querySelector('.sidebar-title'),
-  sidebarBody = document.querySelector('#sidebar_body');
-
-  tocSideBar && tocSideBar.addEventListener('click', (e) => {
-    toggleSidebar(e);
-  });
-
-  metaSideBar && metaSideBar.addEventListener('click', (e) => {
-    toggleSidebar(e);
-  });
-
-  function toggleSidebar(e) {
-    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
-    if (currentTitle == e.srcElement) {
-      return ;
-    }
-    let current, showElement, hideElement;
-    if (e.srcElement == metaSideBar) {
-      showElement = postSiteMeta;
-      hideElement = postToc;
-    } else if (e.srcElement == tocSideBar){
-      showElement = postToc;
-      hideElement = postSiteMeta;
-    }
-    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
-    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
-
-    jQuery.Velocity(hideElement, 'stop');
-    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
-      display: 'none',
-      duration: 200,
-      complete: function () {
-        jQuery.Velocity(showElement, 'transition.slideDownIn', {
-          duration: 200
-        });
+  let sidebarMeta = document.querySelector('#sidebarMeta');
+  let scheme = 'gemini';
+  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
+  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
+    document.addEventListener('scroll', function(e) {
+      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
+        sidebarWrapper.classList.add('home-sidebar-fixed')
+      } else {
+        sidebarWrapper.classList.remove('home-sidebar-fixed')
       }
-    })
-    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
-    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+    });
   }
-
-  postToc && postToc.addEventListener('transitionend', function() {
-    this.classList.remove(SLIDE_UP_IN);
-  });
-
-  if (sidebarBody) {
-    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
-      let hasFix = false;
-      let scrollEl = document.querySelector('.main-continer');
-      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
-      window.addEventListener('scroll', function(e) {
-        if (document.scrollingElement.scrollTop >= limitTop) {
-          if (!hasFix) {
-            sidebar.classList.add('sidebar-fixed');
-            hasFix = true;
-          }
-        } else {
-          if (hasFix) {
-            sidebar.classList.remove('sidebar-fixed');
-            hasFix = false;
-          }
-        }
-      });
-    }
-  }
-  
-</script>
-        <div class="section-box box-shadow-wrapper">
-          <div class="section bg-color post post-page">
-            <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/"> 其叶蓁蓁 </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2017-07-13 15:22:57">2017-07-13</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://aaaliaaa.github.io/tag/FM/"> <span>FM</span> </a>、   
-      <a href="https://aaaliaaa.github.io/tag/SHORT/">
-        <span>短篇</span>
+  </script>
+        <div class="section-box tag-line box-shadow-wrapper">
+          <section class="section tags-section posts-expand bg-color">
+            <div class="padding-wrapper">
+  <div class="tag-timeline-box">
+    <div class="tag-timeline-wrapper">
+      <div class="tag-timeline-title">
+        <h2>
+          圈外
+          <small class="language" data-lan="tag">标签</small>
+        </h2>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <a href="https://aaaliaaa.github.io/post/yun-ci-fang-qing-ren-jie-kuai-le/">
+        <div class="motion-warpper">
+          <div class="tag-post-node">
+            <h1>
+              02-14
+              <small>【云次方】情人节快乐！</small>
+            </h1>
+          </div>
+        </div>
       </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span
-        >20<span class="language" data-lan="minute"
-          >分钟</span
-        ></span
-      >
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span
-        >5988<span class="pc-show language" data-lan="words"
-          >字数</span
-        ></span
-      >
-    </span>
-    
-  </div>
-</section>
-
-            <div class="post-body next-md-body" id="post_body">
-              <p>下午三点二十四，叶蓁趴在桌上的脑袋有了一丝挪动，懒散着眼神瞥了一眼手腕上的表，嘴角勾起一抹意味深长的笑，活动了一下趴了一下午酸麻的手臂和身子，向四周看了看。<br>
-这节是物理课，对文科班的他们来说实在是鸡肋到不行，任由老师在讲台上唾沫横飞，座位上的大家不是睡觉就是自顾自做着其他事情。<br>
-叶蓁扭头朝隔壁桌使了个眼色，隔壁桌的唐戈看似正假装在抽屉里找东西，实则拿着手机开黑开得正欢，感受到邻座瞟来的目光，无比有默契地侧头，两术目光对在一起，擦出火花，瞬间明了了一切含义。<br>
-叶蓁挤眉弄眼：“走吗？时机正好。”<br>
-唐戈指指手机：“等我这盘完。”<br>
-叶蓁皱眉：“多久？”<br>
-唐戈耸耸肩，比了个五：“五分钟，送他们下地狱。”<br>
-叶蓁心满意足，比ok：“行，快点的干活。”<br>
-四分三十七秒，唐戈麻溜地将手机屏一关，咧嘴朝叶蓁笑笑，悄悄在桌子底下用中指食指比了个“走吧”，叶蓁竖大拇指，两人默契地一起弯下腰用桌子做了掩护，猫着腰几乎手脚并用地往门口挪去。<br>
-“你们两个！干什么去！”只可惜，天算地算，比不过物理老师灼灼目光，两人刚挪到门边就被喝住。<br>
-两人身形一顿，对视一眼，叶蓁立即弯下腰捂住肚子一脸极其痛苦模样，唐戈配合得搀住他，叶蓁小脸皱成一块：“老…师，我肚子疼的厉害，唐，唐戈陪我去医务室。”<br>
-叶蓁生的俊秀，长了一张人畜无害的脸。若是蓄上长发，十个有九个人会将他错认为女孩儿，再加上这表情，看上去无比楚楚可怜。唐戈默默在他手臂上重重拧了一下，好让他的泪眼汪汪看起来更加真实几番，叶蓁差点一个粗口骂出来，咬牙切齿忍住了眼巴巴看着老师。<br>
-老师眉头一抽：“那好好说不行吗？要这样偷偷摸摸出去？”唐戈笑眯眯马上接到：“我们这不是不想打断老师您精彩绝伦的讲解吗？”说得慷慨激昂可信度非常高！老师当即柔了眼神，慈祥得像街对面天天坐在门口晒太阳的老奶奶：“这样啊，去吧去吧，别耽误了病。”<br>
-两人脸上表情不改，鞠躬离开了教室里同学老师视线，唐戈热情伸手想要击掌，被叶蓁一肘子捅在肚子上：“鸽子我找你惹你，你掐那么狠报仇啊！”<br>
-唐戈痛苦单膝跪地尔康手：“我这不是为了让你演技更真实一些吗，还当别人看不出你那眼泪是挤了多久打了多少哈欠才出来的。”叶蓁撇嘴，嫌弃踢踢他：“别装了，快起来，走了。”<br>
-两人正大光明晃到校门口......边的墙边，两人明显对这样的事情熟烂于心，拍拍手踮起脚尖够了墙头双脚一用力就翻上了墙头坐着，轻盈跳下墙对望一眼，唐戈露出小狐狸般的笑：“走吧，我踩好点了的。”<br>
-今天，是个值得纪念的日子！因为唐戈，终于找到了愿意收留他们两个的正规网吧。高二的孩子，十六七岁的年纪，一般网吧是不让进的，两个人还算有点分寸，黑网吧是绝对不进的，唐戈经过多日视察多方联络（大误），终于在自己众亲戚中，找到了一个遥远的远方亲戚在附近不远处开网吧，规模挺大还算安全，所谓的踩好点了，就是和那位亲戚对好了暗号，两人过去刷脸就行。<br>
-叶蓁跟着唐戈心满意足坐在VIP厅看着面前一字排开的三个大大显示屏，手指飞快熟悉了下键盘，之后就熟门熟路点了桌面上的LOL图标，挽起袖子小舌头顺着小虎牙舔了一圈，和唐戈对视了一眼，便开始了战斗。<br>
-正战得高兴，放在一旁的手机突然愉快地叫了起来，锲而不舍地响了好几个回合，带着振动动静大得不可忽视，叶蓁眉头抽着犯了第三个错后，忍无可忍将耳机拽下来，一只手立在面前晃了晃跟唐戈道了声抱歉一边接了电话，语气极冲：“喂！”<br>
-电话那头的人听到他的语气沉默了一秒后道：“蓁儿？”叶蓁也沉默了一秒，脑子里飞快划过：这声音有点耳熟似乎是我家姐姐的声音哦不对这是上课时间我姐怎么可能可我打电话呢可是这个声音就是啊，然后将手机从耳边拿下来看了看，叶夭夭三个大字明晃晃挂在手机屏幕上，证明了叶蓁耳朵并没有出问题。<br>
-深吸了口气重新将手机放回耳边，换上谄媚极了的声音：“哦我亲爱的姐姐啊，您工作一天一定累了，不知什么事烦劳到您，尽管说！小弟包了。”<br>
-叶夭夭语气平淡早就习惯极了自家弟弟的不着调：“哪儿呢？”叶蓁犹豫了一下，小舌头不自觉地舔了一圈上排整齐的牙：“外面呢。”叶夭夭那儿传来同样快速敲击键盘的声音，语气听上去并没什么异常：“知道你在外面，不上课去哪儿了？”叶蓁小小声道：“网吧呢。”叶夭夭用力按下空格键后沉默了三秒，突如其来的沉默让叶蓁有些不安地喊了声姐，听到他唤她的声音才接了下去：“现在回学校，你老师打电话到我这儿来了，在那儿等我。”<br>
-叶蓁哐地一下把手机拍到了脑门上，望天流泪状，刚结束完一场战斗正伸着懒腰的唐戈正好往这里一瞥，吓了一跳，嫌弃道：“小叶子你干什么中邪了啊？”叶蓁一巴掌糊过去：“中什么邪，我姐啦。”唐戈满不在乎靠到了舒服的老板椅上：“然后呢？”<br>
-这事儿实在怪不得唐戈，主要是叶家姐姐没原则宠弟弟的印象太深入人心，上至校长下至他们班和叶蓁最不熟的同学，没有一个不知道叶家姐姐叶夭夭的光荣事迹，想当年叶家小弟情窦初开，疯狂地追求了一段时间的段花，徐希。一般家长做到默认这一步已经是很了不得了，叶夭夭非但没有阻止甚至提供了技术指导及经济支持，虽然最后结果以徐家家长由于工作要搬到外地而不了了之，两个小孩儿现在依然保持着还算密切的联系。<br>
-实验中学的校长怕是现在都不愿回想起当日和叶夭夭见面的场景。叶蓁追求徐希的过程轰轰烈烈无人不知无人不晓，作为校长，自然要将这样“犯罪”的源头扼杀在摇篮中，于是叶家姐姐第一次由于要被批评而被请到了学校。叶蓁虽然看起来吊儿郎当其实成绩确实一等一的好，叶夭夭在学校开家长会的时候向来只有被表扬的份儿。<br>
-校长以为，自己会看到一个悔意慢慢进了办公室不断道歉诉说自己教导不周的家长，却没想到，等到了一个看起来理直气壮极了的女魔王。开头叶夭夭还十分客气，校长语重心长从头到尾跟她讲述了早恋的十大坏处，分门别类有理有据让人无比信服。但事实证明，叶夭夭B大中文系出身的光环并不是白带的。十分有耐心地听校长讲完，然后喝了口水润了润喉，慢条斯理开了口，从头到尾将校长十个论点反驳回去，不带一个脏字没有一个停顿，甚至论点的顺序都没有改变，将校长说得一愣一愣一句话都说不出，最后只差鞠躬将她送出门口，从此，叶蓁的追求之旅再也没有遇到任何老师的阻止。<br>
-叶夭夭一战成名，成为全校学生敬仰，全校老师畏惧的对象。<br>
-因此，此时唐戈一点没把叶蓁的反应放在心上，不过逃个课，从小和叶蓁一起长大的唐戈甚至都能想象出叶夭夭将叶蓁拉到面前和颜悦色说：“蓁儿啊，逃课没事儿，要不要姐姐给你推荐个地儿去？”的样子。<br>
-“不不不，我觉得她听起来有点生气。”叶蓁蹲在地上画圈圈，思考了一阵子后一下子跳起来，拉着唐戈就往外走：“我们今天先回去吧。”<br>
-唐戈一点拒绝的话都还没来得及说出口就被生生拖走了，眼巴巴看着身后还亮着的屏幕，无比委屈：“可是我们才没呆多久。”叶蓁头也不回：“周末来我家打通宵，我请你吃饭。”<br>
-两人回到学校直接就去了办公室，果不其然看到怒气冲冲的物理老师在班主任面前数落他们两个的不是，看到他们更是气不打一处来劈头盖脸就骂下来。班主任靳彧老师教历史，浑身的书香气儿，往日里总是笑眯眯对所有人，所以此时有些无奈地看着物理老师把两人从头到脚说了个通，然后将两个人拉到身边，对着物理老师微鞠了一躬：“吴老师大概情况我知道了，您看我这也叫了二人的家长过来了，这事儿我来处理吧？还是等下家长来了您再过来？”<br>
-吴老师正骂完一段，气喘细细加口干舌燥地正喝了一大口水，听到她这么说，只得不耐烦挥挥手：“行吧行吧，我等下过来，靳老师你这次一定不能纵容他们了，都高二了，还整天想着玩这玩那......”边说着边回了自己的办公室。<br>
-靳彧和两个小孩儿对视了三秒，自己先憋不住无奈地笑出声，一人一只手揉乱两个人的发：“有本事逃课，倒是有本事不被抓住啊。”唐戈和叶蓁对视一眼，看出靳彧一点生气的迹象都没有，一齐咧开了嘴露出一排小白牙，左右同时跟靳彧揉了肩。“老师辛苦啦。”“老师我们给你捶背！”看得隔壁老师噗嗤一声笑出声：“小靳啊你们班这两个，真的是活宝。”<br>
-靳彧也笑：“可不是，说你们什么好？”话音刚落办公室门就被打开了，正是叶家姐姐，叶夭夭。<br>
-叶蓁手上的动作顿了一下，举小手招财猫状：“姐姐好，姐姐吉祥，一天不见，分外想念。”叶夭夭几步走到他面前弓起食指在他额头弹了一下：“你就贫吧。”然后有些抱歉地看向靳彧：“靳老师不好意思，又给您添麻烦了。”然后指指唐戈，“这小子的家长都不在，我一道听了回去就好。”<br>
-唐家和叶家父母认得的早，学生时代就一路一起上来，四人都是特别好的朋友，所以买房子时也就买在了一起，唐家哥哥叶家姐姐年龄相仿，唐戈叶蓁年龄一样，几乎都是穿着纸尿裤的时候玩大的，叶家父母在叶蓁很小时候便出了意外去世了，只留下当时正要上大学的叶夭夭和还在襁褓里的一岁大的叶蓁，唐家父母毅然决然将叶蓁接到了家里，才让叶夭夭一边上完了大学，一边扶稳了父母留下的公司，还能同时看到弟弟很好地成长起来。现在如果唐戈学校有什么事儿家里家长不能到场，叶夭夭也随叫随到，跟亲姐姐没什么本质区别了。<br>
-隔壁物理老师大概听到了动静，气势汹汹跑过来，就开口跟叶夭夭控诉：“叶蓁姐姐，这样下去真的不行了，我知道你们觉得是文科，物理不重要，但是你们知不知道，如果会考过不去......”老师念念叨叨说了大约几分钟终于停下来了。<br>
-叶夭夭一副听得极其认真的样子，看到物理老师停下之后顿了一下，转头问两个少年：“老师今天上课的内容，你们会了吗？”两个少年愣了一下，心里坏笑了起来，表面上却非常认真忙不迭地点头：“会了会了，早就自学过了。”到底是他们的姐姐啊，没有原则护着他们不论在谁面前都没有变。<br>
-果然，叶夭夭一脸疑惑看向物理老师：“吴老师，他们说他们都会了啊，为什么要听课？”物理老师瞠目结舌，一时不知道该说些什么好。叶夭夭慢条斯理继续道：“上课，就是为了学习新的陌生知识，如果已经掌握了，的确也就没有什么好学的了，用这些时间做些更有意义的事情也是他们自己的选择嘛，当然这不是说他们逃课的行为就正确了，我会好好说说他们的，让他们下次记得请好假。”<br>
-物理老师“你......我......”地支吾了半天，大概觉得这家长不可理喻，颤抖着手指指了几个人一番后气呼呼甩袖走了。<br>
-几个人目送着物理老师出去了，叶夭夭回过头对着靳彧耸了肩：“我说的不对吗？为什么吴老师那么生气？”<br>
-靳彧忍笑：“不，您说的对极了，两个孩子您是就带回去了？还是今天继续上完课？”叶夭夭要来课表看了下，接下来就两节校本课然后就晚自习了：“我先带他们回去吧，也没什么其他事情了。”<br>
-一路上两个小孩子神采飞扬和叶夭夭讲着今天学校发生的趣事儿，叶夭夭笑眯眯听着，时不时还点评几句，车慢慢驶进三人住的小区，稳稳停在了唐戈的家门口。唐戈和叶蓁同时噤了声，唐戈试探地问了句：“夭夭姐，我不跟你们回去吗？”刚刚分明说我家没家长。叶夭夭回头冲他笑：“没事儿，家里不还有阿姨吗？饿不着你的，今天我要和蓁儿谈谈，改天戈儿再来玩吧？”<br>
-叶蓁将头藏在叶夭夭椅背后冲唐戈疯狂摇头：是不是兄弟啊，是兄弟这时候怎么能见死不救！唐戈咽了口口水，不知道该听哪边的话，脑子里两个小人打了会架后毅然决然下了车，严肃道：“小叶子我明天再去找你玩啊你自己保重！”然后无比决然地一把关上车门，头也不回飞奔回家：开玩笑，得罪了小叶子他也就气个几天，得罪了夭夭姐，呵。<br>
-叶蓁紧紧握了拳头缩在椅子后气得牙痒痒，心里想好了下次见到唐戈时要用什么把式把他揍一顿，还没想好车就开进了自家车库。<br>
-叶夭夭动作麻利地下了车，顺便帮他将他这侧的车门拉开，勾了勾食指：“快出来吧。”叶蓁连忙狗腿地露出乖孩子的笑：“来啦姐姐~”<br>
-叶夭夭向来是个极其直奔主题的人，进了家门二话没说往沙发上一坐，左腿架到右腿上两只手叠在膝盖上，往沙发上一靠，一副懒散得连眼皮都不屑抬一下的样子：“说说？”<br>
-叶蓁双手背在身后不自然地扭在一起又松开，避重就轻道：“就......老师的课太无聊了，所以就跑出去了！”“怎么出去的？”叶蓁望天：“爬出去的。”叶夭夭手抬起来将掉下来的碎发别到耳后，抬了抬眼皮：“记不记得上次姐姐揍你是因为什么？”叶蓁视死如归：“爬，爬护栏。”“嗯，继续。”叶夭夭复又将手放回原位，眼睛瞟了他一眼。<br>
-叶蓁都快要哭出来了，姐啊你这是啥态度，要杀要剐随你但这种清清淡淡的态度是怎么回事？“然后，就去了网吧。”“怎么进去的？”叶夭夭眯眼，抓住重点。“鸽子他家亲戚的店......”叶蓁试探着道，一边悄悄观察叶夭夭的脸色。叶夭夭听到这里脸色微霁，然后站起身，弯下腰在茶几底下变法术般翻出一把长长的塑料尺子，是叶蓁前些天跑到客厅来边看电视边做作业时留下的。叶蓁悔青肠子，从没有一刻这么痛恨自己用完东西不归回原位的坏习惯。<br>
-叶夭夭倒是对工具离得这么近颇为满意，用尺子点点沙发椅背，眨眨眼睛示意叶蓁趴上去。叶蓁耍宝惯了却是不敢在这种时候有所造次，只得一步一厘米地挪过去，趴上去后可怜巴巴地转头看叶夭夭，充分发挥了漂亮皮相的最大功能，糯糯道：“姐，轻点啊~”<br>
-叶夭夭挑眉，这个弟弟从小被唐家人和自己捧在手心里长大，连虚小了他两三个月的唐戈从小都知道事事让着他，倒是养成了这样一副油嘴滑舌的模样，这样子简直是大人杀手，小时候每次闯了祸唐家妈妈气不过的时候看到他这幅样子就忍不住收了凶神恶煞的表情，反而安慰他道“蓁蓁不怕。”她经历了十几年的历练早就对他特意练过一样的可怜眼神免疫了，别人不知道这小天使的模样下是怎样的小恶魔样，她再清楚不过了。<br>
-七成力毫不留情地就甩下来第一下，贯穿两边臀部，成功激起叶蓁一声冲破天际的狼嚎。叶夭夭被喊得头疼，左手抬起来按了按太阳穴：“小声点，喉咙不要了？”右手一点不受影响连力道都没有变地继续抽下去。叶蓁嘴里叫得厉害，身子却一点都不敢动，往往是尺子带着凌冽的风甚至还没落到身上就能听到他“嗷呜”一声叫得响天动地。<br>
-叶夭夭自然知道自己下了多重的手，会让他足够疼，却不至于叫得这般惨烈，这声音里掺了多少水分两人都心知肚明。十五下过后，许是喊得累了，叶蓁的声音小了许多，顶多是在尺子真真切切落到身上时才小猫一样呜咽一声。<br>
-叶夭夭对这个状态相当满意，终于开了口：“姐姐说过了，如果你觉得这节课没有上的必要，没关系，你请个假，光明正大从门口出去，不管哪个老师打电话过来姐姐都能给你圆，不要爬墙。”叶蓁眼睛里包满了眼泪回头求情：“姐姐......”<br>
-叶夭夭眨了下眼，没理他，继续道：“网吧，不管如何，我不允许。”像是想起了什么一样脸色白了一下，叶蓁正研究怎么将眼泪挤到眼睫毛上看起来更加楚楚可怜一些，便没有错过叶夭夭转瞬即逝的神情，连表情都僵了一下。他不知道为什么叫姐姐这么排斥网吧，但让他家这样天不怕地不怕的姐姐都能变了脸色的原因，他不愿想，也不愿姐姐回忆起来，神情严肃了几分，连语气中的不正经都收了：“姐姐我错了，你别生气，我再不去了。”<br>
-叶夭夭闭了下眼睛将回忆收了，看着叶蓁多少带了些不安的神情，笑出声：“快趴好，别以为这么乖剩下的就不用打了。”叶蓁撇撇嘴，趴俯端正的同时想：果然刚刚的神情是用来骗人的吧叶家夭夭才不会露出这样的表情呢。<br>
-叶夭夭调整好了情绪，又是不停歇的十五下雨露均沾地照顾了臀的每个角落，叶蓁连准备好叫的力气都来不及就一次性打完了，随后疼痛才顺着臀上的每一寸皮肤爬进脑子，象征性地嚎了几嗓子，叶蓁就急不可待地从沙发上趴下来双手护着身后退后一步远离叶夭夭。<br>
-叶夭夭最喜欢叶蓁这幅装可怜的可爱模样，也不绷着脸上前将小家伙拉到身边伸手帮他揉揉身后的两团肉肉，男孩子本就皮实，她又没用上全力，过个把小时就该一点感觉都没有了，你看看这不是刚揍完就有力气跳起来跟自己耍滑了。语重心长地道：“蓁儿啊，姐姐啥时候限制过你们玩游戏，为什么偏要去网吧玩？家里的电脑没网吧的好吗？”<br>
-叶蓁严肃接：“没，家里的电脑跑起游戏来实在太慢了。”<br>
-叶夭夭：“......”好气啊真是恨不得将他按下去再揍一顿。<br>
-但是本着生了病的小孩最大，挨了揍的小孩最最大的原则，叶夭夭硬是忍住了手上的力度，咬牙切齿道：“换！跟戈儿问一下，他那亲戚家啥型号，姐姐明天就给你换，装个两台，满意了吗？”叶蓁在心里大大欢呼了一声，面上却嫌弃地耸了下鼻子：“凑合吧。”然后飞快闪开叶夭夭可以够得到的范围，大声喊着“姐姐我上楼做作业了！”就拎起书包往楼上跑，动作太快扯到身后又是夸张的一声大叫，然后小心翼翼回头看了叶夭夭一眼，咧嘴笑得无比狡猾。<br>
-叶夭夭哭笑不得，坐下来打电话联系电脑厂家，换换换，给他换，别到处乱跑了。抬头无意间看到挂在墙上的全家福，那是他们家唯一一张四个人的全家福，当时的叶蓁还抱在怀里，带着点自然卷的小毛翘在头上，对着镜头笑得无比灿烂，伸着小手像是要跟摄影师玩。<br>
-嘴角莫名地就勾起了一个温婉的弧度。桃之夭夭，其叶蓁蓁。蓁儿呀，你可知道，父亲母亲有多么多么地希望，看到你蓬勃茂盛，意气风发的样子。</p>
-<p>【END】</p>
-
-            </div>
-            
-              <div class="reward-btn">
-                <div class="reward-btn-text">赞赏</div>
-              </div>
-            
-            
-              <div class="post-footer">
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong class="language" data-lan="author">本文作者：</strong>
-      小阿离离离离
-    </li>
-    <li class="post-copyright-link">
-      <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/" title="其叶蓁蓁">https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong class="language" data-lan="copyright">版权声明： </strong>
-      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-  <div class="tags">
-    
-      <a href="https://aaaliaaa.github.io/tag/FM/"># FM</a>
-    
-      <a href="https://aaaliaaa.github.io/tag/SHORT/"># 短篇</a>
-    
-  </div>
-  <div class="nav">
-    <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="念生" href="https://aaaliaaa.github.io/post/nian-sheng/">念生</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="念生" href="https://aaaliaaa.github.io/post/nian-sheng/">上一篇</a>
       
-    </div>
-    <div class="nav-next">
       
-        <a class="nav-pc-next" title="那些年坑爹的高考作文题" href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/">那些年坑爹的高考作文题</a>
-        <a class="nav-mobile-next" title="那些年坑爹的高考作文题" href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/">下一篇</a>
-        <i class="fa fa-chevron-right"></i>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
     </div>
   </div>
 </div>
-            
-            
-  
-
-          </div>
+          </section>
         </div>
       </div>
     </div>
@@ -715,235 +562,6 @@
     parent.insertBefore(aelem, next);
   });
 </script>
-    <div class="reward-mask" style="display: none;">
-  <div class="reward-relative">
-    <span class="close" aria-hidden="true">x</span>
-    <div class="reward-body">
-      <h2>感谢您的支持，我会继续努力的!</h2>
-      <div class="reward-img-box">
-        <div style="position: relative; width: 140px; height: 140px;">
-          
-          
-            <img id="zfb" class="reward-img" src="\media\images\custom-zfbImg.jpg" alt="赞赏码">
-          
-          
-            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
-          
-        </div>
-      </div>
-      <p class="reward-word">量力而行哦，超过18找我要文档</p>
-      <p class="reward-tip"> </p>
-    </div>
-    <div class="bottom">
-      
-      <div id="zfbBtn" class="pay-text">
-        支付宝
-      </div>
-      
-      
-      <div id="wxBtn" class="pay-text">
-        微信支付
-      </div>
-      
-    </div>
-  </div>
-</div>
-<style>
-  .reward-mask {
-    position: fixed;
-    z-index: 99999;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #00000054;
-  }
-
-  .reward-relative {
-    position: relative;
-    width: 480px;
-    text-align: center;
-    margin: 0 auto;
-    border-radius: 5px;
-    background-color: #fff;
-    top: 50%;
-    margin-top: -205px;
-  }
-
-  .reward-relative .close {
-    position: absolute;
-    right: 10px;
-    font-weight: normal;
-    font-size: 16px;
-    color: #929292;
-  }
-
-  .reward-body {
-    padding: 40px 20px 20px;
-  }
-
-  .bottom {
-    display: flex;
-  }
-
-  .reward-btn {
-    text-align: center;
-  }
-
-  .reward-btn-text {
-    display: inline-block;
-    cursor: pointer;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    background-color: #ff9734;
-    color: #FFF;
-    margin-top: 20px;
-  }
-
-  .pay-text {
-    margin-top: 10px;
-    padding: 10px;
-    flex: 1;
-    transition: all .2s linear;
-  }
-
-  .pay-text:hover {
-    background-color: #a5a5a536;
-  }
-
-  .reward-body h2 {
-    padding-top: 10px;
-    text-align: center;
-    color: #a3a3a3;
-    font-size: 16px;
-    font-weight: normal;
-    margin: 0 0 20px;
-  }
-
-  .reward-body h2:after,
-  .reward-body h2:before {
-    font-family: Arial, Helvetica, sans-serif;
-    background: 0 0;
-    width: 0;
-    height: 0;
-    font-style: normal;
-    color: #eee;
-    font-size: 80px;
-    position: absolute;
-    top: 20px;
-  }
-
-  .reward-body h2:before {
-    content: '\201c';
-    left: 50px;
-  }
-
-  .reward-body h2:after {
-    content: '\201d';
-    right: 80px;
-  }
-
-  .reward-img-box {
-    display: inline-block;
-    padding: 10px;
-    border: 6px solid #ea5f00;
-    margin: 0 auto;
-    border-radius: 3px;
-    position: relative;
-  }
-
-  .reward-img {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-  }
-
-  @media (max-width: 767px) {
-    .reward-relative {
-      height: 100%;
-      top: 0px;
-      margin-top: 0;
-      width: auto;
-    }
-
-    .reward-relative .bottom {
-      flex-direction: column;
-    }
-
-    .reward-relative .pay-text {
-      width: 80%;
-      margin: 5px auto;
-      border: 1px solid silver;
-      padding: 6px;
-      border-radius: 4px;
-    }
-
-    .reward-body h2:after {
-      right: 40px;
-    }
-
-    .reward-body h2:after,
-    .reward-body h2:before {
-      font-size: 60px;
-    }
-
-    .reward-body h2:before {
-      left: 20px;
-    }
-  }
-</style>
-<script>
-  !function () {
-    var mask = document.querySelector('.reward-mask');
-    let close = document.querySelector('.reward-relative .close');
-    let rewardBtn = document.querySelector('.reward-btn');
-
-    let zfb = document.querySelector('#zfb'),
-      wx = document.querySelector('#wx'),
-      zfbBtn = document.querySelector('#zfbBtn'),
-      wxBtn = document.querySelector('#wxBtn');
-
-    if (zfbBtn && wxBtn) {
-      zfbBtn.addEventListener('click', () => {
-        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
-          duration: 400
-        });
-        jQuery.Velocity(wx, 'transition.slideRightOut', {
-          display: 'none',
-          duration: 400
-        });
-      });
-
-      wxBtn.addEventListener('click', () => {
-        jQuery.Velocity(wx, 'transition.slideRightIn', {
-          duration: 400
-        });
-        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
-          display: 'none',
-          duration: 400
-        });
-      });
-    }
-
-    rewardBtn.addEventListener('click', (e) => {
-      jQuery.Velocity(mask, 'transition.slideDownIn', {
-        duration: 400
-      })
-    });
-
-    close.addEventListener('click', (e) => {
-      e.preventDefault();
-      jQuery.Velocity(mask, 'transition.slideUpOut', {
-        duration: 400
-      })
-    })
-  }()
-</script>
-
   </div>
 </body>
 
@@ -2121,6 +1739,7 @@ Cyberlife创造了奇迹，而孩子型的仿生人为了最大程度地模仿�
       speed: 200
     });
   </script>
+
 
 
 
