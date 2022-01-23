@@ -8,7 +8,7 @@
 <meta name="keywords" content="Gridea静态个人博客">
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
-<title>那些年坑爹的高考作文题 | 阿离的杂货堆</title>
+<title>缺爱小片段 | 阿离的杂货堆</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642926556534">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="那些年坑爹的高考作文题" />
-  <meta name="keywords" content="短篇,MM" />
+  <meta name="description" content="缺爱小片段" />
+  <meta name="keywords" content="脑洞,乱" />
 </head>
 
 <body>
@@ -193,8 +193,7 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            <div class="post-side-meta" id="post_side_meta">
-              
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -224,203 +223,6 @@
 
 
 </div>
-            </div>
-            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
-              <div class="toc-box right-motion">
-  <div class="toc-wrapper  auto"
-    id="toc_wrapper">
-    <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#%E9%A4%90%E5%89%8D%E8%B4%B4%E5%A3%AB"><strong>餐前贴士：</strong></a></li>
-<li><a href="#%E4%B8%80%E5%A4%96%E5%9B%BD%E5%8F%8B%E4%BA%BA">【一】外国友人</a></li>
-<li><a href="#%E4%BA%8C%E5%A4%A7%E7%86%8A%E7%8C%AB">【二】大熊猫</a></li>
-<li><a href="#%E4%B8%89%E4%B8%AD%E5%9B%BD%E7%BE%8E%E9%A3%9F%E9%A3%9F%E5%93%81%E5%AE%89%E5%85%A8">【三】中国美食？食品安全！</a></li>
-<li><a href="#%E5%9B%9B%E5%BD%92%E5%8E%BB">【四】归去</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  </div>
-</div>
-
-<script>
-
-  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
-  let active = 'active-show', activeClass = 'active-current';
-  let tocWrapper = document.querySelector('#toc_wrapper');
-  let tocContent = tocWrapper.children[0];
-  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
-
-  function addTocNumber(elem, deep) {
-    if (!elem) {
-      return;
-    }
-    let prop = elem.__proto__;
-
-    if (prop === HTMLUListElement.prototype) {
-      for (let i = 0; i < elem.children.length; i++) {
-        addTocNumber(elem.children[i], deep + (i + 1) + '.');
-      }
-    } else if (prop === HTMLLIElement.prototype) {
-      // 保存li元素
-      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
-        lList.push(elem);
-      }
-      for (let i = 0; i < elem.children.length; i++) {
-        let cur = elem.children[i];
-        if (cur.__proto__ === HTMLAnchorElement.prototype) {
-          if (autoNumber) {
-            cur.text = deep + ' ' + cur.text;
-          }
-        } else if (cur.__proto__ === HTMLUListElement.prototype) {
-          addTocNumber(cur, deep);
-        }
-      }
-    }
-  }
-
-  function removeParentActiveClass() {
-    let parents = tocContent.querySelectorAll('.' + active)
-    parents.forEach(function (elem) {
-      elem.classList.remove(active);
-    });
-  }
-
-  function addActiveClass(index) {
-    if (index >= 0 && index < hList.length) {
-      lList[index].classList.add(activeClass);
-    }
-  }
-
-  function removeActiveClass(index) {
-    if (index >= 0 && index < hList.length) {
-      lList[index].classList.remove(activeClass);
-    }
-  }
-
-  function addActiveLiElemment(elem, parent) {
-    if (!elem || elem === parent) {
-      return;
-    } else {
-      if (elem.__proto__ === HTMLLIElement.prototype) {
-        elem.classList.add(active);
-      }
-      addActiveLiElemment(elem.parentElement, parent);
-    }
-  }
-
-  function showToc() {
-    if (tocWrapper) {
-      postBody = document.querySelector('#post_body');
-      for (let i = 0; i < postBody.children.length; i++) {
-        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
-          hList.push(postBody.children[i]);
-        }
-      }
-      if (tocWrapper.classList.contains('compress')) {
-        tocContent.classList.add('closed');
-      } else if (tocWrapper.classList.contains('no_compress')) {
-        tocContent.classList.add('expanded');
-      } else {
-        if (hList.length > 10) {
-          active = 'active-hidden'
-          tocContent.classList.add('closed');
-        } else {
-          tocContent.classList.add('expanded');
-        }
-      }
-    }
-  }
-
-  (function () {
-    // 处理不是从#一级标题开始目录
-    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
-      let con = tocContent.children[0].children[0];
-      tocContent.innerHTML = con.innerHTML;
-    }
-    let markdownItTOC = document.querySelector('.markdownIt-TOC');
-    let innerHeight = window.innerHeight;
-    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
-    addTocNumber(tocContent, '');
-  })();
-
-  document.addEventListener('scroll', function (e) {
-    if (lList.length <= 0) {
-      return;
-    }
-    let scrollTop = document.scrollingElement.scrollTop + 10;
-    let dir;
-
-    if (lastTop - scrollTop > 0) {
-      dir = 'up';
-    } else {
-      dir = 'down';
-    }
-
-    lastTop = scrollTop;
-    if (scrollTop <= 0) {
-      if (lastIndex >= 0 && lastIndex < hList.length) {
-        lList[lastIndex].classList.remove(activeClass);
-      }
-      return;
-    }
-
-    let current = 0, hasFind = false;
-    for (let i = 0; i < hList.length; i++) {
-      if (hList[i].offsetTop > scrollTop) {
-        current = i;
-        hasFind = true;
-        break;
-      }
-    }
-    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
-      current = hList.length - 1;
-    } else {
-      current--;
-    }
-    if (dir === 'down') {
-      if (current > lastIndex) {
-        addActiveClass(current);
-        removeActiveClass(lastIndex)
-        lastIndex = current;
-        removeParentActiveClass();
-        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
-      }
-    } else {
-      if (current < lastIndex) {
-        addActiveClass(current);
-        removeActiveClass(lastIndex);
-        lastIndex = current;
-        removeParentActiveClass();
-        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
-      }
-    }
-  });
-
-
-  window.addEventListener('load', function () {
-    showToc();
-    document.querySelector('#sidebar').style = 'display: block;';
-    tocWrapper.classList.add('toc-active');
-    setTimeout(function () {
-      if ("createEvent" in document) {
-        let evt = document.createEvent("HTMLEvents");
-        evt.initEvent("scroll", false, true);
-        document.dispatchEvent(evt);
-      }
-      else {
-        document.fireEvent("scroll");
-      }
-    }, 500)
-  })
-
-</script>
-            </div>
           
         
       </div>
@@ -508,14 +310,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/"> 那些年坑爹的高考作文题 </a>
+    <a class="post-title-link" href="https://aaaliaaa.github.io/post/que-ai-xiao-pian-duan/"> 缺爱小片段 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2017-07-08 22:13:54">2017-07-08</span>
+      <span class="publish-time" data-t="2019-12-07 01:08:43">2019-12-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,9 +325,9 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://aaaliaaa.github.io/tag/SHORT/"> <span>短篇</span> </a>、   
-      <a href="https://aaaliaaa.github.io/tag/MM/">
-        <span>MM</span>
+      <a href="https://aaaliaaa.github.io/tag/RlNaMxkFl/"> <span>脑洞</span> </a>、   
+      <a href="https://aaaliaaa.github.io/tag/DMgLSm6gv/">
+        <span>乱</span>
       </a>
        
     </span>
@@ -534,7 +336,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >26<span class="language" data-lan="minute"
+        >3<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -543,7 +345,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >7762<span class="pc-show language" data-lan="words"
+        >624<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -553,67 +355,13 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <blockquote>
-<h3 id="餐前贴士"><strong>餐前贴士：</strong></h3>
-<ul>
-<li>这篇的脑洞来自于一个flag，高考的时候大家都在说要跟着高考题写点啥，于是，冲动是魔鬼，当时吧，不知道在想啥，我就跟了句：“虽然不写同人但是可以用高考题，写个拍啊！” 结果是，我吧，是福建的，考全国一卷，一卷的作文题目如下（微笑）：<br>
-据近期一项对来华留学生的调查，他们较为关注的“中国关键词”有：<br>
-一带一路、大熊猫、广场舞、中华美食、长城、共享单车、京剧、空气污染、美丽乡村、食品安全、高铁、移动支付。<br>
-请从中选择两三个关键字来呈现你所认识的中国，写一篇文章帮助外国青年读懂中国。要求选好关键字，使之形成有机的关联；选好角度，明确文体，自拟标题；不要套作，不得抄袭；不少于800字。</li>
-<li>于是，这是一篇，逻辑零，脑洞清奇，一切只为找拍点，就是要欺负外国小友人的文章</li>
-</ul>
-</blockquote>
-<h3 id="一外国友人">【一】外国友人</h3>
-<p>徐翼一手漫不经心举着接人的牌子，另一手抓着手机上下划着刷着空间朋友圈。盛夏的日子，对N市人民来说简直是折磨，太阳的热浪充斥了室外的每一个角落，走在路上都能感受到柏油马路传来的似是能将人融化的温度。就在这样的天气里，徐翼父母毅然决然丢下他，和父亲远在美国的妹妹和妹夫，也就是徐翼的姑姑和姑丈，双宿双飞去了加拿大，额这词儿用得不是很准确，但是对小姨小姨父出去玩了还不愿意带上自家小子，更过分地把他扔到中国来这种行为，徐翼持绝对的不满态度。</p>
-<p>但不满归不满，小表弟被丢过来了，自己作为哥哥，还是要尽职尽责来接一下，左右就两个月暑假，作为还算清闲的大三学生，还是能腾出时间当好这个东道主的。</p>
-<p>正在心里吐槽某位损友发的朋友圈，眼前就晃进了一顶金灿灿的卷毛脑袋，在他面前仰了头仔细端详了一番，带着犹豫开口：“翼，哥哥？”徐翼手一顿，视线从手机屏幕上离开大量了下眼前刚到他腰际的孩子：“徐愿？”表弟混血，中文名跟妈妈姓。小金毛儿听到熟悉的名字，激动点头，头上带着自然卷的金发跟着颤了两下：“对的对的，是这个名字。”语气有着些许生硬，带着外国人生疏的中文调调，没跑了，这绝对是他那个便宜表弟。</p>
-<p>淡定把牌子收在身侧，顺手接过徐愿三十寸大的大箱子：“走吧。”徐愿连忙快了几步追上徐翼有些大的步伐，亮亮的眼睛忽闪忽闪看着徐翼：“哥哥哥哥，N市漂亮。”“哥哥哥哥，明天我们去哪里玩呀？”“哥哥哥哥，你会自己开车啊？”徐翼脑袋里充斥着徐愿并不标准的“哥哥哥哥”只觉得头都大了。他不讨厌小孩子，甚至在同龄的男生中还算喜欢，但也绝不是喜欢到不论孩子多熊都能慈爱地看着，当下有些冷了脸。徐愿感受到徐翼带着点冷淡的气场，讪讪地撇了几下嘴，终于是安静了下来，在车后座晃悠着双腿看向车外飞快划过的景色。</p>
-<p>徐翼当天晚上就发现，虽然这是个活泼过头的孩子，但绝不是一个坏孩子，自己的冷淡虽然小小伤了小朋友的心，但回了家后还是非常主动自己拖了箱子——三十寸的大箱子啊几十斤重，他都想不到这么小的一个娃娃怎么把它带过来的。回了家又小心翼翼拿出姑姑姑丈带来的特产，交到自己手中，瞥见自己脸上有些意外的惊喜神色，马上又咧开了嘴露出白白净净的两排牙。晚饭点了外卖，七八岁大的小孩子，倒是难得的一点儿也不挑食，一盒饭吃得干干净净还主动帮忙收了桌子，虽然闹腾了点，总的来说，还是很好带的孩子。</p>
-<p>十点三十六，徐翼将乖乖洗完澡穿着睡衣的徐愿塞进被窝，看着徐愿眨巴着漂亮的大眼睛歪着头问他：“哥哥，晚安吻？”徐翼顿了一下，俯下身轻吻在他额头上。</p>
-<p>“晚安，小愿。”</p>
-<p>接下来两个月，请多关照。</p>
-<h3 id="二大熊猫">【二】大熊猫</h3>
-<p>N市东部坐落着全市最大的动物园，傍着山，依着水，更有着徐家小愿最喜欢的，大熊猫。<br>
-徐翼从第二天就注意到，自家小表弟对熊猫有着一种疯狂的喜爱，两人看电视时，无论什么节目，徐愿一定能叽叽喳喳跟他聊着节目内容，但是某次偶然调到关于中国又送给某国某只大熊猫的新闻，小家伙居然一句话没讲盯着大屏幕愣是安安静静看完了那则新闻，徐翼看了一分钟总觉得哪里不对，转头看到徐愿无比认真的神情倒是一愣。新闻嘛，几分钟就讲完了，徐愿本来坐的直直的身子一下子摊回沙发上，嘟着小嘴有些不高兴，然后侧了头看他，刚洗过的小金毛乖顺的耷拉在脸上，心心念念道：“熊猫，可爱！”</p>
-<p>然后就是平均每天一次的，路过他的房间就进来跳到他的床上，抱住套着熊猫图案的枕头，在熊猫图案的被子里翻滚一番，赖皮着躺到睡觉时间，才依依不舍滑下床回了房间。</p>
-<p>小孩儿难得有点喜欢的东西，徐翼想了想，腾了一天空闲时间，避开了人满为患的周末，想着带他去动物园看看。去的前一天晚上，看着电视的空档，徐翼问：“小愿，明天我们去动物园？”徐愿正往嘴里塞着小饼干，听到他问话先是条件反射点了头，话过了脑后浑身一僵，拼尽全力将嘴里小饼干吞了下去，然后探过身一字一顿问他：“动，物，园？”徐翼看着他突然放亮的眼睛，放柔了目光，伸手揉了揉他头发：“嗯，动物园。”“有熊猫？”“有啊。”“熊猫！”小孩儿瞬间举高手，“要，要去的。”结局是整个晚上小孩儿都属于傻乐状态，即时上了床都眼睛亮亮看着徐翼。徐翼眉角抽搐了一下：“快睡觉，明天早起呢。”徐愿笑成月牙眼：“嗯！哥哥晚安！”</p>
-<p>第二天一早，甚至不需要徐翼叫，徐愿就无比自觉从床上爬起来跑到徐翼门口敲门，开头还留着几分含蓄，小拳头一扣一扣在门口绵绵地喊哥哥，重复了几次发现并没什么效果之后愈发豪迈起来，门被敲得哐当哐当响，小孩儿叫哥哥的声音直冲云霄。</p>
-<p>但事实证明，效果真的好。一分钟不到，门徐徐打开，徐翼一脸阴沉站在房间里，身体周遭黑色的气氛都能具象化了，徐愿愣住一下，非常有自知之明收回敲门的小拳头，招财猫一样在脑袋边晃晃，笑得讨好：“哥哥好，早上好，一晚上不见，分外想念。”</p>
-<p>徐翼混沌的脑子已经思考不了“哇美国的弟弟学会了分外这么有难度的词呢！”这样高深的问题，面无表情将手机屏放到徐愿面前：“现在几点？”徐愿不好意思抓抓脸：“五点二十三。”“于是？”徐翼声音低沉，“睡觉，睡觉～哥哥晚安。”徐愿说着就要跑，被徐翼一把揽住腰，扛起来丢进被窝，裹得严严实实顺便在小臀上盖了一巴掌：“好好睡觉！”徐愿难得看到这么凶巴巴的哥哥，脑袋上的呆毛都快耷拉下来了，嘟了小嘴软绵绵缩在被子里，闭着眼睛不敢动，慢慢也沉沉睡了过去。</p>
-<p>再醒来时太阳已经爬到当空，徐愿一个激灵从床上跳起来，身边被子已经没了褶皱，可见身边人早就起来了，小孩儿脸一下子皱起来，跳下床连拖鞋都都顾不得穿推了门跑出去，两只光溜溜小脚跑过木地板发出吧嗒吧嗒的声音。徐翼八点半的时候就被生物钟叫醒了，看着蜷在自己身边的小卷毛脑袋睡得正熟，徐愿有着一半白种人的血统，皮肤白得透亮，更清晰地看到了眼底的青黑，无声地笑了笑，到底是小孩子，出去玩居然能兴奋成这样，轻轻在小家伙头上印下一吻，悄无声息地起身去做早饭了。半个小时后听到门突然被推开，徐愿紧张兮兮扑到他面前：“哥哥哥哥，几点了几点了？”</p>
-<p>徐翼正要回答，目光率先落在了徐愿两只踮着脚尖踩在冰凉的大理石地板上的脚上，皱了眉，将手中端起的盘子放下火一熄，弯腰将他单手抱起来走到餐桌边放下：“急什么？鞋都不穿跑出了，感冒了怎么办？”然后才转身把锅里两个煎蛋铲到盘子里，放到徐愿面前，又倒了满满一杯牛奶在马克杯中，“慢慢吃，才九点，来得及。</p>
-<p>吃完徐愿不顾室外三十四度的高温，硬生生将黑白相间还带个熊猫耳朵小帽子的小毛绒马甲套在了T恤外面，坚定地相信这样就能和熊猫没有交流障碍。徐翼无奈，不过既然小孩儿自己都不嫌热，依了他就是。</p>
-<p>动物园很大，徐翼走了一个多小时都有些累，徐愿却背着书包一蹦一蹦在前面走，仿佛一点倦意都没有，熊猫山在动物园最深处，绕过了长长尾巴的小熊猫，拜访了高高的长颈鹿，和狮子老虎隔着玻璃对吼了几分钟，终于到了徐愿最心心念念的，熊猫山。</p>
-<p>徐愿的眼睛从进了熊猫馆内就没有离开过熊猫，徐翼知道他激动，也不制止他，只是微低了身在他耳朵边小声提醒了句：“慢慢走不要跑不要爬，听到了？”徐愿胡乱点了几下头，也不知道有没有听进去。跟着人流走着走着就离栏杆越来越近，徐愿整个人几乎是贴在了防护的铁栏杆上，两只小爪子扣在栏杆上，小身子迫切地往前探着，两只脚又不自觉往上探了探。徐翼正好接了个电话，一时分神眼睛没有停在他身上，再瞥到他时他身子已经探出栏杆许多，晃来晃去摇摇欲坠，一时大惊，下意识伸手抓住他帽子不算轻柔地把他拖回来放到地上。<br>
-徐愿正看得入神，感觉自己差一点点就能摸到心心念念的熊猫，却一下子被外力干涉，不高兴撅起嘴转身看了一眼哥哥，小小跺了下脚。徐翼本就被他吓得够呛，如今这个姿势更是腾地一下勾起他心里的火，当下就冷了脸，心里想着这是外面要给孩子留些面子，只淡淡说了句：“不想看回家。”</p>
-<p>徐愿这才看到徐翼几乎冻上冰霜的脸，不自觉端正了站姿，低下头小小声道：“要......要看。”徐翼看他不自觉双手交缠着的不自在小举动，深吸一口气将火压下去，牵了他一只手带着他继续往前。被这小插曲一弄，徐愿的性质也不是那么高了，只乖乖的跟在徐翼身边，本激动得闪闪发光的眼睛也一下黯淡了下来，也不四处看来看去了，只盯着地面亦步亦趋地走。</p>
-<p>两人在外面吃了晚饭，回家已经八点多了。帮小家伙吹干洗完澡湿漉漉的头发，表情严肃：“小愿，今天的事情哥哥必须跟你谈谈。”徐愿蔫蔫地缩在沙发里，小幅度点点头。徐翼不管他有些可怜巴巴的眼神，坐在他旁边沙发上调整了下表情。徐翼长得硬朗，这样一板脸看起来平添了不少严肃的气氛，吓吓小孩子还是绰绰有余的，徐愿看了他一眼马上低下头，死死盯着睡衣上的纽扣，像是在那里发现了金币似的。</p>
-<p>徐翼加重了点语气：“抬头，看我。”徐愿像是被触发了哪个按钮一般一下子抬起头来，怯生生看着他眼睛，“今天进熊猫馆的时候，我有没有说过，不要跑不要爬？”徐愿点头，两只手死死抱着沙发上的抱枕，紧得都快将枕头上的绒毛揪下来了。“所以，你是明知故犯？”徐翼一点退路都不给弟弟留，眯起眼问。徐愿长了张嘴巴，又闭上了，沉默了足足有半分多钟，才像蚊子叫般说了一句：“不会掉下去的......”</p>
-<p>屋里一下静得吓人，徐翼听这句话听得真切，半晌后，怒极反笑，话语中反而收了怒意：“你有几分的把握不掉下去？如果掉下去了呢？是想跟熊猫过下半辈子吗？”徐愿就算中文再不好，也听出了哥哥话中的讽刺意味，一下子慌了起来，手脚并用爬到他身边急切地抓住他手臂摇晃起来：“哥哥，你不要生气，哥哥，哥哥......”</p>
-<p>徐翼被他叫得心烦意燥，手臂伸过去环住他上身一用力将他从旁边沙发拎到自己身上，右手顺手连着在他身后扇了五下：“不生气，你都快把我气死了不生气？”徐愿被他突如其来的举动惊得抖了一下，随后身后的疼痛便炸开了，隔了两层薄薄的布并不对徐翼几乎没有收力的巴掌起什么防护作用。本来徐翼已经稍微冷静了一点想着好好跟他说，不得不说徐愿拱火的能力还是一等一的棒，拍完他就有些后悔，这么小的孩子，他盛怒下几乎没有收力，不知道会不会打坏，却没想到这时徐愿抽泣了两声，却突然在他身上乱动起来，嘴里含含糊糊喊着：“哥哥不讲理......不会摔下去的啊！为什么打我，呜......不讲理......”</p>
-<p>徐翼刚萌生出来的那天后悔一下子烟消云散，左臂稍稍用力将他在怀里钳住，右手褪了他宽松的睡裤和小内裤，白皙得吓人的皮肤马上露了出来，雪白的双丘上清清晰晰叠着几个巴掌印，已有些小小的肿起，衬得格外骇人。徐翼右手不自觉握了下拳，但还是控制了下力度左右开弓扇了下去，直打满了二十才放慢了速度。徐愿起初还浑身每个细胞都在挣扎，一副绝不屈服在他淫威之下的壮烈模样，挨到后面除了提了声音号哭出声，小胳膊小腿已经无力地瘫软在他身上。</p>
-<p>徐翼看他不再挣扎知道现在他大概是能听进去话了，稍稍停了手，左手仍压在他腰上：“现在可以听哥哥说话了？”徐愿抽抽搭搭边抹了眼泪边点了头，“小愿喜欢熊猫，哥哥知道，但是爬上去如果掉进去，你爸爸妈妈怎么办？你又让哥哥怎么办？去哪里再找一个小愿来还给他们？还是跟他们说，小愿跟熊猫过日子去了，不回美国了？”徐愿本就知错了，只是碍于小小的自尊心不愿意开口认错，别别捏捏地将小脑袋塞到徐翼怀里，张开小嘴一口咬在他衣服上，摇晃着小脑袋就是不说话，他从来都是爸妈的乖宝宝，美国又是自由极了的国度，像这样被家长压在膝上挨巴掌的经历实在是没有，认错的话梗在喉咙中就是说不出来。</p>
-<p>徐翼被他的小举动惹得一下子破了功，轻轻拍拍他小脸蛋：“快松开，脏不脏。”也知道他听进去了，刚想用最后五下给他加深下记忆，却没想到小家伙松开了咬着的衣角一蹭一蹭从他膝盖上蹭起来，双手勾了他脖子嘟嘟囔囔道：“不脏，哥哥的衣服，香。”带着浓浓的讨好意味。徐翼哑言了一瞬，正要重新板起脸叫他趴回去，就听到小家伙糯糯的声音在耳边响起：“哥哥，对不起——”徐愿的声音还带着孩子独有的奶声奶气，说起中文又带着有趣的上挑调调，温温软软的像砸在人心尖上。徐翼心猛然地就软下来，算了吧——孩子知道错了就行了，何必呢。</p>
-<p>叹口气帮他将垂到脚踝处的裤子穿好，拿了湿毛巾帮他擦了擦泪和汗混杂的小脸：“好了好了，去看电视吧。”徐愿眨眨刚刚哭过显得格外透亮的碧蓝色眼睛，伸手拉他，不好意思咧出小虎牙：“哥哥一起看吧？”</p>
-<p>徐翼被这一句话勾得心里暖暖的，这孩子啊，一点都不会记仇的吗？刚刚才打过他，他就能这样心无旁骛扑到自己怀里。勾起嘴角：“好，一起看。”</p>
-<h3 id="三中国美食食品安全">【三】中国美食？食品安全！</h3>
-<p>徐愿是个多方面全面发展的新世纪好少年，也就是说，天天窝在家里看电视吃零食度日是不可能的！怎么可以不出去搞事，额不对，结交小伙伴呢！小孩子对环境的适应能力比起大人来强了许多，每天晚上都到楼下小区蹦跶的徐愿很快就和小区里同样在假期中的一堆男孩子打成了一片。</p>
-<p>全球各地的男孩子只要能跑能跳能一起冲锋陷阵就能有共同语言，徐翼向来不限制自家弟弟广交好友的行为，甚至可以说是相当支持，每次都会装些零花钱在他随身带的小包里，放他出去和新交的朋友们到处玩玩，只是反复叮嘱了不要离太远手机随时保持联系不要乱吃东西。得了哥哥允许的徐愿几乎撒了欢般往外跑，但都乖乖在规定时间前回了家。</p>
-<p>这天几个男孩子碰头得早，一些老套的追逐小游戏都玩腻了，正围着小区最大的树百无聊赖地转来转去，突然一个男孩子拍案而起：“徐愿！你还没吃过咱中国的烧烤吧！来来来我们今天就去尝尝！”徐愿眼睛一亮，但是突然响起哥哥的嘱咐，小小退缩了一下：“不，不了吧！外面的食物很不卫生的。”男孩子嗤之以鼻斜眼看了他一眼：“男子汉！你还怕不卫生！我爸说了，大口吃肉大口喝酒的才是男人！”“男子汉”三个字一下子激得所有人热血沸腾，徐愿脑子里仅存一点理智也被打消了：“去就去！谁怕谁。”</p>
-<p>于是徐愿就人生第一次，进了神奇的夜市。N市的夜市热气腾腾，小路两旁的小吃让人看得眼花缭乱，一声比一声高的吆喝声萦绕在身边，徐愿只觉得眼睛都不够看了，一晃神间被其他男孩子拉进一家烧烤店，几个男孩子看起来和老板极其熟络，举高了手就冲老板喊：“老板！羊肉串猪肉串各二十串！”</p>
-<p>老板穿着白色吊带和随意的深红色大短裤，在脖子上搭了一条毛巾，由于靠近碳烤炉浑身汗津津的，脸烤的通红，听到男孩子的吆喝咧开大嘴中气十足喊回去：“好嘞！等一下啊！”弯腰从装着羊肉串和猪肉串的袋子里一次各抽出十串，两只手拿的满满的，都不用细数，一拿一个准，四十串一字排开，将烧烤架占得满满当当，碳火滋滋啦啦的将热量裹在串儿上，老板做这一切都熟能生巧，翻滚着让每一寸肉丝都被充分照顾，然后右手抄起旁边的调料罐，盐巴孜然椒盐辣椒悉数被撒上，老板边翻动着肉串边嘴里哼着小曲儿，不一会儿就将整整两大盘冒着热气的串儿放到了五个小少年面前。热气和烧烤独特的香味扑面而来，即使吃过了晚饭几个孩子还是在瞬间变得饥肠辘辘，忙不迭左手右手各抓起一串，顾不得烫嘴往嘴里赛，羊肉肉质鲜嫩，混着N市特有的辣椒粉制法侵入少年们的口腔，一下子将嘴吃得火辣，徐愿辣的直伸舌头，一口一口冰镇可乐往下灌，但是却忍不住一口接一口地继续吃，猪肉虽没羊肉那样入口即化，却颇有一番嚼劲，混着沿着棍子快要滴下来的猪油囫囵吞到嘴里，感觉一下子香味都涌到了喉间。吃饱喝足五个人无比愉悦回了家，徐愿走在路上还心心念念舔了好几下嘴唇。</p>
-<p>回了家一切就不好了起来，十点开始徐愿就觉得肚子翻滚般的疼起来，跑了好几次厕所，到了后半夜更是上吐下泻得连胆汁都呕了出来。徐愿吃的一向清淡，到了中国徐翼给他做饭也尽可能不做重口味的菜，烧烤这样重油重辣的东西一到肠胃里从来没有遇到过这些东西的身体一下子就有了反应。徐翼被他折腾的也一夜未眠，看他吐得苍白苍白的小脸心都提到了半空，不敢怠慢马上带了些必备东西开了车飞驰到了离家最近的医院。</p>
-<p>急性肠胃炎是逃不过去的了，吃什么吐什么连喝水都能干呕的徐愿连走路的力气都被抽光了，徐翼看着心疼，一路抱在怀里挂号看了医生，开了几瓶消炎的药剂坐在输液区轻轻晃着哄他入了睡，肠胃炎会有些轻微的发热反应，单手抱着怀里有些热度的小身子，徐翼抽了另一只手从包里取了张纸将他额上冒出的汗悉数擦干，心里寻思着这是吃了什么不好的东西才让小孩儿遭了这么大的罪，不免有点自责，就这么两个月都不到的功夫，也能把孩子整出这么大的病。</p>
-<p>急性肠胃炎这种东西，来得快去得快，一晚上点滴下去就好得差不多了，第二天早上徐翼跑了医院对面买了清清淡淡的馄饨汤，喂着徐愿小勺小勺吃了下去，也没再有什么激烈的反应了，才逐渐放下心来，轻轻弹在徐愿脑门上笑骂：“小笨蛋，怎么这么没用呢，这都吃什么了弄成这样，哥哥怎么什么反应都没有呢。”徐愿听他问这话一下子有些慌乱，支支吾吾道了几句“没有啊”然后蹭到徐翼身上问：“哥哥我们能回家了吗？”徐翼心里想着他的病，没太注意到他躲躲闪闪的眼神，知道他在医院没睡得太好，又问了下医生，得到了首肯后带了他打的回家。车肯定是不能开了，他一夜没睡也正困得上下眼皮打架，想着先停着这儿等晚一点自己再打的过来拿。</p>
-<p>回家两个人都从头到尾洗了个澡，大白天的硬是把窗帘拉得老黑，一起窝到了被窝里补了个觉。徐翼就浅浅睡了五个钟头，想着徐愿的胃还处于脆弱的时期，甩甩头将困顿赶走，下床炖了稀饭，知道小家伙不喜欢吃这么清淡的东西，又变着法子做了点味道不错的小菜，中午时间才到徐愿床边轻柔将他叫了起来：“小愿，先吃点东西再睡？”徐愿在医院其实也算睡了个整夜觉，此时被哥哥一叫就幽幽转醒，迷迷糊糊地伸手让他抱，徐翼对病中的小家伙容忍度百分百，稍一用力将他接到怀里。徐愿尖尖的下巴搁在徐翼肩上，歪着头正好看到徐翼眼底淡淡的青黑，徐翼不是容易有黑眼圈的人，这次其实也不算熬得太厉害，主要是劳精费神心还一直提着，一晚上竟就把他黑眼圈逼了出来。徐愿一下咬了唇，内疚在心中漾开了，如果不是因为自己贪嘴，哥哥又怎么需要这样辛苦地忙前忙后。</p>
-<p>吃了饭徐翼让徐愿自己旁边玩玩自己拿了碗正要去洗，就看到小家伙低着头走过来，像是下了很大勇气抓住他衣角，仰头跟他说：“哥，对不起。”徐翼愣了一下，放下碗筷蹲下身和他平视：“为什么说对不起？”徐愿耸了耸鼻尖：“小愿生病才让哥哥这么累。”徐翼笑出声，用手背贴贴他微凉的小脸：“小傻瓜，说什么呢？你又不是故意要生病，是哥哥没照顾好你。”“不是的！”徐愿一下抓住他手，“昨天晚上我和于天他们去吃烧烤了，对不起。”徐翼满满收了笑容，沉默了一下，心里居然没有愤怒的感受涌上来，只是空了一下。徐愿打量着他的表情变化，几乎哭出声来，死死抓着他手不放：“哥哥，别生气，你罚我，罚我吧。”徐翼这才回过神，凝神看着眼前因为生病还没有恢复原来红润脸色的小脸，竟是一点气都生不起来，最终是深深叹了口气，捏捏他脸：“你就做吧，难受了吧，去那边坐着，哥去洗碗了。”</p>
-<p>徐愿不敢跟他顶嘴，却也不愿意坐到客厅去，就紧巴巴地跟在徐翼身后，两只眼睛通红地盯着他洗碗，徐翼洗了一个碗就被身后心心念念的小眼神给注视得背后发毛，满头黑线地关了水擦干净手转身看他：“好好好，先跟你说，去你房间。”徐愿马上点了头，小尾巴一样跟在后面进了房间。</p>
-<p>徐翼斟酌了下言辞：“首先，哥哥很高兴你能主动说出来，说明我们小愿已经是能承担责任的大孩子了对不对？但是你看，哥哥说的话都是为你好吧？烧烤好吃，吃完那么难受值得吗？外面的油不干净，你要真想吃，把朋友们请到家里来，哥哥试着做给你们吃，好不好？”徐愿难以置信抬起头：“还能吃吗？烧烤。”徐翼点头：“虽然肯定不比外面的好吃了，但是偶尔吃吃没什么不行，等你好了再说。”徐愿下意识就要欢呼出声，但是突然想到自己还要挨罚，刚伸出去的手又收了回来，视死如归走到徐翼身边闭着眼一下趴在他膝上：“哥哥罚吧，小愿受得住。”</p>
-<p>徐翼看着他纠结至极又强忍着不起来的模样忍了好久才没笑出声，被他生病这么一搅天大的错他都打不下去了，但是不打这孩子肯定心里挂着个事儿，扬了手掌拍灰一般拍了响亮的十下，声音大得红色一下爬上了徐愿的耳朵，但疼痛感实在有限。徐翼拍完就拍拍他后背：“好啦，起来吧。”徐愿蒙蒙呼呼地起来，只觉得有些莫名其妙，徐翼憋了好久没憋住吃吃笑出声，伸手呼拉了下他小卷毛：“小呆子，快去休息吧，再生起病来看哥怎么收拾你。”</p>
-<h3 id="四归去">【四】归去</h3>
-<p>两个月，说长也长，说短也短，转瞬即逝间就过去了，徐翼帮徐愿重新打包好三十寸的大箱子，在安检口嘱咐了许多，不要乱跑不要和陌生人说话下了飞机打电话云云，徐愿嘟着嘴贴在他身边也不知道有没有认真听。临别的当口小家伙还是红了眼眶，突然变得特别黏人，磨磨蹭蹭不愿意走进安检口，徐翼无奈地帮他上下打理了下衣服书包：“好啦，快去吧，等下飞机不等你了，哥哥下次放假去美国找你，好不好？”徐翼用力点了点头，像是要将头发甩下来般的用力，说了声拜拜后头也不回进了安检口，安检完却又忍不住在那一头一跳一跳跟徐翼打招呼，徐翼笑着挥挥手，目送他走出视线。</p>
-<p>再见，我的小朋友，好好学习好好锻炼，明年再见。</p>
-<p>【END】</p>
+              <p>最近缺爱，写了个小片段，没有逻辑，没有前情，没有后果，估计没有续写<br>
+她蹲在体育馆外面的地上，团成小小一个球，蓬松松的羽绒服几乎要垂到了地上，将整个人包得严严实实。她就这样蹲着仰起头看他的脸，他背着路灯的光站着，表情看不真切，眼睛跟她对视了一下，有些无奈地笑了，伸手给她：“快起来，冷不冷啊，回家了。”她将两只手缩在胸前，有些耍赖地眨眨眼睛，声音糯糯地开口：“哥哥你背背我。”说完怕他回绝得果断，伸手指指不远的前方的路灯，“就到那儿就好，背背我吧。”不过不到十米的距离，真是非常不贪心。<br>
+他几乎要笑出声来，却忍着不说话，就和她对视着，在心中默数：“一，二……”三甚至没有数完，果不其然就看到他的宝贝妹妹垂下眼帘避开他的眼睛，小小声叹了口气，准备着站起来。<br>
+她正打算放弃累了一天心态有点崩的时候一时间突如其来想撒个娇的想法，就看到她家哥哥三步两步走到她身边，从善如流背朝她蹲了下来，眼睛一下子亮了，小心翼翼将两只小爪子往他肩上搭。他耐心极了，等她稳稳地搂上他的脖子，将脑袋搭在他一边肩膀上才平平稳稳站了起来。<br>
+十米是真的不长，即使他放慢了脚步，也一会儿就走完了。她有些留恋地拿下巴蹭蹭他肩膀，然后挣扎着要下来——做人要有诚意，下次才有可能再有这种好事！<br>
+他懂她的意思，心却有点酸，怎么会这么好哄啊他家妹妹，每次都小心翼翼拿出一块糖舔一口再放回去，生怕吃完了就再不会有。<br>
+“别乱动。”他将她往上掂了掂，突然就加快了速度。她被突然而然的变速吓了一跳，下意识用手环住他的脖子。晚上带着凉意的风呼啦啦地略过脸颊，等回过神来的时候，已经被放在了车的旁边。她有些晕晕乎乎不明所以，没太反应过来发生了些什么，于是被轻敲了下额头：“小朋友，满意了？”</p>
 
             </div>
             
@@ -630,7 +378,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/" title="那些年坑爹的高考作文题">https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/</a>
+      <a href="https://aaaliaaa.github.io/post/que-ai-xiao-pian-duan/" title="缺爱小片段">https://aaaliaaa.github.io/post/que-ai-xiao-pian-duan/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -639,23 +387,23 @@
   </ul>
   <div class="tags">
     
-      <a href="https://aaaliaaa.github.io/tag/SHORT/"># 短篇</a>
+      <a href="https://aaaliaaa.github.io/tag/RlNaMxkFl/"># 脑洞</a>
     
-      <a href="https://aaaliaaa.github.io/tag/MM/"># MM</a>
+      <a href="https://aaaliaaa.github.io/tag/DMgLSm6gv/"># 乱</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="其叶蓁蓁" href="https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/">其叶蓁蓁</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="其叶蓁蓁" href="https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/">上一篇</a>
+        <a class="nav-pc-next" title="论兄控的自我修养" href="https://aaaliaaa.github.io/post/lun-xiong-kong-de-zi-wo-xiu-yang/">论兄控的自我修养</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="论兄控的自我修养" href="https://aaaliaaa.github.io/post/lun-xiong-kong-de-zi-wo-xiu-yang/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="错误的吃醋方式" href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/">错误的吃醋方式</a>
-        <a class="nav-mobile-next" title="错误的吃醋方式" href="https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/">下一篇</a>
+        <a class="nav-pc-next" title="【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）" href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）</a>
+        <a class="nav-mobile-next" title="【云次方】【妻子的浪漫旅行AU】【论坛体】你们知道云次方的那两位参加那个丈夫的旅行去了吗？！（一）（坑了）" href="https://aaaliaaa.github.io/post/yun-ci-fang-qi-zi-de-lang-man-lu-xing-au-lun-tan-ti-ni-men-zhi-dao-yun-ci-fang-de-na-liang-wei-can-jia-na-ge-zhang-fu-de-lu-xing-qu-liao-ma-yi-keng-liao/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
