@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://aaaliaaa.github.io</id>
     <title>阿离的杂货堆</title>
-    <updated>2022-01-24T09:01:16.373Z</updated>
+    <updated>2022-01-24T09:18:16.204Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://aaaliaaa.github.io"/>
     <link rel="self" href="https://aaaliaaa.github.io/atom.xml"/>
@@ -71,13 +71,13 @@
         <id>https://aaaliaaa.github.io/post/ke-zhan-wu-yan-juan-wen-an-mu-lu/</id>
         <link href="https://aaaliaaa.github.io/post/ke-zhan-wu-yan-juan-wen-an-mu-lu/">
         </link>
-        <updated>2021-12-10T16:58:12.000Z</updated>
+        <updated>2021-12-09T14:58:12.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[客栈序言+目录]]></title>
         <id>https://aaaliaaa.github.io/post/ke-zhan-xu-yan/</id>
         <link href="https://aaaliaaa.github.io/post/ke-zhan-xu-yan/">
         </link>
-        <updated>2021-12-10T03:56:28.000Z</updated>
+        <updated>2021-12-09T14:56:28.000Z</updated>
     </entry>
 </feed>
