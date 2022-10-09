@@ -9,7 +9,7 @@
 <meta name="description" content="阿离的杂货堆">
 <meta name="theme-color" content="#adb5bd">
 <title>假如大哥回到十年前——盼盼的新年小剧场系列（11-15） | 阿离的杂货堆</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1665306219117">
+<link rel="shortcut icon" href="/favicon.ico?v=1665309458819">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -81,7 +81,7 @@
             <li class="nav-item ">
               
               
-                <a href="/" target="_blank">
+                <a href="/" target="_self">
                   <i class="fa fa-globe"></i> 首页
                 </a>
               
@@ -271,7 +271,8 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -301,6 +302,203 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#11">【11】</a></li>
+<li><a href="#12">【12】</a></li>
+<li><a href="#13">【13】</a></li>
+<li><a href="#14">【14】</a></li>
+<li><a href="#15">【15】</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -395,7 +593,7 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2022-02-08 11:39:00">2022-02-08</span>
+      <span class="publish-time" data-t="2022-02-07 22:39:00">2022-02-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -423,7 +621,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >11747<span class="pc-show language" data-lan="words"
+        >11752<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -433,9 +631,24 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p></p>
-<p>###【11】<br>
-陆建白拉开椅子坐到他对面，笑得非常和善：“呀，好巧？”<br>
+              <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#11">【11】</a></li>
+<li><a href="#12">【12】</a></li>
+<li><a href="#13">【13】</a></li>
+<li><a href="#14">【14】</a></li>
+<li><a href="#15">【15】</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h3 id="11">【11】</h3>
+<p>陆建白拉开椅子坐到他对面，笑得非常和善：“呀，好巧？”<br>
 裴永宁码牌的手僵在了原地，冷汗湿透了手心，低着头不敢看他，不知道怎么回他这句话。<br>
 麻将店老板看他们气氛不对，陪着笑走过来：“哟，这位小少爷看着面生，第一次来？”陆建白“嗯”了一声，动作熟稔地码起牌来：“你们这儿什么规矩？”<br>
 麻将店老板看他手下这姿势，警铃大作，故意往小了说：“一般来说还是看客人自己，一支十块二十都有……”陆建白瞥了他一眼，拿过一把积分签：“打个五十的怎么样？”麻将店老板心情复杂地看了眼其他两个客人，两人都点头说好，事实上一支50也算不上什么大数，只是老板怂，觉得陆建白架势太大，怕他一发不可收拾。但客人们达成了共识，他也没啥能讲的，只能风风火火把饮料瓜子堆到陆建白手边的小桌上，对裴永宁使了个眼色。<br>
@@ -478,8 +691,8 @@
 当然，并没有就此收敛，他大方地承认了：“嗯，我就是偏心阿昱。”把季思文震惊得瞪大了眼睛。芒昱也吃惊，边吃惊边笑，小孩子嘛，会自然而然亲近对自己有偏爱的人，几天下来偶尔也会跟徐尘开开玩笑，甚至在徐尘的纵容下把不喜欢吃的菜夹到他盘子里。<br>
 目睹了这一刻的潘景同大惊失色，在吃完饭后拖住徐尘质问：“告诉我，你看上的不是他。”徐尘笑得不行，好不容易止住笑，严肃回答：“嗯，就是他。”潘景同大松了一口气：“还好还好，不是就好。”徐尘好笑地看着他，心说：你看，我承认了，是你自己不信。</p>
 <hr>
-<p>###【12】<br>
-刚听完不让人省心的小混蛋的光荣事迹，转头看到贴心的阿昱小少年，徐尘简直是百感交集，恨不得上手揉乱他脑袋，想了想还是忍住了，只跟他碰了下可乐：“阿昱真好。”芒昱被他夸得莫名其妙，愣了一下，看着他看着自己笑弯的眼，莫名有了一丝不知如何形容的情绪，抿了抿嘴撇过头：“不，我不好。”如果他足够好，那他的亲生母亲不会抛下他离开家，如果他真的这么好，那父亲和继母也不会因为自己闹成那样。小少年的眸子深沉得像漫无边际的黑洞，错开徐尘的目光也攀上旁边的不锈钢杆子，望向宿舍楼外在轻风下簌簌而动的松柏。<br>
+<h3 id="12">【12】</h3>
+<p>刚听完不让人省心的小混蛋的光荣事迹，转头看到贴心的阿昱小少年，徐尘简直是百感交集，恨不得上手揉乱他脑袋，想了想还是忍住了，只跟他碰了下可乐：“阿昱真好。”芒昱被他夸得莫名其妙，愣了一下，看着他看着自己笑弯的眼，莫名有了一丝不知如何形容的情绪，抿了抿嘴撇过头：“不，我不好。”如果他足够好，那他的亲生母亲不会抛下他离开家，如果他真的这么好，那父亲和继母也不会因为自己闹成那样。小少年的眸子深沉得像漫无边际的黑洞，错开徐尘的目光也攀上旁边的不锈钢杆子，望向宿舍楼外在轻风下簌簌而动的松柏。<br>
 徐尘被他这突如其来的一句话说愣了，打量了他一眼，笑了，心说原来这个年纪的阿昱是这样的，二十三岁的阿昱能把这种距离感和厌世感隐藏得很好，但十三岁的小少年显然做不到，有点像青春疼痛文学的男主角，还挺可爱。终于还是上手揉揉他脑袋：“有什么事儿能说给尘哥听吗？”芒昱侧过头看他：“后天早上，夏令营就结束了。”拒绝的意义分明。<br>
 徐尘对他很好，特别好，但这有什么用，这是一个七天限定的美梦，一朝梦醒，总还是要回到寻常的生活里的。<br>
 徐尘保持着温和的笑，芒昱和裴永宁不一样，他对别人盲目地闯进自己的世界有种超乎寻常的警惕性，表面像只温吞的小松鼠，实际上却更像是把刺放平了的小刺猬。他们俩之间，即使是后来，主动权也更多地在芒昱手上，他得主动选择迈出自己的世界进入新的家庭里头来，于是徐尘只是说：“只是夏令营结束了而已。”<br>
@@ -517,8 +730,8 @@
 徐尘愣了一下，这是零九年，一个十岁的孩子两天能挣200块吗，何况裴永宁并不是全天在那里，但他没让自己愣太久，沉思了一下，还是狠心道：“行，一块钱一下，分四天，之后每天晚上十点，自己自觉过来。”<br>
 “作为明知故犯的惩罚，在你还完债之前，哥哥都不会跟你一起睡了，等下挨完打，自己回房间去。”</p>
 <hr>
-<p>###【13】<br>
-裴永宁刚被“两百”这个天文数字震了一下，就听到了最后这句话，一瞬间觉得天都塌了，情绪一下子绷不住了，一直压在喉咙里的哭声一下子爆发了出来：“大哥，不要，哥哥……我真的知道错了，别这样罚我，我，我害怕，哥哥……”身子也几乎是本能地去抓徐尘的手臂，这话几乎对他来说是凌迟般的惩罚了，他太怕身上有伤的时候一个人呆着，这给他一种被全世界抛弃的感觉。<br>
+<h3 id="13">【13】</h3>
+<p>裴永宁刚被“两百”这个天文数字震了一下，就听到了最后这句话，一瞬间觉得天都塌了，情绪一下子绷不住了，一直压在喉咙里的哭声一下子爆发了出来：“大哥，不要，哥哥……我真的知道错了，别这样罚我，我，我害怕，哥哥……”身子也几乎是本能地去抓徐尘的手臂，这话几乎对他来说是凌迟般的惩罚了，他太怕身上有伤的时候一个人呆着，这给他一种被全世界抛弃的感觉。<br>
 徐尘狠下心：“自己脱裤子，过来。”<br>
 裴永宁像是被他提醒了，忙不迭地扑过去：“今天就打完，两百下都今天打，一次性打完！”<br>
 徐尘被他大无畏的样子气得牙痒痒，也不跟他计较谁脱不脱这种形式上的事情了，一伸手把他捞到自己腿上趴着，亲力亲为给他扯掉了那两层布，一开始就是没收力两下：“一次性打完，你倒是够豪气，先试试能不能挨过今天的五十再说。”光两下，就打得裴永宁惊呼出声，他几乎是被打得脑袋一嗡，没想到比他没大多少的徐尘，光是用手，就能打得这么疼，一瞬间身后的疼仿佛刚被丢进嘴里的跳跳糖，噼里啪啦在脑袋里放烟花，裴永宁心里的恐惧一下子被点燃了，下意识地抱住脑袋微蜷起，小身子控制不住地发着抖——是标准的防御姿势。<br>
@@ -536,8 +749,8 @@
 怎么就觉得这么疼呢。<br>
 裴永宁题还没开始看，眼前就糊了一片，眼泪啪嗒啪嗒往练习册上掉，他吓了一跳，连忙把书往前推，手忙脚乱去擦眼泪，越擦越多，心里越急，眼泪就越止不住，他努力地抑制了一下，终究是忍不住，管不上仍然一顿一顿叫嚣着疼的身后，把整个人蜷成一个球缩到椅子上，脑袋埋进膝盖，哭得并不大声却带了点撕心裂肺的感觉，直哭得手脚发麻，好几次险些喘不上气来，他就这么哭了不知道多久，好不容易缓过那种难过得有些窒息的心情来，活动了一下僵硬的四肢，洗完澡，把自己埋进了被窝，罩了个严严实实。</p>
 <hr>
-<p>###【14】<br>
-“胡婶，宁儿还没醒吗？”徐尘醒得挺早的，出去晨跑了一圈回来已经九点多了，还没看到小朋友下来吃饭，胡婶应了一声，也纳闷：“是啊，今天是有点晚了。”裴永宁假期的作息挺规律的，因为睡得就早，一般来说最多八点也就醒了，很少有这样到了九点多还没醒的情况，徐尘有些担心，去冲了个澡就轻声轻气地去推他的门，虽然昨天那点打不至于把人打坏，但万一呢，裴永宁身子弱，总不能是巴掌打几下就烧起来了吧？<br>
+<h3 id="14">【14】</h3>
+<p>“胡婶，宁儿还没醒吗？”徐尘醒得挺早的，出去晨跑了一圈回来已经九点多了，还没看到小朋友下来吃饭，胡婶应了一声，也纳闷：“是啊，今天是有点晚了。”裴永宁假期的作息挺规律的，因为睡得就早，一般来说最多八点也就醒了，很少有这样到了九点多还没醒的情况，徐尘有些担心，去冲了个澡就轻声轻气地去推他的门，虽然昨天那点打不至于把人打坏，但万一呢，裴永宁身子弱，总不能是巴掌打几下就烧起来了吧？<br>
 房间里漆黑一片，徐家的窗帘都是拉上就伸手不见五指的类型，徐尘没关门，就着门口那点亮光跺到他床边，小心地探手去试裴永宁额头温度，手指刚碰上他额头，侧趴着的小朋友就像是受到了什么惊吓一般，猛地睁开眼睛，正对上徐尘打量的眼神，吓得徐尘手抖了一下，和他面面相觑了两秒，坐到他床边，边在他背上轻轻拍着边声音很轻地安抚他：“吵醒你了？对不起对不起，宁儿想睡就再睡一会儿，哥哥出去了。”刚刚轻轻碰那一下，徐尘觉得他温度并没有什么太大异常，帮他整了整被子，把他开得像冰窟的十六度空调调到了二十六度，轻点了点他脑袋：“没人盯着就贪凉。”<br>
 这话一下子戳到了裴永宁伤心处，他轻轻翻了个身，又压到了伤处，蛰伏的疼一下子被唤醒了，他昨天哭了太久了，眼睛肿得不成样子，涨得慌，但看到徐尘后依然想哭，委屈巴巴地嘟囔：“谁叫你不盯着的……”徐尘被气笑了，刚想骂他两句，就顺着微弱的光看到他红红肿肿的眼睛，骂人的话就卡在了嘴边，无奈笑着揉揉他头发：“要不想睡了起来吃个早饭吧，等下王老师还要来呢。”<br>
 提到王老师，裴永宁更难过了，他昨天太难受，实在做不下去作业，裴永宁是乖小孩儿，不管遇到多大的事儿写作业都是他的头等大事，除了有两次挨完裴杨的打烧得温度太高坐都坐不住，还没遇到过他欠了老师作业不交这种事情，小朋友扁着嘴，只觉得每一件事情都让他想哭，用被子把自己包得严严实实，声音都带上哭腔了：“我作业没写完……怎么办……王老师要骂我的……”<br>
@@ -555,8 +768,8 @@
 裴永宁脚落地的那一刻拉到了伤处，腿一软竟是没站稳，徐尘眉心一跳，忙侧转了椅子伸手去接他，把他抱了个满怀。<br>
 裴永宁落到他怀里，片刻后就哭出委屈满得快要溢出来的一声，堪称凄厉，一下子哭进人心里，徐尘轻柔地轻轻在他背上顺气：“好了好了，结束了。”</p>
 <hr>
-<p>###【15】<br>
-这话丝毫没能安慰到漫漫还债长路堪堪过去一般的小孩儿，他疼得七荤八素的同时绝望地想到徐尘不近人情的附加刑，哭得更伤心，小猴子一样死死攀在他哥身上。徐尘试着去掰他攥得蹦出青筋的手，竟是没拉动，叹了口气：“宁儿，松松手，大哥在这儿呢，不走。”<br>
+<h3 id="15">【15】</h3>
+<p>这话丝毫没能安慰到漫漫还债长路堪堪过去一般的小孩儿，他疼得七荤八素的同时绝望地想到徐尘不近人情的附加刑，哭得更伤心，小猴子一样死死攀在他哥身上。徐尘试着去掰他攥得蹦出青筋的手，竟是没拉动，叹了口气：“宁儿，松松手，大哥在这儿呢，不走。”<br>
 裴永宁像是听不进去一样，手上力道丝毫没减，仿佛沉浸在自己的世界里只顾着专心哭，徐尘无法，只能轻轻在他背后拍：“没事儿，没事儿，哥哥在呢。”<br>
 裴永宁发泄一般地哭了大半个小时，徐尘都担心他把自己哭脱水了，等他稍微平静一点就给他喂了小半瓶水下去，语气轻柔而无奈：“哭够了？回去洗个澡睡觉吧。”<br>
 裴永宁头摇得像拨浪鼓，声音都哭哑了：“我……我还没有要睡觉呢！”徐尘被他逗笑了：“那你还想干嘛。”裴永宁用力吸了下鼻子，像是认真思考了一下：“我还有作业没写，我……我要在哥哥这里写作业。”<br>
@@ -1186,7 +1399,7 @@
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-xiang-jing-jing/&#34;&gt;【MM】李鸣鸣觉得他想静静&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-tan-liao-ge-jia-lian-ai&#34;&gt;【MM】李鸣鸣觉得他谈了个假恋爱&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/yan-wang-dian-wu-xian-yi-jin-kao-lu-yi-xia/&#34;&gt;【MM】阎王殿五险一金考虑一下？&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;huang-di-shi-me-de-bu-gan-la-1-4&#34;&gt;【MM】皇帝什么的不干啦&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;huang-di-shi-me-de-bu-gan-la-1-4/&#34;&gt;【MM】皇帝什么的不干啦&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/ming-tian-zhi-hou-1-3/&#34;&gt;【FF】明天之后&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;娱乐圈相关&#34;&gt;娱乐圈相关：&lt;/h2&gt;
@@ -1194,14 +1407,14 @@
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/lun-xiong-kong-de-zi-wo-xiu-yang/&#34;&gt;【MM】论兄控的自我修养&lt;/a&gt; + &lt;a href=&#34;https://aaaliaaa.github.io/post/shi-jie-na-me-da-1-3/&#34;&gt;世界那么大（坑了）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/hai-bu-neng-tan-ge-lian-ai-le-ma/&#34;&gt;【MM】还不能谈个恋爱了吗&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/guan-yu-zhui-xing-de-na-xie-shi-1-5/&#34;&gt;【MF】关于追星的那些事儿（1-5）&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;shuo-lai-ni-ke-neng-bu-xin-wo-zhen-bu-xiang-shang-re-yi-1-2/&#34;&gt;【MF】说来你可能不信我真不想上热一&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/shuo-lai-ni-ke-neng-bu-xin-wo-zhen-bu-xiang-shang-re-yi-1-2/&#34;&gt;【MF】说来你可能不信我真不想上热一&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/re-jin-zhu-sheng-qi-liao-zen-me-ban-zai-xian-deng-ting-ji-de-1-6/&#34;&gt;【MM】惹金主生气了怎么办？在线等，挺急的。&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/huo-yan-yu-bing-chuan-1-6/&#34;&gt;【MM】火焰与冰川&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h1 id=&#34;短篇杂&#34;&gt;&lt;strong&gt;短篇（杂）&lt;/strong&gt;&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/cuo-wu-de-chi-cu-fang-shi/&#34;&gt;【MF+MM】错误的吃醋方式&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;[【MM】就要酒后乱性](https://aaaliaaa.github.io/post/(jiu-yao-jiu-hou-luan-xing)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/jiu-yao-jiu-hou-luan-xing&#34;&gt;【MM】就要酒后乱性&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/xiao-hai-er-peng-ci-er-ni-1-2/&#34;&gt;【MM】小孩儿，碰瓷儿呢？（1-2）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/cai-cai-sheng-he/&#34;&gt;【MM】至今没有名字的菜菜生贺&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/na-xie-nian-keng-die-de-gao-kao-zuo-wen-ti/&#34;&gt;【MM】那些年坑爹的高考作文题&lt;/a&gt;&lt;/li&gt;
@@ -1213,14 +1426,14 @@
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/feng-ge-long-lou-lian-yun-xiao/&#34;&gt;【MM】凤阁龙楼连霄汉&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/xi-huan-ni-de-zhe-jian-shi/&#34;&gt;【FM】喜欢你的这件事&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/qi-xie-zhen-zhen/&#34;&gt;【FM】其叶蓁蓁&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;shi-jian-ma-zhe-shi-wo-de-48-xiao-shi-he-suan-bao-gao&#34;&gt;【FF】实践吗？这是我的48小时核酸报告&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/shi-jian-ma-zhe-shi-wo-de-48-xiao-shi-he-suan-bao-gao/&#34;&gt;【FF】实践吗？这是我的48小时核酸报告&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;同人文&#34;&gt;同人文：&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/wang-qiu-bu-shi-yong-lai-zhi-zao-chou-hen-de-gong-ju-lian-wen/&#34;&gt;【网王同人】网球不是用来制造仇恨的工具&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/xu-lesslessman-wu-zhi-jing-de-ba-yue-greatergreater-fan-wai-san/&#34;&gt;续《漫无止境的八月》番外三：（一只小雨莉）老师的番外续写&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/liang-yi-xiang-huan-xiang-guan-chang-ping-tong-ren-xiao-ju-chang/&#34;&gt;寒霜降老师的两意相欢相关&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/san-shui-sheng-he-yi-xie-xiao-yu-tuo-xie-de-geng&#34;&gt;【三水生贺】一些小虞妥协的梗&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/san-shui-sheng-he-yi-xie-xiao-yu-tuo-xie-de-geng/&#34;&gt;【三水生贺】一些小虞妥协的梗&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;一些圈外文&#34;&gt;一些圈外文：&lt;/h2&gt;
 &lt;ol&gt;
@@ -1242,7 +1455,7 @@
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/nao-dong-yi-ge-ff-de-geng/&#34;&gt;【FF】一个FF的梗&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/chi-jia-chu-zou-geng/&#34;&gt;【都可】离家出走梗&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/que-ai-xiao-pian-duan/&#34;&gt;【都可】缺爱小片段&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;you-shi-yi-xie-min-gan-xiao-hai-de-geng&#34;&gt;【都可】又是一些敏感小孩的梗&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/you-shi-yi-xie-min-gan-xiao-hai-de-geng/&#34;&gt;【都可】又是一些敏感小孩的梗&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/sp-zuo-zhe-wen-juan/&#34;&gt;【随笔】圈内作者问卷&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/wen-shou-er-shi-wen/&#34;&gt;【随笔】文手二十问&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://localhost:4000/post/er-shi-wu-jian-shi-er-hu-nao-ban/&#34;&gt;【随笔】二十五件事儿胡闹版（文书后遗症）&lt;/a&gt;&lt;/li&gt;
@@ -1260,9 +1473,23 @@
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-49-52/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【四十九】&lt;br&gt;
-芒昱出发去江城的第一天，家里气氛异常沉闷。&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#%E5%9B%9B%E5%8D%81%E4%B9%9D&#34;&gt;【四十九】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%BA%94%E5%8D%81&#34;&gt;【五十】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%BA%94%E5%8D%81%E4%B8%80&#34;&gt;【五十一】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%BA%94%E5%8D%81%E4%BA%8C&#34;&gt;【五十二】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;四十九&#34;&gt;【四十九】&lt;/h3&gt;
+&lt;p&gt;芒昱出发去江城的第一天，家里气氛异常沉闷。&lt;br&gt;
 徐尘手上忙着公司的事，心里又装着芒昱的事，很难分出一点精神来安抚弟妹。&lt;br&gt;
 裴永宁把带着蒋盼把作业写完了，给她开了动画片后，一个人缩进了乐器室。&lt;br&gt;
 邹和宇则一头扎进了健身房。&lt;br&gt;
@@ -1330,8 +1557,8 @@
 徐尘笑了，伸手拉他：”哎呀，开玩笑的，来，来，补偿你，今天晚上吃完晚饭，大哥带你出门兜风怎么样？让你开。“&lt;br&gt;
 邹和宇反应了一下，喜上眉梢：”真的？“&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【五十】&lt;br&gt;
-邹和宇的驾照是年前考出来的，刚考完没多久就遇到这个事儿，徐尘本来承诺他要带他去练车，到现在还没实现过。&lt;br&gt;
+&lt;h3 id=&#34;五十&#34;&gt;【五十】&lt;/h3&gt;
+&lt;p&gt;邹和宇的驾照是年前考出来的，刚考完没多久就遇到这个事儿，徐尘本来承诺他要带他去练车，到现在还没实现过。&lt;br&gt;
 和芒昱那种考证当任务，开车就紧张的类型不同，邹和宇胆子向来是大的，拿证那天回家徐尘去接他，他就兴致勃勃开了一大段回来，燕城路况那么复杂都没能打击到他的积极性，虽然开完下来出了一身冷汗但第一句话就是“咱啥时候再去练”。&lt;br&gt;
 这会儿路上一辆车都没有，倒是个练车的好时候。&lt;br&gt;
 徐尘用一句话把人哄好了，邹和宇欢欢喜喜地跑上楼去换能出门的衣服。&lt;/p&gt;
@@ -1392,8 +1619,8 @@
 邹和宇踩下去脚刹的时候觉得浑身脱了力一般，两只手冰凉，汗津津的，整个人也控制不住地有些颤抖，刚换了两次呼吸平静一些下来，就听到他哥一点温度都没有的声音：“滚下车。”&lt;br&gt;
 随即是徐尘扣上了门的闷响。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【五十一】&lt;br&gt;
-邹和宇抿着嘴下了车，脚落到地上的时候甚至觉得有些浮，带了点不真实，需要扶着宽大的车门才能勉强站定，刚站定就看到他哥气势汹汹地冲他走来，邹和宇一个瑟缩，想要往车里缩，被徐尘一把提起，一脚跨上挺高的SUV把人提到腿上压着，先毫无章法地落了十来巴掌。&lt;br&gt;
+&lt;h3 id=&#34;五十一&#34;&gt;【五十一】&lt;/h3&gt;
+&lt;p&gt;邹和宇抿着嘴下了车，脚落到地上的时候甚至觉得有些浮，带了点不真实，需要扶着宽大的车门才能勉强站定，刚站定就看到他哥气势汹汹地冲他走来，邹和宇一个瑟缩，想要往车里缩，被徐尘一把提起，一脚跨上挺高的SUV把人提到腿上压着，先毫无章法地落了十来巴掌。&lt;br&gt;
 一下子给邹和宇打懵了。&lt;br&gt;
 其实疼得倒有限，大过年的，这么冷的天，裤子都厚，又是巴掌，能有几分疼是留着的。&lt;br&gt;
 邹和宇震惊的更多是他哥居然在室外对他动手，虽说这个时间点这个荒凉的地方，大概率也不会有人出现，但到底是室外，万一呢。&lt;br&gt;
@@ -1449,8 +1676,8 @@
 “车窗膜贴的防窥的，车的隔音那么好，那方圆十里都不一定能见到一条人，”徐尘真的很冤枉，“哪可能真的当别人面打他。”&lt;br&gt;
 道理是这么个道理，心理又是另一种心理了，裴永宁叹口气：“知道啦，我下去哄就是了。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【五十二】&lt;br&gt;
-裴永宁也不着急哄他，就拍着他背等他自己发泄完，邹和宇死抱着他的力道慢慢松了一些，就在裴永宁以为小朋友哭好了打算放开了的时候，听到耳边传来一声哭腔浓重的声音：“……三哥。”&lt;br&gt;
+&lt;h3 id=&#34;五十二&#34;&gt;【五十二】&lt;/h3&gt;
+&lt;p&gt;裴永宁也不着急哄他，就拍着他背等他自己发泄完，邹和宇死抱着他的力道慢慢松了一些，就在裴永宁以为小朋友哭好了打算放开了的时候，听到耳边传来一声哭腔浓重的声音：“……三哥。”&lt;br&gt;
 “嗯？”&lt;br&gt;
 “我想二哥了……”&lt;br&gt;
 裴永宁僵住了，好半天只讷讷回了一个“嗯”。&lt;br&gt;
@@ -1527,8 +1754,8 @@
 &lt;li&gt;李宏辛*何桥&lt;/li&gt;
 &lt;li&gt;不温不火但很有生活气息的音乐制作人*丧气摆烂曾经顶流小偶像&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-“走了桥桥！”经纪人康虞在门口喊，她拿着文件拍在门上，整个人有点无奈，“快一点，别整天一副要死不死的样子，打起精神来！年轻人！精神气儿呢！”&lt;br&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;“走了桥桥！”经纪人康虞在门口喊，她拿着文件拍在门上，整个人有点无奈，“快一点，别整天一副要死不死的样子，打起精神来！年轻人！精神气儿呢！”&lt;br&gt;
 何桥用黑色的口罩把脸遮得严严实实，又把黑色的帆船帽往下拉了拉，低低地“嗯”了一声。&lt;br&gt;
 康虞叹了口气，从房子里数落他到车上：“挺好看一孩子，成天阴沉沉的，你说你到底想要什么？嗯？舞台舞台不去好好争取，演戏演得一塌糊涂，你还记不记得你曾经也是发一条微博几百万转发的人，嗯？”&lt;br&gt;
 何桥把自己陷进座椅里，转头看向了窗外，没应她，眼底的黑青清晰可见。&lt;br&gt;
@@ -1592,8 +1819,8 @@
 “那你接下来，想过将来打算做什么呢？”&lt;br&gt;
 何桥闭上了眼睛：“……我没想过。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-黄泊维带着摄影组敲开李宏辛工作室的大门的时候，正是正午时分。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;黄泊维带着摄影组敲开李宏辛工作室的大门的时候，正是正午时分。&lt;br&gt;
 这时间有些尴尬，属于一个人会困顿的时间段，开门的男人却挺精神，眼睛里带笑：“哟，挺早，吃了吗？”&lt;br&gt;
 “吃了吃了，李老师，好久不见！”黄泊维瞬间被带到了他的气氛里，整个人都舒适起来。&lt;/p&gt;
 &lt;p&gt;很多人说，李宏辛有种神奇的氛围感，在他身边就会觉得心很静。&lt;br&gt;
@@ -1655,8 +1882,8 @@
 &lt;p&gt;“没事的，所有人都是一样，第一首歌，怀疑，不确定，不知道自己在干嘛，到了后面，越写越好，越写越多，逐渐的，你就知道自己在干什么，想要什么，该往哪里走了。”&lt;br&gt;
 “别着急，也别害怕，先走走看。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【3】&lt;br&gt;
-“桥桥，来，进来。”李宏辛打开小酒吧的后门，对何桥招招手。&lt;br&gt;
+&lt;h3 id=&#34;3&#34;&gt;【3】&lt;/h3&gt;
+&lt;p&gt;“桥桥，来，进来。”李宏辛打开小酒吧的后门，对何桥招招手。&lt;br&gt;
 何桥脑袋探进去看了一眼，小酒吧灯光昏暗，没有不认识的人，这才松了口气往里头走。&lt;br&gt;
 大白天不是酒吧的营业时间，这是李宏辛朋友的酒吧，吧台侧面儿有个小舞台，乐器的家伙什儿倒是齐全的很。&lt;br&gt;
 李宏辛把舞台边的灯打开：“自己玩玩儿？”&lt;/p&gt;
@@ -1718,8 +1945,8 @@
 “最好是。”岑时暮神情严肃地看着他，“你要知道你自己在干什么。”&lt;br&gt;
 “嗯，我知道，”李宏辛用手撑了下巴，微笑着迎上岑时暮的目光，“我在追人。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【4】&lt;br&gt;
-说追人是用来噎岑时暮的，但李宏辛知道岑时暮说得没错。&lt;br&gt;
+&lt;h3 id=&#34;4&#34;&gt;【4】&lt;/h3&gt;
+&lt;p&gt;说追人是用来噎岑时暮的，但李宏辛知道岑时暮说得没错。&lt;br&gt;
 他确实有点不对劲儿。&lt;br&gt;
 说得轻描淡写，但其实从他开始给何桥挑麦克风他就开始意识到了，他对何桥的态度确实很微妙。&lt;br&gt;
 不过只见了一面。&lt;br&gt;
@@ -1786,8 +2013,8 @@
 何桥沉默了半晌，将手放到了他的手心上。&lt;br&gt;
 任由他把自己从地上拉了起来。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【5】&lt;br&gt;
-“你想好了？”&lt;br&gt;
+&lt;h3 id=&#34;5&#34;&gt;【5】&lt;/h3&gt;
+&lt;p&gt;“你想好了？”&lt;br&gt;
 何桥看着李宏辛对着自己难得没有笑容的脸，不由自主地就抖了一下，本来就心虚的语气更没底气了：“我，我就是觉得我今天嗓子状态可能不好，万，万一唱得不好给你们添麻烦……那……“&lt;br&gt;
 前几天他连着听了几场小酒吧的晚上演出，听得实在热血澎湃，晕头转向在最心动的时候面对李宏辛“想不想自己也试试？”的问题，不知怎么就点了头，回去越想越后悔，失眠了整整一晚，还是跟李宏辛说了自己不想去了。&lt;br&gt;
 李宏辛难得态度坚决地打断他：”这些都是借口，现在你告诉我你的决定，今天晚上你是想唱，还是不唱？“&lt;br&gt;
@@ -1836,8 +2063,8 @@
 李宏辛被逗笑了，这什么话：“三岁呀？任性。”&lt;br&gt;
 何桥抬头，乌溜溜的眼睛里带着些紧张，攥他袖子的手愈发紧了：“我……我喜欢你，宏辛哥。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【6】&lt;br&gt;
-他这句话说完，房间里的空气突然就安静下来，饶是李宏辛一向很会面对各种各样的突发情况且向来很会说话，面对何桥这突然发出一记究极直球也一时间晃了神。&lt;br&gt;
+&lt;h3 id=&#34;6&#34;&gt;【6】&lt;/h3&gt;
+&lt;p&gt;他这句话说完，房间里的空气突然就安静下来，饶是李宏辛一向很会面对各种各样的突发情况且向来很会说话，面对何桥这突然发出一记究极直球也一时间晃了神。&lt;br&gt;
 他的沉默让本就紧张的何桥更紧张了，他有些慌张地松开了拽着李宏辛的手，飞快把手背到身后，结结巴巴：“对……对不起。”&lt;br&gt;
 他这声带着颤音的对不起把李宏辛的神拉了回来，他笑了笑，微俯了点身在他耳边问：“你宏辛哥在你眼中，就是个刚听完人告白就能揍人的混蛋啊？”&lt;br&gt;
 何桥脸一红：“啊……不是……”&lt;br&gt;
@@ -2758,16 +2985,30 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/huang-di-shi-me-de-bu-gan-la-1-4/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-午夜时分，宫内一封急报传到了摄政王府，称皇帝似是感了风寒，半夜发起热来，呓语间唤着皇叔。&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#1&#34;&gt;【1】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2&#34;&gt;【2】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#3&#34;&gt;【3】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#4&#34;&gt;【4】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;午夜时分，宫内一封急报传到了摄政王府，称皇帝似是感了风寒，半夜发起热来，呓语间唤着皇叔。&lt;br&gt;
 赵黎和连正经衣裳都没换，快马加鞭进了宫。&lt;br&gt;
 小皇帝时年十三，先帝驾崩时方满六周岁，朝廷一度风雨飘摇，各大家族暗潮澎湃，逼宫行动一触即发。&lt;br&gt;
 然而，先帝的幼弟，年轻的楚王爷以一己之力平定了内乱，稳坐摄政王地位置一手将年幼的小皇子捧上王位。&lt;br&gt;
 年号御京。&lt;br&gt;
 至今已是七年。&lt;/p&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-“陛下的情况如何？”赵黎和任由侍卫将自己身上的大衣取下来，边大步往养心殿内走边问。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;“陛下的情况如何？”赵黎和任由侍卫将自己身上的大衣取下来，边大步往养心殿内走边问。&lt;br&gt;
 “回王爷，还烧着，”小皇帝的贴身侍女锦绣快步跟在他身后边压低声音回，“陛下一直在叫您。”&lt;br&gt;
 话说着二人已经走到了龙床边，皇帝病得严重，太医院也不敢怠慢，围了一群太医，看到赵黎和走进来皆作着揖往后退，为他让出一条路来：“参见王爷。”&lt;br&gt;
 “免礼。”赵黎和轻轻一抬手，坐到床边去查看小皇帝的情况。&lt;br&gt;
@@ -2779,8 +3020,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 赵黎和看他连眼眶都红了，随手挥了挥手将一屋子的人遣走，伸手将他半搂进怀里：“这样难受？”&lt;br&gt;
 小皇帝快速摇了两下头，伸手圈住赵黎和的腰，将自己的脸埋进去：“你别走……”&lt;br&gt;
 “我不走，”赵黎和轻声宽慰，“安心睡吧，皇叔守着你。”&lt;/p&gt;
-&lt;p&gt;###【3】&lt;br&gt;
-赵衍京不知道发生了什么。&lt;br&gt;
+&lt;h3 id=&#34;3&#34;&gt;【3】&lt;/h3&gt;
+&lt;p&gt;赵衍京不知道发生了什么。&lt;br&gt;
 他以为自己死定了。&lt;br&gt;
 毕竟他被他的堂兄赵子辰一刀捅进了胸口。&lt;br&gt;
 回过神来的时候，这座宫殿早已成为别人的掌中之物。&lt;br&gt;
@@ -2805,8 +3046,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 &lt;p&gt;赵衍京很坦然地接受了他的死亡，但没想到，再醒来的时候还能见到赵黎和。&lt;br&gt;
 他来不及思考这是否为幻境，只是凭着本能死死地抓住了出现在眼前的赵黎和。&lt;br&gt;
 事实上，就算是幻境，他也甘之如饴。&lt;/p&gt;
-&lt;p&gt;###【4】&lt;br&gt;
-第二天，赵衍京睁开眼时已经快到晌午了，他的脑子糊成一团乱麻，搞不清楚如今是个什么情况，他应该是实实在在的死了，冰冷的刀剑刺入胸口的剧痛和冰凉的触感都历历在目，但他又确确实实这样好好地活着，似乎是回到了孩提时期。&lt;br&gt;
+&lt;h3 id=&#34;4&#34;&gt;【4】&lt;/h3&gt;
+&lt;p&gt;第二天，赵衍京睁开眼时已经快到晌午了，他的脑子糊成一团乱麻，搞不清楚如今是个什么情况，他应该是实实在在的死了，冰冷的刀剑刺入胸口的剧痛和冰凉的触感都历历在目，但他又确确实实这样好好地活着，似乎是回到了孩提时期。&lt;br&gt;
 回到了那个皇叔在他身边的时候。&lt;br&gt;
 他并未让自己挣扎太久，任由锦绣帮他更衣完毕，在锦绣问他是否传午膳的时候扯开话题问道：“皇叔呢？”&lt;br&gt;
 锦绣是他母后的贴身侍女，从小服侍他长大，永远视他如长不大的孩子，笑着帮他把袖子上的褶皱抹平：“王爷昨儿陪了陛下一宿，天未亮又准备早朝，如今还没回来呢，陛下想王爷了？奴婢唤人去传话可好？”&lt;br&gt;
@@ -3805,9 +4046,21 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/xiao-hai-er-peng-ci-er-ni-1-2/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-亓映觉得一切都很玄幻。&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#1&#34;&gt;【1】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2&#34;&gt;【2】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;亓映觉得一切都很玄幻。&lt;br&gt;
 他本来只是好好地开着车在路上走着，突然路边窜出来一个小孩儿。这算一条快速公路，他虽然没有走在最左道，但速度并不慢，突发如此变数的时候只踩急刹车像是已经避不开，身体本能让他猛地往左边打方向盘，隔壁车道的车猝不及防，几辆车撞成一团，硬是撞出了亓映的安全气囊，他本人在强烈的震动下失去了意识。&lt;br&gt;
 醒来之后，脑袋里就多了一个莫名其妙的声音。&lt;br&gt;
 自称“强制任务执行系统”。&lt;br&gt;
@@ -3847,8 +4100,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “你昨天就是这么讲的。”&lt;br&gt;
 “……明天一定，明天一定。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-“……你知道自己在说什么吗？”时乐语心情复杂地看着亓映。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;“……你知道自己在说什么吗？”时乐语心情复杂地看着亓映。&lt;br&gt;
 亓映比他还绝望，脸上却很沉稳地“嗯”了一声，强装冷静地把自己都觉得离谱的理由说出来：“毕竟是公司上市前的重要阶段，不能被任何一个小问题所影响。”&lt;br&gt;
 时乐语哑口无言：“哥，卖艺又卖身啊？”&lt;br&gt;
 你当我乐意啊，亓映忍住了自己的粗口，挤出一个形式化的假笑：“为人民服务。”&lt;br&gt;
@@ -4064,10 +4317,24 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-tan-liao-ge-jia-lian-ai/"" data-c="
-          &lt;p&gt;&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#1&#34;&gt;【1】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2&#34;&gt;【2】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#3&#34;&gt;【3】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#4&#34;&gt;【4】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
 &lt;a href=&#34;https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-xiang-jing-jing/&#34;&gt;【前文】&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-季深点了一杯美式，坐在学校一个餐厅的透明窗边的高脚桌边开始办公。今天天气不错，这个地方难得出太阳，下午这个点还有太阳能照进来就更少见。&lt;br&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;季深点了一杯美式，坐在学校一个餐厅的透明窗边的高脚桌边开始办公。今天天气不错，这个地方难得出太阳，下午这个点还有太阳能照进来就更少见。&lt;br&gt;
 季深对天气没有太大偏好，但李鸣鸣很喜欢阳光天，想到今天早上出门的时候小朋友张开双手拥抱阳光的享受神情，他也情不自禁有点高兴起来。正想着，余光就看到透明窗外挤了几个学生，凑在一起不知道在说些什么，频频往他这里看——他家的李鸣鸣小同志正在其中。&lt;br&gt;
 季深抬头正视过去，仔细看了一眼，是他那节课上的李鸣鸣的小组。商科相关的课本就大多都是项目制，他这节课干脆就叫“Campaign”，整节课从头到尾都是讨论和小组项目为主。他很清楚大部分学生对小组作业的痛恨和绝望心情，但没办法，商科的生态就是这样。&lt;br&gt;
 他这样看过去，和其中一个学生对上了眼神，于是他和善地笑笑，当做打招呼了。那位金发碧眼的外国小哥一瞬间就慌张起来，疯狂去拍旁边队友的肩膀，见了鬼一样往自己这里指了一下，然后整个组都往他这里看过来，季深有点疑惑地看着他们又窸窸窣窣了好一阵子，最后把李鸣鸣推到了队伍最前面，推搡着他往餐厅里头走。&lt;br&gt;
@@ -4100,8 +4367,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “不重要了，”贺西喜滋滋，担心了一下午的心情终于缓解了，丝毫不觉得这个出卖朋友的行为有什么不对，“反正分要到了就好！”&lt;br&gt;
 李鸣鸣抬头望天，很惆怅。是啊是啊，对你们来说这件事情就到这里了，但对自己来说，还说不准呢。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-他们这个讨论意外得搞到了很晚，季深十点还没收到他的信息，有点担心地发信息去询问，收到李鸣鸣一个生无可恋的倒地兔子表情包。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;他们这个讨论意外得搞到了很晚，季深十点还没收到他的信息，有点担心地发信息去询问，收到李鸣鸣一个生无可恋的倒地兔子表情包。&lt;br&gt;
 季深倚着吧台笑出了声，回他：“需要我帮什么忙吗？”&lt;br&gt;
 被会议折磨到几乎升天的李鸣鸣不理智地回：“取消演讲吧教授大人。”&lt;br&gt;
 然后飞快撤回了，换成了一个“我还要这样工作多久.jpg”的猫猫表情包。&lt;br&gt;
@@ -4159,8 +4426,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “再说了，”季深把他的书包往进门后的换鞋小椅子上一放，表情有点疑惑，“我要师德那东西做什么？”是能吃还是能赚钱，怎么想都是老婆更重要一些。&lt;br&gt;
 李鸣鸣：……教授啊！你听听自己在说什么呀！！！&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【3】&lt;br&gt;
-虽然没等到他那句“好哥哥”，季深到底还是没让他自己煮面吃，李鸣鸣洗完澡浑身热气地出来的时候，季深正好把煎好的荷包蛋放到一碗冒着白雾的面上，招呼他：“正好，来吃饭。”&lt;br&gt;
+&lt;h3 id=&#34;3&#34;&gt;【3】&lt;/h3&gt;
+&lt;p&gt;虽然没等到他那句“好哥哥”，季深到底还是没让他自己煮面吃，李鸣鸣洗完澡浑身热气地出来的时候，季深正好把煎好的荷包蛋放到一碗冒着白雾的面上，招呼他：“正好，来吃饭。”&lt;br&gt;
 李鸣鸣一个澡把自己洗得通体舒畅，心情都变好了，笑眯眯坐到餐桌旁抱碗吃面，季深坐到他对面看他：“好吃吗？”&lt;br&gt;
 李鸣鸣点了两下头，嘎吱嘎吱嚼进去一个脆骨，吃得很香的样子。&lt;br&gt;
 季深撑着下巴看他：“以后别因为这种事情影响心情搞得自己吃不下饭，不值当。”&lt;br&gt;
@@ -4215,8 +4482,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 &lt;/blockquote&gt;
 &lt;/blockquote&gt;
 &lt;hr&gt;
-&lt;p&gt;###【4】&lt;br&gt;
-季深洗完碗依然没见到李鸣鸣那家当出来，随手在旁边的小熊擦手巾上擦干了手，往屋里走去找他。&lt;br&gt;
+&lt;h3 id=&#34;4&#34;&gt;【4】&lt;/h3&gt;
+&lt;p&gt;季深洗完碗依然没见到李鸣鸣那家当出来，随手在旁边的小熊擦手巾上擦干了手，往屋里走去找他。&lt;br&gt;
 李鸣鸣小朋友站在床边，神情相当纠结地看着床上摆着的几样工具——红木发刷、长柄浴刷和……一条皮带。&lt;br&gt;
 季深对他肃然起敬：“呜呜，你可太会挑东西了。”&lt;br&gt;
 是怎么做到一个比一个杀伤力大的。&lt;br&gt;
@@ -4612,9 +4879,24 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-2-zhaixing-1-5/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-半夜十一点半，微博上依然一片轰动，“摘星之子舞台事故”的词条高高地“爆”在热搜第一，相关词条紧接着占了一半热搜榜单，各种贴吧论坛聊天框信息一条一条刷得飞快。&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#1&#34;&gt;【1】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2&#34;&gt;【2】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#3&#34;&gt;【3】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#4&#34;&gt;【4】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#5&#34;&gt;【5】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;半夜十一点半，微博上依然一片轰动，“摘星之子舞台事故”的词条高高地“爆”在热搜第一，相关词条紧接着占了一半热搜榜单，各种贴吧论坛聊天框信息一条一条刷得飞快。&lt;br&gt;
 ……&lt;br&gt;
 “wocwocwoc！据现场的姐妹说今天这场现场出事了！”&lt;br&gt;
 “是啊！！我就在现场！我离舞台有点远看得不是很清楚但应该是宁宁那组表演的时候舞台出事了，好像有选手受伤了，节目马上停了，具体什么情况也没说！”&lt;br&gt;
@@ -4650,8 +4932,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 芒昱跟医生借了条一次性毛巾，用温水浸湿了给裴永宁擦了脸和手。裴永宁确实是累了，忙活了一天，又惊又吓又受伤，这段时间本就因为集训缺乏睡眠，这种情况下见到徐尘和芒昱，绷紧到极致的神经倏然就松了，被徐尘一手遮在眼前轻声地哄，没多久居然真的沉沉睡过去。&lt;br&gt;
 徐尘抱着他站起身，对白鹿使了个眼色，这个基地是有准备一些客人或嘉宾来时的用房的，本来就是徐氏出资的节目，自然也留了徐尘他们的房间，白鹿连忙走在前面带路。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-把裴永宁安顿到了房间，徐尘拍了一把芒昱的肩，芒昱点头，知道他还要去处理这个事情，点头，比了个“放心吧”的嘴形。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;把裴永宁安顿到了房间，徐尘拍了一把芒昱的肩，芒昱点头，知道他还要去处理这个事情，点头，比了个“放心吧”的嘴形。&lt;br&gt;
 等徐尘出了门，芒昱小心翼翼把裴永宁身上的衣服换了，用热毛巾给他随便擦了擦，他身上还穿着演出时的戏服，妆也没卸全，事情发生得太快太出乎意料，没有人有心情管这些细枝末节的小事情，芒昱看着雪白的戏服上沾上的血迹，心里有些堵，边轻手轻脚给他卸妆，边端详着他睡得还算安稳的五官想：就这么点时间是真的瘦了好多。&lt;br&gt;
 说实话，他其实是不太愿意裴永宁来这样的选秀的，毕竟又辛苦，这个圈子又复杂，裴永宁完完全全是可以不走这条路的，他喜欢音乐喜欢跳舞，那开开心心搞艺术挺好，没必要做什么男团，但裴永宁自己很感兴趣，再加上节目甚至是徐尘全权掌握在手里的，知道他不可能在这个节目里被欺负，就算是真的作为偶像出道了，在徐氏的庇护下裴永宁的路不可能难走，芒昱也就随他去了。&lt;br&gt;
 没人能想到他会受伤，还伤得这么严重。&lt;br&gt;
@@ -4695,8 +4977,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘伸手用被子把怀里的裴永宁裹得更严实：“是啊……谁知道呢。”&lt;br&gt;
 可能……还是下意识地，想去追那束光吧。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【3】&lt;br&gt;
-裴永宁醒的时候已经过了中午吃饭的点了，他睡了有些久，身体好久没有过这个多的睡眠，显然是有些不能适应，醒来的时候脑袋还有点懵，在被窝里迷迷糊糊了好一会儿，直到动了动腿，轻轻扯到了腿上的石膏才想起来昨天发生了什么。&lt;br&gt;
+&lt;h3 id=&#34;3&#34;&gt;【3】&lt;/h3&gt;
+&lt;p&gt;裴永宁醒的时候已经过了中午吃饭的点了，他睡了有些久，身体好久没有过这个多的睡眠，显然是有些不能适应，醒来的时候脑袋还有点懵，在被窝里迷迷糊糊了好一会儿，直到动了动腿，轻轻扯到了腿上的石膏才想起来昨天发生了什么。&lt;br&gt;
 一想起来，缝针的伤口好像就跟着疼了起来。&lt;br&gt;
 裴永宁揉揉眼睛，放声喊：“大哥！二哥！”&lt;br&gt;
 片刻后门就被推开了，芒昱走到床边俯下身亲了口他额头：“醒啦？”&lt;br&gt;
@@ -4755,8 +5037,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “楼上太天真了吧，真觉得他们看起来关系好就是好吗？这种选秀不是你死就是我活，大家都是竞争对手，表面上给大家看一个乌托邦居然还真有人信了。”&lt;br&gt;
 ……&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【4】&lt;br&gt;
-到了最后，整个风向变成了各家唯粉相互撕逼，选秀粉很容易发展成这样，而网上大家吵得热火朝天的时候，裴永宁正很有闲情逸致地边挑着一桶混合坚果里的腰果吃边一手随意地摸牌，对面坐了两个神情紧张且严肃的小男孩子，周围围了一圈半大男孩儿，都认认真真看着他们这场牌局。&lt;br&gt;
+&lt;h3 id=&#34;4&#34;&gt;【4】&lt;/h3&gt;
+&lt;p&gt;到了最后，整个风向变成了各家唯粉相互撕逼，选秀粉很容易发展成这样，而网上大家吵得热火朝天的时候，裴永宁正很有闲情逸致地边挑着一桶混合坚果里的腰果吃边一手随意地摸牌，对面坐了两个神情紧张且严肃的小男孩子，周围围了一圈半大男孩儿，都认认真真看着他们这场牌局。&lt;br&gt;
 裴永宁一伸手摸过正面朝上放着的牌：“看到了啊，我又是地主。”&lt;br&gt;
 对面两个男生一阵哀嚎，双手捏着手上的牌更专注了。裴永宁等所有牌都摸在手上，刷地在手里展开，左手飞快把牌理整齐，伸手把三张地主牌翻过来给大家看：“我要。”&lt;br&gt;
 对面两个男生一片死灰，知道他这句话说出来那大概就是没啥赢的可能性了。果然，五个回合之内，裴永宁就把手里最后两张牌扔了下去：“对二，结束啦，换人。”&lt;br&gt;
@@ -4789,8 +5071,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 许颂叹了口气：“知道了。”&lt;br&gt;
 徐尘挂了电话，把手机随手丢进车前放水杯的桶里，踩刹车发动了车。既然他还有能力，那么便能护多久护多久吧，他愿意为裴永宁罩起一个乌托邦的罩子，哪怕这或许不是个正确的做法。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【5】&lt;br&gt;
-&amp;quot;裴永宁童年&amp;quot;&lt;br&gt;
+&lt;h3 id=&#34;5&#34;&gt;【5】&lt;/h3&gt;
+&lt;p&gt;&amp;quot;裴永宁童年&amp;quot;&lt;br&gt;
 &amp;quot;裴永宁打黑工&amp;quot;&lt;br&gt;
 &amp;quot;裴永宁 徐氏&amp;quot;&lt;br&gt;
 &amp;quot;裴永宁 徐尘&amp;quot;&lt;br&gt;
@@ -4830,9 +5112,24 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-2-26-30/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【26】&lt;br&gt;
-芒昱脸刷地就红了，有些求助般地转头看徐尘喊他：“哥……”&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#26&#34;&gt;【26】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#27&#34;&gt;【27】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#28&#34;&gt;【28】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#29&#34;&gt;【29】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#30&#34;&gt;【30】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;26&#34;&gt;【26】&lt;/h3&gt;
+&lt;p&gt;芒昱脸刷地就红了，有些求助般地转头看徐尘喊他：“哥……”&lt;br&gt;
 “嗯？”徐尘装傻地看着他，“怎么了？”&lt;br&gt;
 这个芒昱显然还没培养出十年后的大心脏，这会儿连“帮我”两个字都说不出口，支支吾吾了好一阵，看着他哥一脸欺负他的神情，咬了咬牙，自己伸手去探腰间的松紧带，好不容易完成了准备工作，他的倒霉大哥居然还要一脸欣慰地夸：“真棒，我们阿昱好乖。”&lt;br&gt;
 芒昱脸红得快要滴出血来，恨不得拿手去捂脸：“……快一点。”&lt;br&gt;
@@ -4878,8 +5175,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘适时地住了嘴，也不说哄他的话，给了他足够的时间专心致志地哭。芒昱哭得很安静，但不是裴永宁之前那种克制而压抑的哭法，或许是性格使然，芒昱一直都这种光掉眼泪几乎没什么哭声的哭法，实在忍不住才抽泣一声，看着倒不委屈，就感觉哭得怪认真的。徐尘也不打扰他，让他尽情地哭完了，自己活动了一下有些麻的手脚，伸手去拽放在旁边桌上的纸巾给自己擤鼻子。&lt;br&gt;
 徐尘把他放下来：“去洗个脸，我去拿个药。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【27】&lt;br&gt;
-徐尘回来的时候，芒昱已经把自己收拾清楚低着头站在床边等他了，徐尘坐到他床上轻轻拍拍他腿侧：“穿上干什么？”&lt;br&gt;
+&lt;h3 id=&#34;27&#34;&gt;【27】&lt;/h3&gt;
+&lt;p&gt;徐尘回来的时候，芒昱已经把自己收拾清楚低着头站在床边等他了，徐尘坐到他床上轻轻拍拍他腿侧：“穿上干什么？”&lt;br&gt;
 芒昱带着有点幽怨的眼神抬头瞥了他一眼，徐尘被逗笑了：“好好好，为昱少爷服务。”伸手小心翼翼帮他褪了裤子，将药喷上去，把他往前搂到自己两腿之间轻轻将药揉进去，感受到他有些压抑的痛呼，动作放得更轻，分散他注意力地问：“今天晚上想吃什么？”&lt;br&gt;
 “胡婶不是做好了？”芒昱皱着眉头从忍痛中分给他一点注意力。&lt;br&gt;
 “没事，明天吃也行。”&lt;br&gt;
@@ -4926,8 +5223,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 红烧肉的香味随着微波炉的运作声愈发明显，和热腾腾大米散发出来的饭香交织在了一起，灯光暖蕴，耳边是裴永宁欣喜地喊“红烧肉”和徐尘絮絮叨叨地说“慢一点”的声音。芒昱恍然间，觉得自己走向的不单单是那餐桌。&lt;br&gt;
 而是一个他从未想过能够拥有的，真正属于他的，名为“家”的异次元。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【28】&lt;br&gt;
-芒昱回到家的时候，外面天已经黑透了，徐尘都回来了，坐在沙发上漫不经心看电视，看到他回来，“嚯”了一声：“今天有点晚啊？”&lt;br&gt;
+&lt;h3 id=&#34;28&#34;&gt;【28】&lt;/h3&gt;
+&lt;p&gt;芒昱回到家的时候，外面天已经黑透了，徐尘都回来了，坐在沙发上漫不经心看电视，看到他回来，“嚯”了一声：“今天有点晚啊？”&lt;br&gt;
 芒昱边换鞋边回：“嗯，老师多讲了两题。”胡婶听到他回来的动静，探头出来：“昱少爷回来了？&lt;br&gt;
 那我们差不多吃饭吧？”转头叫徐尘，“尘少爷，去叫宁少爷。”&lt;br&gt;
 徐尘没动，喊芒昱：“阿昱，下来的时候去叫一下。”&lt;br&gt;
@@ -4979,8 +5276,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “靠，别拉，不是说不吃吗？家里不是做好饭了？”&lt;br&gt;
 “打个电话，不回了，吃顿好的去。”实在是件还挺值得庆祝一顿的事儿。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【29】&lt;br&gt;
-“第几个啊？”裴永宁在位置上坐下来，仰头去看液晶屏上的选手榜，“邹……邹……啊，第三个！”&lt;br&gt;
+&lt;h3 id=&#34;29&#34;&gt;【29】&lt;/h3&gt;
+&lt;p&gt;“第几个啊？”裴永宁在位置上坐下来，仰头去看液晶屏上的选手榜，“邹……邹……啊，第三个！”&lt;br&gt;
 徐尘往他手里塞了一瓶牛奶：“嗯。”&lt;br&gt;
 芒昱打了个哈欠：“小朋友今年是……八岁了？”&lt;br&gt;
 “对，这好像是他第一场国家级的比赛。”徐尘回答，眼睛往候赛区瞟，很快找到了幼年版的邹和宇小朋友。&lt;br&gt;
@@ -5039,8 +5336,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 邹茂只是笑，对他比了个“加油”的嘴形。&lt;br&gt;
 邹和宇闭上了眼，深吸了一口气，再睁开时，眼里已经只剩了专注。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【30】&lt;br&gt;
-这场自由滑滑成什么样其实已经不太重要了，邹和宇的短节目那个分数注定他和奖牌没什么关系了，但关心小朋友的人在乎的也不是分数。&lt;br&gt;
+&lt;h3 id=&#34;30&#34;&gt;【30】&lt;/h3&gt;
+&lt;p&gt;这场自由滑滑成什么样其实已经不太重要了，邹和宇的短节目那个分数注定他和奖牌没什么关系了，但关心小朋友的人在乎的也不是分数。&lt;br&gt;
 徐尘看小朋友又摔了一个跳之后再站起身悄摸摸地吐了下舌头，倒是没短节目那种紧绷的感觉了，莫名的有种“自家孩子长大了”的成就感。伸手摸了一把身边紧张得快要把怀里小熊布偶的毛都要薅下来的裴永宁的脑袋：“宁儿，你要不要到底下去，等节目结束把玩偶丢进去。”&lt;br&gt;
 裴永宁整个思绪都放在比赛上，这会儿突然被他打断一下，花了两秒才反应过来：“啊？可以吗？”&lt;br&gt;
 “去吧。”徐尘笑着推推他。&lt;br&gt;
@@ -5137,9 +5434,24 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-2-21-25/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【21】&lt;br&gt;
-芒昱这个澡洗了挺长时间，他在自己埋在水雾之下，淋漓尽致地冲了一个彻头彻尾的澡，几乎以为自己被水淹没了，终于让自己从头暖到了尾。&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#21&#34;&gt;【21】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#22&#34;&gt;【22】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#23&#34;&gt;【23】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#24&#34;&gt;【24】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#25&#34;&gt;【25】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;21&#34;&gt;【21】&lt;/h3&gt;
+&lt;p&gt;芒昱这个澡洗了挺长时间，他在自己埋在水雾之下，淋漓尽致地冲了一个彻头彻尾的澡，几乎以为自己被水淹没了，终于让自己从头暖到了尾。&lt;br&gt;
 徐尘把睡衣和浴巾都给他放在了旁边的架子，芒昱随手擦了两把头发，并不打算吹它，套了徐尘的睡衣就顶着一头湿漉漉的头发出门来，徐尘棒棒糖嚼到了最后，两下把它从塑料棒上咬下来，抬头看他：“怎么不吹头。”&lt;br&gt;
 芒昱随意地甩了甩头，甩下几滴水珠：“没事，等下就干了。”&lt;br&gt;
 徐尘叹了口气，伸手拿过他搭在肩膀上的毛巾，上手亲力亲为给他擦头发，芒昱身子一僵：“我，我自己来吧。”徐尘任由他慌乱地把毛巾拽到自己手里，也不纠缠：“行，你擦着。”转身去卫生间拿电吹风，不由分说把人按住开始给他吹头发，芒昱挣扎了两下，被一句“再乱动我要烫到了”给震住了，浑身僵硬地坐在沙发上任他摆布。&lt;br&gt;
@@ -5195,8 +5507,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 然后他就听到徐尘带着笑意的声音：“傻瓜，这都信？”&lt;br&gt;
 “我从头到尾就没给过你选择，你的事儿本来就是我的事儿，反对无效。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【22】&lt;br&gt;
-芒昱把那颗糖紧紧握到手心里，语气还有点哭腔：“你骗我？”&lt;br&gt;
+&lt;h3 id=&#34;22&#34;&gt;【22】&lt;/h3&gt;
+&lt;p&gt;芒昱把那颗糖紧紧握到手心里，语气还有点哭腔：“你骗我？”&lt;br&gt;
 徐尘不要脸道：“是。”&lt;br&gt;
 芒昱鼻子很酸，一眨眼又掉出一滴泪，徐尘一愣，立马缴械投降：“对不起，哥错了，不该骗你的。”&lt;br&gt;
 芒昱不回他话，转身进卫生间去洗脸，徐尘不放心地跟在他身后进去，靠在卫生间墙上看他洗脸，语气很轻：“阿昱，你有些想法是不对的。”&lt;br&gt;
@@ -5243,8 +5555,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘笑了一声，清了清嗓子：“胡婶，这小孩不爱吃牛肉，成型的洋葱不吃，没型儿的番茄不吃，处理得不好的羊肉不吃，茎干老的蔬菜不吃……”“哥！”芒昱一脸震惊打断他，“我没有！”徐尘适时地住了嘴，对胡婶眨了眨眼睛，胡婶笑了：“记住啦，胡婶会尽力的。”&lt;br&gt;
 芒昱有口难辩：“胡婶……我不挑食的。”徐尘两口吃完了一个茶叶蛋，就了两口粥咽下去：“挑食有什么关系，不喜欢吃就不用吃，又不是没有别的能吃。”说着把最后一口粥咽了，站起身一左一右拍拍身边两个小朋友：“吃快一点，今天要多加一个点。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【23】&lt;br&gt;
-芒昱出现在班级里的时候，他们玩的好的那个圈子一片哗然，季思文第一个扑上去：“我去！阿昱！你昨天够猛啊！”芒昱往自己座位上一坐，皮笑肉不笑：“怎么？”&lt;br&gt;
+&lt;h3 id=&#34;23&#34;&gt;【23】&lt;/h3&gt;
+&lt;p&gt;芒昱出现在班级里的时候，他们玩的好的那个圈子一片哗然，季思文第一个扑上去：“我去！阿昱！你昨天够猛啊！”芒昱往自己座位上一坐，皮笑肉不笑：“怎么？”&lt;br&gt;
 季思文在扑到他身上之后紧急刹了车，打量着他的表情：“你这什么表情，你昨晚到底去哪儿了？”&lt;br&gt;
 “没有，”芒昱揉揉太阳穴，选择性回答，“没睡好。”&lt;br&gt;
 “哦，”季思文在他前面的椅子坐下，转过身来看他：“昨天我们一圈人都不知道你去哪儿了，于是我就给尘哥打电话了。”&lt;br&gt;
@@ -5281,8 +5593,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 芒蔚争握着门把，先和站在他正面前的少年对视了一下，对方下意识地礼貌地笑，和他打招呼：“叔叔好，我是徐尘。”芒蔚争看着少年精致的眉眼和沉稳的笑，点了点头算是应过了，然后把目光投向了站在徐尘身后一个身位的，他的儿子，芒昱。&lt;br&gt;
 他定定地看了芒昱两眼，侧过身让出一条路来：“进来吧。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【24】&lt;br&gt;
-徐尘把手里的礼品袋递到芒蔚争面前，礼数周全：“一点茶叶和茶配点心，打扰叔叔了。”芒蔚争接过来：“客气了，是我们要谢谢徐同学，麻烦你照顾芒昱一晚上。”&lt;br&gt;
+&lt;h3 id=&#34;24&#34;&gt;【24】&lt;/h3&gt;
+&lt;p&gt;徐尘把手里的礼品袋递到芒蔚争面前，礼数周全：“一点茶叶和茶配点心，打扰叔叔了。”芒蔚争接过来：“客气了，是我们要谢谢徐同学，麻烦你照顾芒昱一晚上。”&lt;br&gt;
 “不麻烦，叔叔叫我阿尘就好。”徐尘穿上芒昱递到脚边的拖鞋，“能和您聊聊吗？”&lt;br&gt;
 自然是要聊，如果只是单纯把人送回来，那送到楼下就行，芒蔚争领着他们坐到了餐桌边，许素刚洗完碗从厨房走出来，看到徐尘和芒昱，脸上的表情有点复杂。芒蔚争从茶几上把茶具和茶叶拿出来，轻声吩咐许素：“去烧个水吧。”许素应了一声，回厨房去烧水了，回来的时候，正好看到徐尘往芒蔚争面前递了一张照片：“这是我父母在我出生那年的合照。”&lt;br&gt;
 许素瞥了一眼，灰白照片上的女性熟悉得让她心停了一拍，手上的手壶差点掉了，好不容易稳稳地握住，往茶壶里倒的时候还有点抖。在她把水倒出茶壶之前，一只手从她手里接过了水壶，芒昱站起身来拿过了水壶，声音有点低：“妈，我来吧。”&lt;br&gt;
@@ -5348,13 +5660,15 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘的声音幽幽在他耳边响起：“其实我有点生气，但……今天先放过你，回家先让你睡觉，明天，我们来聊这个事情。”&lt;br&gt;
 芒昱低低地笑了两声：“没问题，哥，我很乖的，认打认罚。”&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;br&gt;
-徐尘心里os：这还乖？那不乖的时候是不是要把天都掀了&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;徐尘心里os：这还乖？那不乖的时候是不是要把天都掀了&lt;br&gt;
 （没有想到十年前最难搞的是阿昱.jpg）&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;/blockquote&gt;
 &lt;hr&gt;
-&lt;p&gt;###【25】&lt;br&gt;
-芒昱这一觉睡了许久。&lt;br&gt;
+&lt;h3 id=&#34;25&#34;&gt;【25】&lt;/h3&gt;
+&lt;p&gt;芒昱这一觉睡了许久。&lt;br&gt;
 大概是真的累到了，又或者是潜意识中不太愿意醒来面对这些个乱七八糟的琐事，明明一回去十点多就睡下了，这一觉一睡就睡到了第二天的中午。&lt;br&gt;
 胡婶看了一眼在客厅带裴永宁玩乐高的徐尘，有点担心：“尘少爷，要不要去叫一下。”是不是睡得有点太久了？&lt;br&gt;
 “没事儿，”徐尘把手里的零件堆到裴永宁手边，“他醒了自己就会下来的，不用管，想睡就让他多睡会儿。”&lt;br&gt;
@@ -5417,15 +5731,30 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/shi-jian-ma-zhe-shi-wo-de-48-xiao-shi-he-suan-bao-gao/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#1&#34;&gt;【1】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2&#34;&gt;【2】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#3&#34;&gt;【3】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#4&#34;&gt;【4】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#5&#34;&gt;【5】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;emo产物，很乱，没有逻辑，慎入&lt;/li&gt;
 &lt;li&gt;有个隐藏结局，全凭大家自己理解&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;###【1】&lt;br&gt;
-糜乐之第三次将揉成一团的纸团往空中抛而后又接住，叹出了一口气。&lt;br&gt;
+&lt;h3 id=&#34;1&#34;&gt;【1】&lt;/h3&gt;
+&lt;p&gt;糜乐之第三次将揉成一团的纸团往空中抛而后又接住，叹出了一口气。&lt;br&gt;
 这里的窗帘隔光效果不如家里，她的夜视能力极好，这房间现在在她看来就是亮如白昼，能看清房间的每个角落。&lt;br&gt;
 这个亮度……大概已经七点往后了，她还是没睡着。&lt;br&gt;
 她又一次入睡失败了。&lt;br&gt;
@@ -5445,8 +5774,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 同样都是留学生，其实在疫情发生前见面的可能性是极大的，会在各种乱七八糟的活动上相见，狼人杀饭局KTV局甚至酒局，虽然那跟糜乐之都没什么多大关系，她向来不参加这些个玩意儿，别人在疫情下鬼哭狼嚎，而她兴高采烈地把这当成了新的拒绝理由，义正言辞的。&lt;br&gt;
 所以在她主动开始这段对话的时候，对方有点懵。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【2】&lt;br&gt;
-牧灵松觉得自己大概是起太早产生了错觉，她在qq上看到一条来自糜乐之的信息：“实践吗？这是我的48小时核酸报告。”后面附着一张写着“negative”的屏幕截图，学校的机构自己做的，还挺权威。&lt;br&gt;
+&lt;h3 id=&#34;2&#34;&gt;【2】&lt;/h3&gt;
+&lt;p&gt;牧灵松觉得自己大概是起太早产生了错觉，她在qq上看到一条来自糜乐之的信息：“实践吗？这是我的48小时核酸报告。”后面附着一张写着“negative”的屏幕截图，学校的机构自己做的，还挺权威。&lt;br&gt;
 那一刻，她沉默了。&lt;br&gt;
 回了一条信息过去：“你……没被盗号吧？”&lt;br&gt;
 “这话说的，你看报告的名字。”&lt;br&gt;
@@ -5480,8 +5809,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “嗯，明天见。”&lt;br&gt;
 糜乐之完成这一段对话时，后知后觉地忐忑起来，像是刚刚蛰伏下去的社恐基因又重新复苏起来，她一直都是个纠结的人，许多事情需要靠一时冲动，但她通常不后悔这种一时冲动，所以她没让自己纠结太久，把手机重新倒扣在身旁的床头柜上——明天确实是没有课，但今天下午有，她还是想努力在上课之前睡着一会儿，哪怕是三四个小时。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【3】&lt;br&gt;
-牧灵松找到公寓门的时候，给糜乐之发了个信息过去，五点差三分，她倒是到得很准时。&lt;br&gt;
+&lt;h3 id=&#34;3&#34;&gt;【3】&lt;/h3&gt;
+&lt;p&gt;牧灵松找到公寓门的时候，给糜乐之发了个信息过去，五点差三分，她倒是到得很准时。&lt;br&gt;
 站在公寓大厅等了差不多十分钟，没能等到回信，牧灵松叹了口气，进电梯按了糜乐之家楼下的一层，去敲那个糜乐之传说中的朋友的门。&lt;br&gt;
 对方显然非常清楚糜乐之的迷之作息，经验颇丰地分享：“太早了，至少还要一两个小时她才会醒。”这话说完，牧灵松的手机就亮了，糜乐之迷迷糊糊地回了条语音：“不好意思，我刚醒，快上来，我给你开门。”&lt;br&gt;
 朋友“嚯”了一声：“还起挺早。”问牧灵松：“那这钥匙……”&lt;br&gt;
@@ -5499,8 +5828,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 牧灵松被逗笑了，对她招手：“行了，别忙活了，这些够了，来吃吧。”&lt;br&gt;
 “最后一个，”糜乐之从冰箱里拿出剩了一半的芝麻酱晃晃，“灵魂人物出场。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【4】&lt;br&gt;
-她们进入主题得相当快，吃完饭随便收拾了一下，牧灵松随便冲了个澡——主要是拜该房屋主人的洁癖所赐，糜乐之不允许任何接触过屋外空气的物体或生物触碰家里的沙发或床类跟睡觉能搭上点边儿的家具，包括她自己。牧灵松入“乡”随俗，穿上了糜乐之对她来说短了一截睡袍，糜乐之看着自己穿到脚跟的长袍到了人家身上硬是缩到了小腿肚忍不住啧了一声：“果然我还是小时候没有好好运动。”&lt;br&gt;
+&lt;h3 id=&#34;4&#34;&gt;【4】&lt;/h3&gt;
+&lt;p&gt;她们进入主题得相当快，吃完饭随便收拾了一下，牧灵松随便冲了个澡——主要是拜该房屋主人的洁癖所赐，糜乐之不允许任何接触过屋外空气的物体或生物触碰家里的沙发或床类跟睡觉能搭上点边儿的家具，包括她自己。牧灵松入“乡”随俗，穿上了糜乐之对她来说短了一截睡袍，糜乐之看着自己穿到脚跟的长袍到了人家身上硬是缩到了小腿肚忍不住啧了一声：“果然我还是小时候没有好好运动。”&lt;br&gt;
 牧灵松笑了，从包里往外掏工具，她带的东西不太多，就三样，大众情人小红同志，一把檀木尺子，和……一根藤条。藤条挺长，装在塑料圆筒里，从包里探出半个身子，糜乐之不由得皱了下眉：“我说我不喜欢细长条的工具。”&lt;br&gt;
 牧灵松拿桌上的酒精给工具消毒：“嗯，我说我记住了。”&lt;br&gt;
 糜乐之一愣，笑了：“原来是这个意思。”&lt;br&gt;
@@ -5520,8 +5849,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “不用谢，现在健身房也不兴去了。”&lt;br&gt;
 “得了，过来趴好吧。”牧灵松用往沙发上一摊，拍拍自己大腿，“给你我都热热身。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【5】&lt;br&gt;
-糜乐之欢天喜地地照做了。&lt;br&gt;
+&lt;h3 id=&#34;5&#34;&gt;【5】&lt;/h3&gt;
+&lt;p&gt;糜乐之欢天喜地地照做了。&lt;br&gt;
 她喜欢巴掌温热的钝痛，如果不是考虑到主方的用户体验，她甚至想申请从头到尾只有这一种工具——她做梦都想体验被巴掌拍哭的感受，但显然这对任何一个主的手都不是什么美好的体验，于是她格外喜欢热身阶段。&lt;br&gt;
 牧灵松来来回回给她上了两层色，手背轻轻贴上有些温热的肌肤，有些挫败感：“你能不能尽可能收一下你愉快的表情，我这边很难做的。”&lt;br&gt;
 于是糜乐之严肃地板起脸：“遵命长官，我十分认可您的业务水平，请您不要有任何顾虑。”大概是语气过于郑重，得到了毫不犹豫的好几下连击，糜乐之呼吸一顿，随机快速地吸了两口气，这几下感觉出疼了，要说前几下是双方对彼此的试探，那大概从这下开始，才是真正进入了主题。&lt;br&gt;
@@ -5646,25 +5975,44 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 “那就先回家，什么都不要想。”&lt;br&gt;
 “总有一天，这条路会变得清晰起来的，别怕。”&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;br&gt;
-有个隐藏结局在LOF&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;有个隐藏结局在LOF&lt;br&gt;
 如前面所说，这篇写得很混乱，甚至有点疯，这个隐藏结局全凭大家理解，愿意相信哪个都好，我个人更倾向于隐藏结局中的这个，这就是个荒唐的梦，糜乐之总得自己面对将来的人生。&lt;br&gt;
 她会一直这样迷茫，一直这样痛苦，直到有一天自己找到一个确定的方向。&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;备注：&lt;/strong&gt;&lt;br&gt;
-（1）	合并同类项并没有这样的用法，请正在学习这个知识点的小同学们不要感到疑惑&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;备注：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;（1）	合并同类项并没有这样的用法，请正在学习这个知识点的小同学们不要感到疑惑&lt;br&gt;
 （2）	没有这样的事情，找死行为，请勿模仿，请不要将家里钥匙的得到方式和家中地址随便告诉陌生人 / 网友 / 甚至一些不太熟的朋友 （尤其是独居）&lt;br&gt;
 （3）	没有这种东西，别信，她胡扯的&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;/blockquote&gt;
 ">实践吗？这是我的48小时核酸报告</a>
       </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-2-16-20/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【16】&lt;br&gt;
-徐尘真真实实地愣住了，喉头有些发紧，好半天才找回神志和声音，连忙伸手过去，架着他胳肢窝把人抱起来揉进怀里，声音有点发涩：“好了，好了，不赶你走。”&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#16&#34;&gt;【16】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#17&#34;&gt;【17】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#18&#34;&gt;【18】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#19&#34;&gt;【19】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#20&#34;&gt;【20】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;16&#34;&gt;【16】&lt;/h3&gt;
+&lt;p&gt;徐尘真真实实地愣住了，喉头有些发紧，好半天才找回神志和声音，连忙伸手过去，架着他胳肢窝把人抱起来揉进怀里，声音有点发涩：“好了，好了，不赶你走。”&lt;br&gt;
 裴永宁鲜少这么放开声音大哭，不管是这次被徐尘找回来之后，还是之前因为盼盼几个人住在一起的那段时间，受了再大委屈，挨了再重的打，他都哭得相当隐忍，徐尘把他从裴杨手下救下的时候，那么重的伤，徐尘也好不容易才哄得他无声无息地哭出来。徐尘印象中，还没见过他哭得这么失控，心里酸得不行，低头亲亲他额头：“怎么难过成这样？”&lt;br&gt;
 裴永宁的睫毛被泪水沾湿，可怜巴巴地黏在一起，哽咽得几个字一顿：“你……你说过……你要我的，为什么赶我走……为，为什么不要我……”徐尘用拇指轻轻摩挲他的发旋，声音很轻：“冤枉啊大人，谁舍得不要我们宝宝啊。除了晚上没陪你睡觉，其他时间大哥没凶你吧？”&lt;br&gt;
 裴永宁不听他辩解，自顾自哭得专心致志，徐尘沉思了两秒，叹口气开了口：“去，拿五十块贿赂一下你哥，算你还完债了。”&lt;br&gt;
@@ -5689,8 +6037,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 芒昱显然也觉得有点意外，但很快恢复了常态，笑道：“嗯，尘哥，真的很巧，你们……来逛街？”徐尘把工具人裴小朋友往前拎了拎，一脸真诚：“嗯，陪我弟弟，宁儿，叫哥哥。”芒昱刚想打声招呼，一打眼看到裴永宁那张脸，瞬间就愣了一下，两秒后才回过神来：“宁儿对吗？你好，我叫芒昱。”徐尘不动声色地打量着他的表情，心里有了底，看来芒昱对蒋念念的事情并不是全不知情，他至少应该是看过蒋念念的照片，所以才会对与蒋念念八分像的裴永宁有这样的反应。&lt;br&gt;
 那还不错，徐尘心里不由有点美滋滋，心想，或许能通过各种暗示，让芒昱自己发现他们之间的这层关系，这比他点明效果好多了。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【17】&lt;br&gt;
-徐尘一直陪他到十点多，是个这个年龄的孩子不得不回家的时候，散着步把他送回家，站在他家楼下给司机打电话。&lt;br&gt;
+&lt;h3 id=&#34;17&#34;&gt;【17】&lt;/h3&gt;
+&lt;p&gt;徐尘一直陪他到十点多，是个这个年龄的孩子不得不回家的时候，散着步把他送回家，站在他家楼下给司机打电话。&lt;br&gt;
 挂掉电话的时候裴永宁正好跳房子跳到他身边，抬头来看他：“大哥。”&lt;br&gt;
 徐尘抬头回他：“嗯？”&lt;br&gt;
 裴永宁眨巴了两下眼睛：“你是在找这个哥哥吗？”&lt;br&gt;
@@ -5749,8 +6097,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 毕竟那天他带着裴永宁遇到芒昱的时候，他就是给裴永宁点了一个水果圣代。&lt;br&gt;
 但芒昱不直白地问出来，从他的立场就觉得这事还没到一个成熟的可以谈的时间，于是徐尘很沉得住气，在芒昱略带打量的眼神中笑得一脸无辜。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【18】&lt;br&gt;
-徐尘的每天勾搭计划被开学打断了，他只能在开学前最后一天旁敲侧击地嘱咐芒昱遇到什么事情都能给他打电话，芒昱也就笑着应。&lt;br&gt;
+&lt;h3 id=&#34;18&#34;&gt;【18】&lt;/h3&gt;
+&lt;p&gt;徐尘的每天勾搭计划被开学打断了，他只能在开学前最后一天旁敲侧击地嘱咐芒昱遇到什么事情都能给他打电话，芒昱也就笑着应。&lt;br&gt;
 但其实他们两个都知道，除非遇到特别大的足够摧毁芒昱世界的事情，不然芒昱是不可能主动打这个电话的。&lt;br&gt;
 徐尘心里无奈，但确实也没有更好的方式用更快的方法来走进芒昱的世界，于是他只能尽可能用各种小话题去打扰芒昱，可能是分享生活里的小事，可能是推荐一本什么书，总而言之，没话找话。徐尘曾经作为一个优秀的社畜，自然而然的搭话能力修炼得炉火纯青，反正只要他不尴尬，他就有把握让对方不尴尬。&lt;br&gt;
 他把每天谈话做成了一种习惯，芒昱久而久之也就会主动给他发点信息，可能是问问某个题目怎么做，也可能单纯就是说说今天在学校遇到了什么事儿。&lt;br&gt;
@@ -5801,8 +6149,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 他把蒙在头上的被子拽下来，愣愣地在黑暗中望着头顶的天花板出神。&lt;br&gt;
 然后在心里对自己说，醒一醒吧，你不可以。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【19】&lt;br&gt;
-徐尘从胡婶手上接过汤碗的时候，裴永宁正眼睛亮亮地晃着脚跟他讲学校里发生的小故事，他今天心情很好，眉眼都带着笑，一人分饰几角，忙碌得不行，徐尘和胡婶一起被逗笑了，胡婶舀了一大块大骨头放到裴永宁碗里，顺手揉了一把他脑袋：“宁少爷多吃点。”徐尘被他的好心情感染了，也不由自主地开心起来，边喝汤边一句两句地回应他。&lt;br&gt;
+&lt;h3 id=&#34;19&#34;&gt;【19】&lt;/h3&gt;
+&lt;p&gt;徐尘从胡婶手上接过汤碗的时候，裴永宁正眼睛亮亮地晃着脚跟他讲学校里发生的小故事，他今天心情很好，眉眼都带着笑，一人分饰几角，忙碌得不行，徐尘和胡婶一起被逗笑了，胡婶舀了一大块大骨头放到裴永宁碗里，顺手揉了一把他脑袋：“宁少爷多吃点。”徐尘被他的好心情感染了，也不由自主地开心起来，边喝汤边一句两句地回应他。&lt;br&gt;
 吃到饭后甜点的时候，徐尘的手机上突然收到了一条信息，徐尘拿起来一看，是芒昱，发了一道奥数题来问他怎么做。&lt;br&gt;
 徐尘一手拿着小泡芙，另一手拿过一旁的报纸，随手抄起一支笔直接在报纸上打起草稿，他做出了一种用高中知识点才能做的做法，先把它拍给了芒昱，然后又转着笔想初中的解法，刚想了一半，芒昱一个电话就打来了。&lt;br&gt;
 徐尘想题想得正入神，没多想就顺手接起来：“喂，阿昱？”&lt;br&gt;
@@ -5869,8 +6217,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 他的大儿子从来不与他聊天。&lt;br&gt;
 徐尘没有等他说出下一句，有些不太礼貌地率先挂掉了电话，顺手接起李叔打过来的电话：“喂，李叔，我这就出来。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【20】&lt;br&gt;
-徐尘坐上车的时候，心还有点乱，李叔问他去哪儿的时候，他还沉默着。&lt;br&gt;
+&lt;h3 id=&#34;20&#34;&gt;【20】&lt;/h3&gt;
+&lt;p&gt;徐尘坐上车的时候，心还有点乱，李叔问他去哪儿的时候，他还沉默着。&lt;br&gt;
 可能性有几个，但这个点了，周围所有营业的店应该都关了，那能去的地方……&lt;br&gt;
 “李叔，去东湖公园，上次停车那里。”徐尘说完这句，带了点歉意，“对不起啊李叔，这么晚了把你叫过来。”&lt;br&gt;
 李叔笑呵呵：“没事儿，我本来也没睡呢，我家那小子闹到刚刚，我正愁没理由开脱呢，还要谢谢少爷帮我逃出来。”&lt;br&gt;
@@ -5943,9 +6291,24 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/pan-pan-2-11-15/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【11】&lt;br&gt;
-陆建白拉开椅子坐到他对面，笑得非常和善：“呀，好巧？”&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#11&#34;&gt;【11】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#12&#34;&gt;【12】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#13&#34;&gt;【13】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#14&#34;&gt;【14】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#15&#34;&gt;【15】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;11&#34;&gt;【11】&lt;/h3&gt;
+&lt;p&gt;陆建白拉开椅子坐到他对面，笑得非常和善：“呀，好巧？”&lt;br&gt;
 裴永宁码牌的手僵在了原地，冷汗湿透了手心，低着头不敢看他，不知道怎么回他这句话。&lt;br&gt;
 麻将店老板看他们气氛不对，陪着笑走过来：“哟，这位小少爷看着面生，第一次来？”陆建白“嗯”了一声，动作熟稔地码起牌来：“你们这儿什么规矩？”&lt;br&gt;
 麻将店老板看他手下这姿势，警铃大作，故意往小了说：“一般来说还是看客人自己，一支十块二十都有……”陆建白瞥了他一眼，拿过一把积分签：“打个五十的怎么样？”麻将店老板心情复杂地看了眼其他两个客人，两人都点头说好，事实上一支50也算不上什么大数，只是老板怂，觉得陆建白架势太大，怕他一发不可收拾。但客人们达成了共识，他也没啥能讲的，只能风风火火把饮料瓜子堆到陆建白手边的小桌上，对裴永宁使了个眼色。&lt;br&gt;
@@ -5988,8 +6351,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 当然，并没有就此收敛，他大方地承认了：“嗯，我就是偏心阿昱。”把季思文震惊得瞪大了眼睛。芒昱也吃惊，边吃惊边笑，小孩子嘛，会自然而然亲近对自己有偏爱的人，几天下来偶尔也会跟徐尘开开玩笑，甚至在徐尘的纵容下把不喜欢吃的菜夹到他盘子里。&lt;br&gt;
 目睹了这一刻的潘景同大惊失色，在吃完饭后拖住徐尘质问：“告诉我，你看上的不是他。”徐尘笑得不行，好不容易止住笑，严肃回答：“嗯，就是他。”潘景同大松了一口气：“还好还好，不是就好。”徐尘好笑地看着他，心说：你看，我承认了，是你自己不信。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【12】&lt;br&gt;
-刚听完不让人省心的小混蛋的光荣事迹，转头看到贴心的阿昱小少年，徐尘简直是百感交集，恨不得上手揉乱他脑袋，想了想还是忍住了，只跟他碰了下可乐：“阿昱真好。”芒昱被他夸得莫名其妙，愣了一下，看着他看着自己笑弯的眼，莫名有了一丝不知如何形容的情绪，抿了抿嘴撇过头：“不，我不好。”如果他足够好，那他的亲生母亲不会抛下他离开家，如果他真的这么好，那父亲和继母也不会因为自己闹成那样。小少年的眸子深沉得像漫无边际的黑洞，错开徐尘的目光也攀上旁边的不锈钢杆子，望向宿舍楼外在轻风下簌簌而动的松柏。&lt;br&gt;
+&lt;h3 id=&#34;12&#34;&gt;【12】&lt;/h3&gt;
+&lt;p&gt;刚听完不让人省心的小混蛋的光荣事迹，转头看到贴心的阿昱小少年，徐尘简直是百感交集，恨不得上手揉乱他脑袋，想了想还是忍住了，只跟他碰了下可乐：“阿昱真好。”芒昱被他夸得莫名其妙，愣了一下，看着他看着自己笑弯的眼，莫名有了一丝不知如何形容的情绪，抿了抿嘴撇过头：“不，我不好。”如果他足够好，那他的亲生母亲不会抛下他离开家，如果他真的这么好，那父亲和继母也不会因为自己闹成那样。小少年的眸子深沉得像漫无边际的黑洞，错开徐尘的目光也攀上旁边的不锈钢杆子，望向宿舍楼外在轻风下簌簌而动的松柏。&lt;br&gt;
 徐尘被他这突如其来的一句话说愣了，打量了他一眼，笑了，心说原来这个年纪的阿昱是这样的，二十三岁的阿昱能把这种距离感和厌世感隐藏得很好，但十三岁的小少年显然做不到，有点像青春疼痛文学的男主角，还挺可爱。终于还是上手揉揉他脑袋：“有什么事儿能说给尘哥听吗？”芒昱侧过头看他：“后天早上，夏令营就结束了。”拒绝的意义分明。&lt;br&gt;
 徐尘对他很好，特别好，但这有什么用，这是一个七天限定的美梦，一朝梦醒，总还是要回到寻常的生活里的。&lt;br&gt;
 徐尘保持着温和的笑，芒昱和裴永宁不一样，他对别人盲目地闯进自己的世界有种超乎寻常的警惕性，表面像只温吞的小松鼠，实际上却更像是把刺放平了的小刺猬。他们俩之间，即使是后来，主动权也更多地在芒昱手上，他得主动选择迈出自己的世界进入新的家庭里头来，于是徐尘只是说：“只是夏令营结束了而已。”&lt;br&gt;
@@ -6027,8 +6390,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘愣了一下，这是零九年，一个十岁的孩子两天能挣200块吗，何况裴永宁并不是全天在那里，但他没让自己愣太久，沉思了一下，还是狠心道：“行，一块钱一下，分四天，之后每天晚上十点，自己自觉过来。”&lt;br&gt;
 “作为明知故犯的惩罚，在你还完债之前，哥哥都不会跟你一起睡了，等下挨完打，自己回房间去。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【13】&lt;br&gt;
-裴永宁刚被“两百”这个天文数字震了一下，就听到了最后这句话，一瞬间觉得天都塌了，情绪一下子绷不住了，一直压在喉咙里的哭声一下子爆发了出来：“大哥，不要，哥哥……我真的知道错了，别这样罚我，我，我害怕，哥哥……”身子也几乎是本能地去抓徐尘的手臂，这话几乎对他来说是凌迟般的惩罚了，他太怕身上有伤的时候一个人呆着，这给他一种被全世界抛弃的感觉。&lt;br&gt;
+&lt;h3 id=&#34;13&#34;&gt;【13】&lt;/h3&gt;
+&lt;p&gt;裴永宁刚被“两百”这个天文数字震了一下，就听到了最后这句话，一瞬间觉得天都塌了，情绪一下子绷不住了，一直压在喉咙里的哭声一下子爆发了出来：“大哥，不要，哥哥……我真的知道错了，别这样罚我，我，我害怕，哥哥……”身子也几乎是本能地去抓徐尘的手臂，这话几乎对他来说是凌迟般的惩罚了，他太怕身上有伤的时候一个人呆着，这给他一种被全世界抛弃的感觉。&lt;br&gt;
 徐尘狠下心：“自己脱裤子，过来。”&lt;br&gt;
 裴永宁像是被他提醒了，忙不迭地扑过去：“今天就打完，两百下都今天打，一次性打完！”&lt;br&gt;
 徐尘被他大无畏的样子气得牙痒痒，也不跟他计较谁脱不脱这种形式上的事情了，一伸手把他捞到自己腿上趴着，亲力亲为给他扯掉了那两层布，一开始就是没收力两下：“一次性打完，你倒是够豪气，先试试能不能挨过今天的五十再说。”光两下，就打得裴永宁惊呼出声，他几乎是被打得脑袋一嗡，没想到比他没大多少的徐尘，光是用手，就能打得这么疼，一瞬间身后的疼仿佛刚被丢进嘴里的跳跳糖，噼里啪啦在脑袋里放烟花，裴永宁心里的恐惧一下子被点燃了，下意识地抱住脑袋微蜷起，小身子控制不住地发着抖——是标准的防御姿势。&lt;br&gt;
@@ -6046,8 +6409,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 怎么就觉得这么疼呢。&lt;br&gt;
 裴永宁题还没开始看，眼前就糊了一片，眼泪啪嗒啪嗒往练习册上掉，他吓了一跳，连忙把书往前推，手忙脚乱去擦眼泪，越擦越多，心里越急，眼泪就越止不住，他努力地抑制了一下，终究是忍不住，管不上仍然一顿一顿叫嚣着疼的身后，把整个人蜷成一个球缩到椅子上，脑袋埋进膝盖，哭得并不大声却带了点撕心裂肺的感觉，直哭得手脚发麻，好几次险些喘不上气来，他就这么哭了不知道多久，好不容易缓过那种难过得有些窒息的心情来，活动了一下僵硬的四肢，洗完澡，把自己埋进了被窝，罩了个严严实实。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【14】&lt;br&gt;
-“胡婶，宁儿还没醒吗？”徐尘醒得挺早的，出去晨跑了一圈回来已经九点多了，还没看到小朋友下来吃饭，胡婶应了一声，也纳闷：“是啊，今天是有点晚了。”裴永宁假期的作息挺规律的，因为睡得就早，一般来说最多八点也就醒了，很少有这样到了九点多还没醒的情况，徐尘有些担心，去冲了个澡就轻声轻气地去推他的门，虽然昨天那点打不至于把人打坏，但万一呢，裴永宁身子弱，总不能是巴掌打几下就烧起来了吧？&lt;br&gt;
+&lt;h3 id=&#34;14&#34;&gt;【14】&lt;/h3&gt;
+&lt;p&gt;“胡婶，宁儿还没醒吗？”徐尘醒得挺早的，出去晨跑了一圈回来已经九点多了，还没看到小朋友下来吃饭，胡婶应了一声，也纳闷：“是啊，今天是有点晚了。”裴永宁假期的作息挺规律的，因为睡得就早，一般来说最多八点也就醒了，很少有这样到了九点多还没醒的情况，徐尘有些担心，去冲了个澡就轻声轻气地去推他的门，虽然昨天那点打不至于把人打坏，但万一呢，裴永宁身子弱，总不能是巴掌打几下就烧起来了吧？&lt;br&gt;
 房间里漆黑一片，徐家的窗帘都是拉上就伸手不见五指的类型，徐尘没关门，就着门口那点亮光跺到他床边，小心地探手去试裴永宁额头温度，手指刚碰上他额头，侧趴着的小朋友就像是受到了什么惊吓一般，猛地睁开眼睛，正对上徐尘打量的眼神，吓得徐尘手抖了一下，和他面面相觑了两秒，坐到他床边，边在他背上轻轻拍着边声音很轻地安抚他：“吵醒你了？对不起对不起，宁儿想睡就再睡一会儿，哥哥出去了。”刚刚轻轻碰那一下，徐尘觉得他温度并没有什么太大异常，帮他整了整被子，把他开得像冰窟的十六度空调调到了二十六度，轻点了点他脑袋：“没人盯着就贪凉。”&lt;br&gt;
 这话一下子戳到了裴永宁伤心处，他轻轻翻了个身，又压到了伤处，蛰伏的疼一下子被唤醒了，他昨天哭了太久了，眼睛肿得不成样子，涨得慌，但看到徐尘后依然想哭，委屈巴巴地嘟囔：“谁叫你不盯着的……”徐尘被气笑了，刚想骂他两句，就顺着微弱的光看到他红红肿肿的眼睛，骂人的话就卡在了嘴边，无奈笑着揉揉他头发：“要不想睡了起来吃个早饭吧，等下王老师还要来呢。”&lt;br&gt;
 提到王老师，裴永宁更难过了，他昨天太难受，实在做不下去作业，裴永宁是乖小孩儿，不管遇到多大的事儿写作业都是他的头等大事，除了有两次挨完裴杨的打烧得温度太高坐都坐不住，还没遇到过他欠了老师作业不交这种事情，小朋友扁着嘴，只觉得每一件事情都让他想哭，用被子把自己包得严严实实，声音都带上哭腔了：“我作业没写完……怎么办……王老师要骂我的……”&lt;br&gt;
@@ -6065,8 +6428,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 裴永宁脚落地的那一刻拉到了伤处，腿一软竟是没站稳，徐尘眉心一跳，忙侧转了椅子伸手去接他，把他抱了个满怀。&lt;br&gt;
 裴永宁落到他怀里，片刻后就哭出委屈满得快要溢出来的一声，堪称凄厉，一下子哭进人心里，徐尘轻柔地轻轻在他背上顺气：“好了好了，结束了。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【15】&lt;br&gt;
-这话丝毫没能安慰到漫漫还债长路堪堪过去一般的小孩儿，他疼得七荤八素的同时绝望地想到徐尘不近人情的附加刑，哭得更伤心，小猴子一样死死攀在他哥身上。徐尘试着去掰他攥得蹦出青筋的手，竟是没拉动，叹了口气：“宁儿，松松手，大哥在这儿呢，不走。”&lt;br&gt;
+&lt;h3 id=&#34;15&#34;&gt;【15】&lt;/h3&gt;
+&lt;p&gt;这话丝毫没能安慰到漫漫还债长路堪堪过去一般的小孩儿，他疼得七荤八素的同时绝望地想到徐尘不近人情的附加刑，哭得更伤心，小猴子一样死死攀在他哥身上。徐尘试着去掰他攥得蹦出青筋的手，竟是没拉动，叹了口气：“宁儿，松松手，大哥在这儿呢，不走。”&lt;br&gt;
 裴永宁像是听不进去一样，手上力道丝毫没减，仿佛沉浸在自己的世界里只顾着专心哭，徐尘无法，只能轻轻在他背后拍：“没事儿，没事儿，哥哥在呢。”&lt;br&gt;
 裴永宁发泄一般地哭了大半个小时，徐尘都担心他把自己哭脱水了，等他稍微平静一点就给他喂了小半瓶水下去，语气轻柔而无奈：“哭够了？回去洗个澡睡觉吧。”&lt;br&gt;
 裴永宁头摇得像拨浪鼓，声音都哭哑了：“我……我还没有要睡觉呢！”徐尘被他逗笑了：“那你还想干嘛。”裴永宁用力吸了下鼻子，像是认真思考了一下：“我还有作业没写，我……我要在哥哥这里写作业。”&lt;br&gt;
@@ -6107,6 +6470,9 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 &lt;ul&gt;
 &lt;li&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#6&#34;&gt;【6】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#7&#34;&gt;【7】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#8&#34;&gt;【8】&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#9&#34;&gt;【9】&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#10&#34;&gt;【10】&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -6115,8 +6481,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/p&gt;
-&lt;p&gt;###【6】&lt;br&gt;
-第二天徐尘果然去上课了，嘱咐了胡婶好好照顾裴永宁再给他跟老师请个假。走的时候没叫醒他，裴永宁再醒来时，条件反射看了眼旁边床头柜的闹钟，倒吸了口冷气，已经快中午了。&lt;br&gt;
+&lt;h3 id=&#34;6&#34;&gt;【6】&lt;/h3&gt;
+&lt;p&gt;第二天徐尘果然去上课了，嘱咐了胡婶好好照顾裴永宁再给他跟老师请个假。走的时候没叫醒他，裴永宁再醒来时，条件反射看了眼旁边床头柜的闹钟，倒吸了口冷气，已经快中午了。&lt;br&gt;
 他一向有生物钟，怎么也不可能让自己睡到这个点才醒来，他慌慌忙忙打算找个衣服准备准备去上课，却想起来自己跑出来的时候什么都没带，包括衣服和书包，只能讪讪然地下了楼梯。&lt;br&gt;
 胡婶听到动静伸出头，笑着叫他：“小少爷醒了？饿了吧？快来吃饭。”裴永宁身体舒服了不少，终于反应过来胡婶一直以来在叫他什么，慌忙摆了手：“我不是小少爷。”胡婶笑了笑，没接他这茬：“怎么这么急？找什么呢？”裴永宁被她岔开了话题，“啊”了一声：“我，我迟到了！”胡婶被逗笑了：“尘少爷拜托我给你请假啦，再休息两天。”看他有些束手束脚的样子，声音放得更柔：“尘少爷上完课就回家了，大概五六点。”裴永宁被这句话安抚了，歪头笑笑，点头“嗯”了一声，胡婶被他的小动作萌化了心，把甜豆花放到他面前：“慢慢吃。”&lt;br&gt;
 胡婶是个足够细心的管家，徐尘几乎能算是她养大的，生活起居全由她做主，一天不到，裴永宁需要的所有生活相关物品便被妥善地准备好了，徐尘旁边的房间也被收拾出来，裴永宁看着一屋子的人进进出出，变法术一样在极短时间把房间变了样，穿着笔挺妥帖西装的男子带着金框眼睛，蹲到他身边，将一个大本子摊在他面前温柔问他：“小少爷，喜欢哪个？”册子上是各式各样的床铺书桌柜子和其他家具，裴永宁不傻，知道这是给自己买东西，慌忙摆手，几乎咬到自己舌头：“不，不用，现在的就很好。”男人温和笑笑，把本子一合，坐到他身边有意无意和他聊天，裴永宁有些紧张，只能结结巴巴地老老实实回话，男人用聊天把他的偏好套了个七八，心里有了数，伸手揉揉他的脑袋。&lt;br&gt;
@@ -6152,8 +6518,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 徐尘大笑着把他脑袋揉到自己怀里：“不用。”&lt;br&gt;
 “可能没人跟你说过，宁宁，你和妈妈长得太像了。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【7】&lt;br&gt;
-周六的早上，何律师来得很准时，徐尘刚和裴永宁一起吃完饭，他抽了张纸巾给裴永宁擦了擦嘴，小声说了句：“宁儿回房间玩儿去吧。”就起身跟何律师握手：“何律，您好，我是徐尘。”何律师笑着握上他的手：“少爷，很荣幸为您效劳。”裴永宁看他有正事儿要谈，只当是不方便他在场，乖乖地跑上楼回了自己的房间。他的书包全放在了原来家里，之前闹成那个样子，再加上裴父这次刚回来没多久，铁定是还在房子里呆着的，自然不可能回去拿。这几天胡婶把他房间的书柜塞满了他这个年龄层的书，从杂书到工具书，甚至全新的教材和这周的作业都已经帮他拿来了，他拿出了崭新的课本，有一瞬间的晃神，盯着封面上的“语文”二字愣了好一会儿，抿着嘴把书翻开了，突然的，有种恍若隔世的感觉。&lt;br&gt;
+&lt;h3 id=&#34;7&#34;&gt;【7】&lt;/h3&gt;
+&lt;p&gt;周六的早上，何律师来得很准时，徐尘刚和裴永宁一起吃完饭，他抽了张纸巾给裴永宁擦了擦嘴，小声说了句：“宁儿回房间玩儿去吧。”就起身跟何律师握手：“何律，您好，我是徐尘。”何律师笑着握上他的手：“少爷，很荣幸为您效劳。”裴永宁看他有正事儿要谈，只当是不方便他在场，乖乖地跑上楼回了自己的房间。他的书包全放在了原来家里，之前闹成那个样子，再加上裴父这次刚回来没多久，铁定是还在房子里呆着的，自然不可能回去拿。这几天胡婶把他房间的书柜塞满了他这个年龄层的书，从杂书到工具书，甚至全新的教材和这周的作业都已经帮他拿来了，他拿出了崭新的课本，有一瞬间的晃神，盯着封面上的“语文”二字愣了好一会儿，抿着嘴把书翻开了，突然的，有种恍若隔世的感觉。&lt;br&gt;
 徐尘从客厅的茶几柜里翻出一个文件夹，整个递给何律师，何律师打开看了一眼，整整齐齐的一系列文件，监护人转让协议，验伤报告，裴永宁过去数年的调查报告，裴父做过的各种擦边球或干脆过了线的赌博行为，林林总总，应有尽有，何律师赞赏地看了一眼这位年轻的少东家，只觉得让自己来做也不会做得更好了，最大程度地提高了整个谈话的效率，他沉吟了一下，问：“您的希望是什么？单纯地拿到抚养权，还是……”还是将对方关进监狱，得到应有的报应呢。&lt;br&gt;
 徐尘也沉默了。&lt;br&gt;
 他其实也很犹豫，论私心，他恨不能千刀万剐这个男人。但很遗憾，就目前他们所掌握的这所有证据，就算能将他关进监狱，也了不起是小几年的牢狱之灾。他出来的时候，他的宁儿都来不及成年。&lt;br&gt;
@@ -6175,8 +6541,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 裴杨像是被激怒了，对着旁边啐了一口：“我呸！你有本事就告！我还不信老子教训儿子，还犯了法不成，你有本事就把老子关进去啊！”何律师显然了解裴杨这种人不见棺材不掉泪的本性，继续从文件袋里掏出几张照片散到他面前：“那不如您看看这个吧？”&lt;br&gt;
 裴杨看到这些照片，一下子坐直起来，一巴掌拍到桌上：“你们tm找人监视老子！”何律师并不怕他发作，歪头笑了：“现在您还想签字吗？”往前探了身，压低声音，像是在耳语，却一字一句都敲在裴杨心上：“我们要的只是小少爷的监护权，裴先生，你也想甩掉这个累赘，不是吗？”裴杨心里腾地燃起无名火，伸手就要拽何律师的领子，被一只有力的手一把攥住了，他侧头，看到了依然沉默不语的其中一个墨镜壮汉，心一凛，使劲把手拽了回来，粗声粗气嚷嚷：“我签！行了吧！你们满意了吧！”何律师弯了嘴角：“请。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【8】&lt;br&gt;
-耳机里的徐尘松了口气：“我带他上来了。”何律师微不可闻地“嗯”了一声。裴永宁其实也过来了，但徐尘并不想让他听到整个谈判过程，期间一直带着他在旁边的商业街乱晃，听着进度差不多了，就牵着他的手把他往这里带——总要带他收拾一下自己的东西，最后和这个男人道个别。&lt;br&gt;
+&lt;h3 id=&#34;8&#34;&gt;【8】&lt;/h3&gt;
+&lt;p&gt;耳机里的徐尘松了口气：“我带他上来了。”何律师微不可闻地“嗯”了一声。裴永宁其实也过来了，但徐尘并不想让他听到整个谈判过程，期间一直带着他在旁边的商业街乱晃，听着进度差不多了，就牵着他的手把他往这里带——总要带他收拾一下自己的东西，最后和这个男人道个别。&lt;br&gt;
 裴杨签完字一抬头，就看到上次看到的少年牵着自己的倒霉儿子进了屋，一把把笔摔到了地上：“cnm你这个小兔崽子！找人报复你老子是吧……”话还没说完，就被徐尘回头的眼神瞪住了，那眼神出现在一个十来岁的少年身上显得有些过于成熟了，像是一眼瞪进了人的灵魂，随后，他眼前就站过来一个墨镜壮汉，裴杨的手腕刚刚被他抓得生疼，大概有概念自己并不可能打过这个人，讪讪地住了嘴。&lt;br&gt;
 徐尘一把揽过裴永宁，低头在他耳边温声说：“宁儿，去收东西吧，哥跟你爸爸聊聊，行吗？”裴永宁抿了抿嘴，没说话，但抓着他衣角的手却还握得紧紧的，没有松的意思。徐尘心一软，马上妥协了：“好，不聊了，哥哥陪你，走吧。”裴永宁小小声“嗯”了一句，拉着徐尘往他房间去，徐尘只能抽着空给了何律师一个眼神，何律师接收到了，对他比了个OK的手势。&lt;br&gt;
 何律师懂他的意思，他需要保证裴杨之后也都不可能对裴永宁有任何威胁，刚刚裴杨的那句话，风险就很大。何律师将签好的文件拿回来，整理整齐放回文件夹收回包里，收了满脸的笑，一瞬间气场都变了：“裴先生，相信你刚刚也看过那份声明了，徐家不要你的任何抚养费，同样的，我们也希望你永远不要出现在小少爷的身边了，你清楚，养小少爷你才花了多少钱，让未成年的孩子自己打工养活自己，而自己成天在外面赌博玩乐，这总不要我跟你科普是犯法行为了吧，我再跟你说一遍，把你送进监狱对徐家来说很简单，如果不希望自己的一辈子都在监狱里度过，我希望，”何律师加重了这几个字，微微眯起眼盯着裴杨，“你，心里有数，若是再做出什么对小少爷不利的事情……”裴杨是个法盲，法盲盲目，但也好吓，他确实没概念自己做出的事情到底能判几年，为了这么个小兔崽子把自己的一生赔进去对裴杨来说得不偿失，事实上，能摆脱裴永宁对他来说已是意外之喜，于是他按捺住自己心里的不爽，不情愿地点头：“我知道啦，谁有这个空去管那个小兔崽子，我巴不得他死了，和我有什么关系。”&lt;/p&gt;
@@ -6225,8 +6591,10 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 芒昱在一群吵吵闹闹的男孩子里显得格外安静，被朋友搭着肩膀笑得温温柔柔的，单肩挎着一个包，徐尘没忍住，盯着看了两秒。满脑子八卦的潘景同注意到他的目光也探头去看：“什么什么，有你认识的人？”徐尘又漫不经心转过头：“怎么会。”潘景同瞄了一眼：“海阳一中？”徐尘“嗯”了一声：“看校服像。”潘景同啧啧了两声：“他们今年感觉也阵仗很大呢。”毕竟是全市前三的初中部，人才济济可以说是。徐尘勾了嘴角：“是啊。”&lt;br&gt;
 等到了分宿舍的时候，潘景同看着被分到莫名其妙房间的徐尘震惊了：“这怎么分的啊，怎么能把你分得这么远，出什么bug了吧。”整个燕青都在西栋三层，徐尘一个人被分到了东栋两层，潘景同怎么也没梳理过来这个逻辑，拽着徐尘就去找宿管老师，大声嚷嚷：“老师！这个宿舍分配……”被徐尘一把捂住了嘴：“没有问题，肯定是前后一均，总有人会跟别的学校一起住的，正常。”潘景同被他捂了个严实，好不容易掰下他手，眯着眼睛盯着他打量了两秒，徐尘大大方方让他看，表情冷静且无辜，潘景同没看出什么破绽，冷哼一声：“那你去吧，到时候上课我再去找你。”徐尘点点头，拉着自己的行李箱，心里满是欢呼雀跃地去找自家弟弟了。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;br&gt;
-这个故事告诉我们，要好好学习，要不然就算穿越回去也没有拐孩子的本事（不是）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;阿离的碎碎念&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个故事告诉我们，要好好学习，要不然就算穿越回去也没有拐孩子的本事（不是）。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;10&#34;&gt;【10】&lt;/h3&gt;
@@ -8632,10 +9000,68 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       </div>
       
       <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/liang-yi-xiang-huan-chang-ping/"" data-c="
+          &lt;p&gt;艹，我睡不着，是什么让我在大半夜的时候打开了这篇文从头看起，这究竟是人性的泯灭还是道德的沦丧，唯有给江江写长评才能让我激荡的内心平静。&lt;br&gt;
+首先，真的很喜欢这篇文，以下言论如有过激那就是叶子亲妈粉的灵魂在疯狂晃动，绝对没有说江江写得不好的意思，相反的，某种程度上正是因为写得足够好才让人如此有代入感。一切皆是个人想法。&lt;/p&gt;
+&lt;p&gt;我个人的习惯看文的时候会代入被视角，于是我从头到尾看下来，最大的感受就是，太 委 屈 了。&lt;/p&gt;
+&lt;p&gt;老秦同志很有原则，很理智，很坚定，对小叶是这样，对自己也是。&lt;/p&gt;
+&lt;p&gt;这没错，这甚至对得离谱，说句实话，但凡有个这样的人在身边管着，一定能成为一个很优秀的人。&lt;/p&gt;
+&lt;p&gt;但就是因为这样，每一次罚都会特别毫不留情，做错了事情承担后果，定了数目就要打完，无可厚非，并且这是双方都认可的方式。&lt;/p&gt;
+&lt;p&gt;但是！但是！&lt;/p&gt;
+&lt;p&gt;小叶哭得太可怜了qaq 代入他去想，真的好委屈，每次都好委屈。（孩子错了！但他哭了。孩子错得离谱啊！但他哭了。这不打能行吗？但他哭了！）&lt;/p&gt;
+&lt;p&gt;我们的上帝视角确实可以知道这是偏爱，是因为在意才会花这么多心思，费这么多口舌，我们知道孙妍只是学妹，只是老秦在带的新人，因为无关紧要，所以她的错与老秦无关；我们知道许非尘和秦昭明没关系，不过点头之交，永远也不可能替代叶慕在秦昭明心里的位置。&lt;/p&gt;
+&lt;p&gt;但是小叶呢，他知道什么，他什么都不知道。&lt;/p&gt;
+&lt;p&gt;站在圈子里，他什么都看不清楚，从他的角度，秦昭明可能喜欢孙妍，可能和许非尘发展成长期关系，甚至他可能觉得，孙妍和许非尘，都在某种程度上，比他好。&lt;/p&gt;
+&lt;p&gt;他太没安全感了。&lt;/p&gt;
+&lt;p&gt;我觉得这是两个人的责任，很多事情没敞开来说，小叶在意的事情，不问出口，或者问得模棱两可，老秦没法往那想，于是给的回答仿佛在戳他刀子。&lt;/p&gt;
+&lt;p&gt;因为这些点点滴滴，小叶很多话说不出口，问不出来，他害怕老秦的失望，于是他不讲四级的事情，他觉得老秦会生气，于是社团的事情一拖再拖，一点一点攒起来，演变成今天这个不可收拾的样子。&lt;/p&gt;
+&lt;p&gt;说实话，第一次秦昭明逼他退社团的时候，我其实是不舒服的。&lt;/p&gt;
+&lt;p&gt;我的角度是，每个人都是独立的个体，我的大学生活只有一次，我希望我拥有社团的回忆，或许对你秦昭明来说不重要，但我实实在在很喜欢，并且人生不该只有学习一件事情。&lt;/p&gt;
+&lt;p&gt;但是确实，医学相关的专业太特殊了。&lt;/p&gt;
+&lt;p&gt;学习不只是你一个人的事儿了，对我的专业来说可以浑水摸鱼的事儿，对医学生来说，或许就是一件相当大的错误。&lt;/p&gt;
+&lt;p&gt;因为医学生实实在在地在与死神打交道，每一个小小的错可能都会酿成不可挽回的后果。&lt;/p&gt;
+&lt;p&gt;我相信小叶在选择临床的时候就看清了这一点，但是世界很大，他才十八九岁，一时迷失是再正常不过的事情。&lt;/p&gt;
+&lt;p&gt;四级这个事情，让我想到我一个朋友，她性质还更恶劣一些hhhhh 她在疫情期间正好在外交换，学校明文公告不许出门玩耍，她跑出去玩儿被发现直接取消项目资格，落了一整学期的学分，被迫延迟毕业。&lt;/p&gt;
+&lt;p&gt;连我听得都有点生气，我觉得这是对自己人生极其不负责任的行为。&lt;/p&gt;
+&lt;p&gt;所以我刚刚躺在床上，突然想，秦昭明知道这件事情，得多难受啊。&lt;/p&gt;
+&lt;p&gt;正是因为在乎，所以才会生气，才会焦虑，你在这里落下了一点，没有人会为你停下脚步，每个人都在埋头往前走，你这里落下的，得花多少时间才能重新填补回来。&lt;/p&gt;
+&lt;p&gt;而在你努力补缺的时候，大家依然还在前进啊。&lt;/p&gt;
+&lt;p&gt;一句轻飘飘的“成年人该为自己的人生负责”太苍白了，我都替小叶焦虑，想他该怎么办呀，更何况是秦昭明了。&lt;/p&gt;
+&lt;p&gt;我突然就能理解他的暴怒了。&lt;/p&gt;
+&lt;p&gt;如果在这样的情况下，小叶再说些什么戳心窝子的话，确实也不怪老秦想要放弃他。&lt;/p&gt;
+&lt;p&gt;会觉得这个孩子扶不上墙，他这么费心有什么用啊。&lt;/p&gt;
+&lt;p&gt;是人都会累，没有哪一段关系是理所当然的。&lt;/p&gt;
+&lt;p&gt;但是，但是！&lt;/p&gt;
+&lt;p&gt;他知道错了qaq 他已经为了这个错误付出了很多代价了，这之后的很长时间都需要花很多精力来弥补这段时间的漏洞。&lt;/p&gt;
+&lt;p&gt;希望老秦同志能，稍微，稍微快一点消气，希望这段冷战能结束得快一点。&lt;/p&gt;
+&lt;p&gt;是需要什么契机吗，亲妈可以身先士卒套上袜子去抢劫小叶创造一点意外的！怎么样才能让老秦心疼，让老秦担心，快告诉我（在说什么快清醒一些）&lt;/p&gt;
+&lt;p&gt;（艹这让我想到前面提到那个有自残倾向的男孩子，老秦冷冷淡淡的样子，江江你别告诉我秦昭明同志这段时间看到小叶受伤生病也会是这反应，那可太伤了，是和好之后每天早上醒来都会想要重新确定是否是做梦的那种伤）&lt;/p&gt;
+&lt;p&gt;但至少你看！小剧场写的是“曾经”放弃过我，那说明！说明小问答的时候，已经和好了呀！&lt;/p&gt;
+&lt;p&gt;前面还有说，在一起后，就没吵过架了！&lt;/p&gt;
+&lt;p&gt;还要在一起的！&lt;/p&gt;
+&lt;p&gt;（失去理智到处挖糖的老母亲）&lt;/p&gt;
+&lt;p&gt;深夜胡言乱语，希望不要冒犯到江江（叹气）好了，我去睡了。等他们和好的第一天（喂还没闹掰呀在说什么呢！）&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/liang-yi-xiang-huan-xiang-guan-chang-ping-tong-ren-xiao-ju-chang&#34;&gt;回目录&lt;/a&gt;&lt;/p&gt;
+">两意相欢长评</a>
+      </div>
+      
+      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/liang-yi-xiang-huan-tong-ren-1/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【一】&lt;br&gt;
-“你真的没事儿吗？”徐铭第三次担忧地侧过头去问叶慕，“你脸色太差了，回宿舍休息去吧，我帮你和老师请假。”&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%B8%80&#34;&gt;【一】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%BA%8C&#34;&gt;【二】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;一&#34;&gt;【一】&lt;/h3&gt;
+&lt;p&gt;“你真的没事儿吗？”徐铭第三次担忧地侧过头去问叶慕，“你脸色太差了，回宿舍休息去吧，我帮你和老师请假。”&lt;br&gt;
 叶慕整张脸白得没有什么血色，坐在阶梯教室的椅子上一副摇摇欲坠的模样，是即使不是医学生也肉眼可见的生病状态。&lt;br&gt;
 叶慕艰难地摇摇头，他实在不敢再逃课了，一方面确实是学业上不敢再有半点马虎，另一方面……万一让秦昭明知道了，岂不是更觉得他阳奉阴违错上加错，若是再惹了他厌烦，那他好不容易熬过的四顿打前功尽弃不说，如果秦昭明再次将那一丝微不可见的希望收回，说实话，他也不知道自己该如何撑下去。&lt;br&gt;
 他光是一想就觉得难过到极点，比身上的难受难熬百八十倍。&lt;br&gt;
@@ -8704,8 +9130,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 这句话像一个救生圈，一下子把又要陷进一团死穴的叶慕给拉住了，他愣愣地去看秦昭明的眼睛，又掉下两串眼泪，秦昭明深吸了一口气，上手给他擦：“不许哭了。”这几天叶慕哭得太多了，再哭下去眼睛怕是不要了。&lt;br&gt;
 这话像句咒语，叶慕硬生生忍住了眼泪，秦昭明没想到他反应这么大，心一颤，忍不住伸手去牵他：“走，我们回家了。”&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【二】&lt;br&gt;
-第二天的七点，叶慕还是准时站到了书房里，他甚至做好了一晚上挨一百下的准备。&lt;br&gt;
+&lt;h3 id=&#34;二&#34;&gt;【二】&lt;/h3&gt;
+&lt;p&gt;第二天的七点，叶慕还是准时站到了书房里，他甚至做好了一晚上挨一百下的准备。&lt;br&gt;
 秦昭明没说结束，那就是还没结束。&lt;br&gt;
 秦昭明做完饭找了一圈没找到人，推开书房门就看到缩在角落里低着头乖乖罚站的叶慕，一时有些语塞，喊他：“叶慕，来吃饭。”&lt;br&gt;
 叶慕身形一顿，迟疑地回头看他，犹豫了几秒，小小声回：“七点了，哥……学长。”&lt;br&gt;
@@ -8762,56 +9188,23 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/liang-yi-xiang-huan-chang-ping/"" data-c="
-          &lt;p&gt;艹，我睡不着，是什么让我在大半夜的时候打开了这篇文从头看起，这究竟是人性的泯灭还是道德的沦丧，唯有给江江写长评才能让我激荡的内心平静。&lt;br&gt;
-首先，真的很喜欢这篇文，以下言论如有过激那就是叶子亲妈粉的灵魂在疯狂晃动，绝对没有说江江写得不好的意思，相反的，某种程度上正是因为写得足够好才让人如此有代入感。一切皆是个人想法。&lt;/p&gt;
-&lt;p&gt;我个人的习惯看文的时候会代入被视角，于是我从头到尾看下来，最大的感受就是，太 委 屈 了。&lt;/p&gt;
-&lt;p&gt;老秦同志很有原则，很理智，很坚定，对小叶是这样，对自己也是。&lt;/p&gt;
-&lt;p&gt;这没错，这甚至对得离谱，说句实话，但凡有个这样的人在身边管着，一定能成为一个很优秀的人。&lt;/p&gt;
-&lt;p&gt;但就是因为这样，每一次罚都会特别毫不留情，做错了事情承担后果，定了数目就要打完，无可厚非，并且这是双方都认可的方式。&lt;/p&gt;
-&lt;p&gt;但是！但是！&lt;/p&gt;
-&lt;p&gt;小叶哭得太可怜了qaq 代入他去想，真的好委屈，每次都好委屈。（孩子错了！但他哭了。孩子错得离谱啊！但他哭了。这不打能行吗？但他哭了！）&lt;/p&gt;
-&lt;p&gt;我们的上帝视角确实可以知道这是偏爱，是因为在意才会花这么多心思，费这么多口舌，我们知道孙妍只是学妹，只是老秦在带的新人，因为无关紧要，所以她的错与老秦无关；我们知道许非尘和秦昭明没关系，不过点头之交，永远也不可能替代叶慕在秦昭明心里的位置。&lt;/p&gt;
-&lt;p&gt;但是小叶呢，他知道什么，他什么都不知道。&lt;/p&gt;
-&lt;p&gt;站在圈子里，他什么都看不清楚，从他的角度，秦昭明可能喜欢孙妍，可能和许非尘发展成长期关系，甚至他可能觉得，孙妍和许非尘，都在某种程度上，比他好。&lt;/p&gt;
-&lt;p&gt;他太没安全感了。&lt;/p&gt;
-&lt;p&gt;我觉得这是两个人的责任，很多事情没敞开来说，小叶在意的事情，不问出口，或者问得模棱两可，老秦没法往那想，于是给的回答仿佛在戳他刀子。&lt;/p&gt;
-&lt;p&gt;因为这些点点滴滴，小叶很多话说不出口，问不出来，他害怕老秦的失望，于是他不讲四级的事情，他觉得老秦会生气，于是社团的事情一拖再拖，一点一点攒起来，演变成今天这个不可收拾的样子。&lt;/p&gt;
-&lt;p&gt;说实话，第一次秦昭明逼他退社团的时候，我其实是不舒服的。&lt;/p&gt;
-&lt;p&gt;我的角度是，每个人都是独立的个体，我的大学生活只有一次，我希望我拥有社团的回忆，或许对你秦昭明来说不重要，但我实实在在很喜欢，并且人生不该只有学习一件事情。&lt;/p&gt;
-&lt;p&gt;但是确实，医学相关的专业太特殊了。&lt;/p&gt;
-&lt;p&gt;学习不只是你一个人的事儿了，对我的专业来说可以浑水摸鱼的事儿，对医学生来说，或许就是一件相当大的错误。&lt;/p&gt;
-&lt;p&gt;因为医学生实实在在地在与死神打交道，每一个小小的错可能都会酿成不可挽回的后果。&lt;/p&gt;
-&lt;p&gt;我相信小叶在选择临床的时候就看清了这一点，但是世界很大，他才十八九岁，一时迷失是再正常不过的事情。&lt;/p&gt;
-&lt;p&gt;四级这个事情，让我想到我一个朋友，她性质还更恶劣一些hhhhh 她在疫情期间正好在外交换，学校明文公告不许出门玩耍，她跑出去玩儿被发现直接取消项目资格，落了一整学期的学分，被迫延迟毕业。&lt;/p&gt;
-&lt;p&gt;连我听得都有点生气，我觉得这是对自己人生极其不负责任的行为。&lt;/p&gt;
-&lt;p&gt;所以我刚刚躺在床上，突然想，秦昭明知道这件事情，得多难受啊。&lt;/p&gt;
-&lt;p&gt;正是因为在乎，所以才会生气，才会焦虑，你在这里落下了一点，没有人会为你停下脚步，每个人都在埋头往前走，你这里落下的，得花多少时间才能重新填补回来。&lt;/p&gt;
-&lt;p&gt;而在你努力补缺的时候，大家依然还在前进啊。&lt;/p&gt;
-&lt;p&gt;一句轻飘飘的“成年人该为自己的人生负责”太苍白了，我都替小叶焦虑，想他该怎么办呀，更何况是秦昭明了。&lt;/p&gt;
-&lt;p&gt;我突然就能理解他的暴怒了。&lt;/p&gt;
-&lt;p&gt;如果在这样的情况下，小叶再说些什么戳心窝子的话，确实也不怪老秦想要放弃他。&lt;/p&gt;
-&lt;p&gt;会觉得这个孩子扶不上墙，他这么费心有什么用啊。&lt;/p&gt;
-&lt;p&gt;是人都会累，没有哪一段关系是理所当然的。&lt;/p&gt;
-&lt;p&gt;但是，但是！&lt;/p&gt;
-&lt;p&gt;他知道错了qaq 他已经为了这个错误付出了很多代价了，这之后的很长时间都需要花很多精力来弥补这段时间的漏洞。&lt;/p&gt;
-&lt;p&gt;希望老秦同志能，稍微，稍微快一点消气，希望这段冷战能结束得快一点。&lt;/p&gt;
-&lt;p&gt;是需要什么契机吗，亲妈可以身先士卒套上袜子去抢劫小叶创造一点意外的！怎么样才能让老秦心疼，让老秦担心，快告诉我（在说什么快清醒一些）&lt;/p&gt;
-&lt;p&gt;（艹这让我想到前面提到那个有自残倾向的男孩子，老秦冷冷淡淡的样子，江江你别告诉我秦昭明同志这段时间看到小叶受伤生病也会是这反应，那可太伤了，是和好之后每天早上醒来都会想要重新确定是否是做梦的那种伤）&lt;/p&gt;
-&lt;p&gt;但至少你看！小剧场写的是“曾经”放弃过我，那说明！说明小问答的时候，已经和好了呀！&lt;/p&gt;
-&lt;p&gt;前面还有说，在一起后，就没吵过架了！&lt;/p&gt;
-&lt;p&gt;还要在一起的！&lt;/p&gt;
-&lt;p&gt;（失去理智到处挖糖的老母亲）&lt;/p&gt;
-&lt;p&gt;深夜胡言乱语，希望不要冒犯到江江（叹气）好了，我去睡了。等他们和好的第一天（喂还没闹掰呀在说什么呢！）&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/liang-yi-xiang-huan-xiang-guan-chang-ping-tong-ren-xiao-ju-chang&#34;&gt;回目录&lt;/a&gt;&lt;/p&gt;
-">两意相欢长评</a>
-      </div>
-      
-      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://aaaliaaa.github.io/post/liang-yi-xiang-huan-tong-ren-2/"" data-c="
-          &lt;p&gt;&lt;/p&gt;
-&lt;p&gt;###【一】&lt;br&gt;
-这个会开得其实很快，开完的时候不过五点多，但秦昭明全程的表情过于阴沉，连老师都看出不对，收拾东西过来拍拍他肩膀，和蔼道：“对不住啊昭明，是不是家里有什么事儿啊？大过年的，还招你们来开会。”&lt;br&gt;
+          &lt;p&gt;&lt;ul class=&#34;markdownIt-TOC&#34;&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%B8%80&#34;&gt;【一】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%BA%8C&#34;&gt;【二】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#%E4%B8%89&#34;&gt;【三】&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;一&#34;&gt;【一】&lt;/h3&gt;
+&lt;p&gt;这个会开得其实很快，开完的时候不过五点多，但秦昭明全程的表情过于阴沉，连老师都看出不对，收拾东西过来拍拍他肩膀，和蔼道：“对不住啊昭明，是不是家里有什么事儿啊？大过年的，还招你们来开会。”&lt;br&gt;
 秦昭明勉强勾了下嘴角：“没事，老师。”老师没多问，安抚了他两句就走了。&lt;br&gt;
 老师走了，事情却不能不做，秦昭明几乎把“别惹我”几个字写在脸上，全组人战战兢兢不敢惹他，好不容易开完了会，其他人都慌忙找了理由离开，许非尘本来也想跑，犹豫了一下，还是坐到他身边：“你到底怎么啦？这一下午，想杀人似的。”&lt;br&gt;
 秦昭明摆摆手，实在没有多余的心气对付他，想打发他走，边从兜里掏出手机，他心情很复杂，很烦躁，又有点伤心。&lt;br&gt;
@@ -8885,8 +9278,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 叶慕动作一顿，泪眼婆娑地抬起头去看他，依然看不真切他的表情，手上的力度却不由自主松了些，秦昭明趁机把他手拽下来，把他人推远了点一手扶着他另一手去探他额头，烫手的热，秦昭明一下子皱起眉来，把他往屋内推。&lt;br&gt;
 走廊不比有暖气的屋内，大冬天的窜堂风透心凉，叶慕刚刚在走廊又是哭又是闹，只穿了这么一件单衣，烧成这样，等下再加重了。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【二】&lt;br&gt;
-叶慕看他跟着进了门，把门关上了，一直盈在心头的恐惧终于被冲淡了一些，人一放松下来，身体的应激反应慢了半拍地降临了，他开始止不住地咳嗽，几乎要把肺咳出来，秦昭明被他突如其来的这一阵咳吓到了，连忙扶住他摇摇欲坠的身子轻轻在他后背顺，看他过了好半天缓过来，松了一口气的同时没好气地数落他：“知道自己发着烧还穿这么点往外面跑。”&lt;br&gt;
+&lt;h3 id=&#34;二&#34;&gt;【二】&lt;/h3&gt;
+&lt;p&gt;叶慕看他跟着进了门，把门关上了，一直盈在心头的恐惧终于被冲淡了一些，人一放松下来，身体的应激反应慢了半拍地降临了，他开始止不住地咳嗽，几乎要把肺咳出来，秦昭明被他突如其来的这一阵咳吓到了，连忙扶住他摇摇欲坠的身子轻轻在他后背顺，看他过了好半天缓过来，松了一口气的同时没好气地数落他：“知道自己发着烧还穿这么点往外面跑。”&lt;br&gt;
 叶慕像是失去了语言能力，没为自己争辩也没认错，只是死死抓着秦昭明的手臂，拿哭得红透了的眼睛看秦昭明。&lt;br&gt;
 秦昭明被他这一出弄得实在不知道该做何反应，他实在也不至于狠心到对一个病成这样的小孩儿发火，也不可能丢下这样的叶慕一走了之，他在心里重重叹了口气，心说：算了，等他病好再说吧。把自己的东西放下来，脱了大衣，将叶慕打横抱起来放回房间床上，问他：“你家有体温计吗？”&lt;br&gt;
 叶慕眼睛一直定在他身上，有些朦胧地摇头，秦昭明看到他床头空了两块儿的退烧药，脑子里闪过叶慕家那个空无一物的餐桌，又问他：“你今晚吃了什么？”&lt;br&gt;
@@ -8960,8 +9353,8 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 叶慕把自己撞得头破血流，总该是记住了教训的。&lt;br&gt;
 他舍不得再苛责了。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;###【三】&lt;br&gt;
-秦昭明一直守着他到了早上，给他量了温度，降下来一些，三十八度多，秦昭明几乎都要焦心起来，不明白他这温度怎么就退不下去，把他裹在被窝里包好，出门去买食材——叶慕家是真的什么都没有，秦昭明连米都没翻到，好不容易翻出两口锅，都感觉是许久没见过光的样子。&lt;br&gt;
+&lt;h3 id=&#34;三&#34;&gt;【三】&lt;/h3&gt;
+&lt;p&gt;秦昭明一直守着他到了早上，给他量了温度，降下来一些，三十八度多，秦昭明几乎都要焦心起来，不明白他这温度怎么就退不下去，把他裹在被窝里包好，出门去买食材——叶慕家是真的什么都没有，秦昭明连米都没翻到，好不容易翻出两口锅，都感觉是许久没见过光的样子。&lt;br&gt;
 叶慕醒来的时候，觉得实在有些恍惚，他还是很难受，喉咙干得不行，头也晕，身上的伤好像也还是叫嚣地疼。他望着花白的天花板，反应了好一会儿现在是个什么境地，转身去看床头的电子钟，九点多了，盯着不断变化的秒数看了几秒，他突然想起来——秦昭明人呢。&lt;br&gt;
 是走了吗？&lt;br&gt;
 这个猜测让他浑身的汗毛一下子竖起来，飞快把自己从层层被窝里挖出来，拖鞋也没顾上找，就这样跌跌撞撞跑出门去找。&lt;br&gt;
@@ -10715,7 +11108,7 @@ k老师那块已经找不到了，这让我想起来，因为允儿的直播里�
 这对设定其实蛮香的，我还蛮喜欢的，这样吧！大家可以在评论里丢梗，假设这篇心心有一天过五百，或者评论里出现特别戳或者很多人想看的梗，可能也许大概会考虑考虑小番外（大概）&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;&lt;a href=&#34;(https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-tan-liao-ge-jia-lian-ai)&#34;&gt;【后文】&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;(https://aaaliaaa.github.io/post/li-ming-ming-jue-de-ta-tan-liao-ge-jia-lian-ai/)&#34;&gt;【后文】&lt;/a&gt;&lt;/p&gt;
 ">李鸣鸣觉得他想静静</a>
       </div>
       
@@ -15336,7 +15729,7 @@ Aixi我就是那个江湖上游荡着的倒霉私生（不是的听我辩解！�
 &lt;h3 id=&#34;假如大哥回到十年前盼盼的新年小剧场系列五章一p完&#34;&gt;假如大哥回到十年前——盼盼的新年小剧场系列（五章一p）【完】&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-1-5&#34;&gt;【1-5】&lt;/a&gt; &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-6-10&#34;&gt;【6-10】&lt;/a&gt;&lt;br&gt;
 &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-11-15&#34;&gt;【11-15】&lt;/a&gt; &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-16-20&#34;&gt;【16-20】&lt;/a&gt;&lt;br&gt;
-&lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-21-25&#34;&gt;【21-25】&lt;/a&gt; &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-16-20&#34;&gt;【26-30】&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-21-25&#34;&gt;【21-25】&lt;/a&gt; &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-26-30&#34;&gt;【26-30】&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;摘星之子事件一些他们在这个世界长大后的故事五章一p完&#34;&gt;摘星之子事件——一些他们在这个世界长大后的故事（五章一p）【完】&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-zhaixing-1-5&#34;&gt;【1-5】&lt;/a&gt; &lt;a href=&#34;https://aaaliaaa.github.io/post/pan-pan-2-zhaixing-6-10&#34;&gt;【6-10】&lt;/a&gt;&lt;/p&gt;
 ">盼盼目录页</a>
