@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://aaaliaaa.github.io</id>
     <title>阿离的杂货堆</title>
-    <updated>2022-10-09T09:57:50.942Z</updated>
+    <updated>2022-10-11T12:00:45.583Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://aaaliaaa.github.io"/>
     <link rel="self" href="https://aaaliaaa.github.io/atom.xml"/>
@@ -15,7 +15,14 @@
         <id>https://aaaliaaa.github.io/post/yi-ge-zong-jie/</id>
         <link href="https://aaaliaaa.github.io/post/yi-ge-zong-jie/">
         </link>
-        <updated>2022-10-06T08:48:56.000Z</updated>
+        <updated>2022-10-11T00:00:19.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[火焰与冰川（7-12）【完结】]]></title>
+        <id>https://aaaliaaa.github.io/post/huo-yan-yu-bing-chuan-7-12wan-jie/</id>
+        <link href="https://aaaliaaa.github.io/post/huo-yan-yu-bing-chuan-7-12wan-jie/">
+        </link>
+        <updated>2022-10-07T23:54:41.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[盼盼（49-52）]]></title>
@@ -72,12 +79,5 @@
         <link href="https://aaaliaaa.github.io/post/wu-yan-juan-fan-wai-yi-hui-yan-jia/">
         </link>
         <updated>2022-07-21T01:25:26.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[就要酒后乱性]]></title>
-        <id>https://aaaliaaa.github.io/post/jiu-yao-jiu-hou-luan-xing/</id>
-        <link href="https://aaaliaaa.github.io/post/jiu-yao-jiu-hou-luan-xing/">
-        </link>
-        <updated>2022-07-02T08:15:43.000Z</updated>
     </entry>
 </feed>
